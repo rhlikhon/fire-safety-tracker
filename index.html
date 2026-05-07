@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fire & Safety Work Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1318;
+    --card: #181e27;
+    --header-from: #7b1416;
+    --header-to: #b52626;
+    --accent: #e03030;
+    --accent2: #2a1515;
+    --border: #252d3a;
+    --text: #e8eaf0;
+    --muted: #6b7892;
+    --row-alt: #161b23;
+    --shadow: 0 8px 32px rgba(0,0,0,0.45);
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    padding: 32px 16px;
+    color: var(--text);
+  }
+
+  /* Subtle grid texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    max-width: 1700px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Header ── */
+  .header-card {
+    background: linear-gradient(135deg, var(--header-from) 0%, #c0321a 50%, var(--header-to) 100%);
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 26px 36px 22px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 3px solid #ff4a2a;
+  }
+  .header-card::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+  .header-card::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: 20%;
+    width: 300px; height: 200px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.12);
+  }
+  .header-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+    z-index: 1;
+  }
+  .header-title .icon { font-size: 30px; }
+  .header-meta {
+    font-size: 12.5px;
+    opacity: .80;
+    margin-top: 9px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 28px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .header-meta span { display: flex; align-items: center; gap: 6px; }
+
+  /* ── Toolbar ── */
+  .toolbar {
+    background: var(--card);
+    padding: 13px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .btn-add {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 9px 20px;
+    border-radius: 8px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: background .2s, transform .1s, box-shadow .2s;
+    box-shadow: 0 2px 12px rgba(224,48,48,0.35);
+  }
+  .btn-add:hover { background: #c82020; transform: translateY(-1px); box-shadow: 0 4px 18px rgba(224,48,48,0.5); }
+  .btn-add:active { transform: none; }
+  .toolbar-sep { flex: 1; }
+  .search-box {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    width: 230px;
+    outline: none;
+    background: #1a2030;
+    color: var(--text);
+    transition: border-color .2s;
+  }
+  .search-box::placeholder { color: var(--muted); }
+  .search-box:focus { border-color: var(--accent); }
+  .task-count {
+    font-size: 12.5px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  /* ── Table Container ── */
+  .table-wrap {
+    background: var(--card);
+    border-radius: 0 0 var(--radius) var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .table-scroll { overflow-x: auto; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 1380px;
+  }
+  thead tr {
+    background: linear-gradient(90deg, #1f0a0a 0%, #3a1010 100%);
+  }
+  thead th {
+    color: #f5b8b8;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 13px 14px;
+    text-align: left;
+    white-space: nowrap;
+    border-right: 1px solid rgba(255,100,80,0.08);
+  }
+  thead th:first-child { width: 46px; text-align: center; }
+  thead th:last-child { border-right: none; }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background .15s;
+  }
+  tbody tr:nth-child(even) { background: var(--row-alt); }
+  tbody tr:hover { background: #1e252f; }
+
+  td {
+    padding: 11px 14px;
+    vertical-align: middle;
+    color: var(--text);
+  }
+  td:first-child { text-align: center; color: var(--muted); font-weight: 600; font-size: 12px; }
+
+  /* ── Inline Edit ── */
+  .cell-edit {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    width: 100%;
+    min-width: 80px;
+    padding: 3px 6px;
+    border-radius: 5px;
+    transition: background .15s, box-shadow .15s;
+  }
+  .cell-edit:focus {
+    background: #1e2535;
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+  /* Date input fix for dark mode */
+  .cell-edit[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.7);
+    cursor: pointer;
+  }
+
+  /* ── Designation Cycle ── */
+  .desig-btn {
+    background: #1e1010;
+    border: 1.5px solid #3d1a1a;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #f0a0a0;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .15s, border-color .15s, transform .1s;
+    min-width: 130px;
+    text-align: center;
+  }
+  .desig-btn:hover { background: #2e1515; border-color: #b03030; transform: scale(1.02); }
+  .desig-btn:active { transform: scale(.98); }
+
+  /* ── Status Badge ── */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 11px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: filter .15s, transform .1s;
+    user-select: none;
+    letter-spacing: .3px;
+  }
+  .status-badge:hover { filter: brightness(1.15); transform: scale(1.04); }
+  .status-badge:active { transform: scale(.97); }
+  .status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+  .s-inprogress  { background: #2e2000; color: #ffd05a; border: 1.5px solid #6b4900; }
+  .s-inprogress::before  { background: #f0a500; }
+  .s-completed   { background: #0a2015; color: #55e09a; border: 1.5px solid #1a5c33; }
+  .s-completed::before   { background: #28a745; }
+  .s-pending     { background: #2a0808; color: #ff8080; border: 1.5px solid #6b1a1a; }
+  .s-pending::before     { background: #dc3545; }
+  .s-review      { background: #061825; color: #6ab8f7; border: 1.5px solid #0d4070; }
+  .s-review::before      { background: #2196f3; }
+  .s-onhold      { background: #150d25; color: #b87cf5; border: 1.5px solid #4a2080; }
+  .s-onhold::before      { background: #9c27b0; }
+  .s-cancelled   { background: #1a1a1a; color: #888; border: 1.5px solid #333; }
+  .s-cancelled::before   { background: #555; }
+
+  /* ── Attachment ── */
+  .attach-btn {
+    background: none;
+    border: 1.5px dashed #3a4560;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 12px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+  }
+  .attach-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .attach-label {
+    font-size: 12px;
+    color: #ff7a5a;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline dotted;
+  }
+
+  /* ── Delete Row ── */
+  .del-btn {
+    background: none;
+    border: none;
+    color: #3a4560;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 2px 6px;
+    border-radius: 5px;
+    transition: color .15s, background .15s;
+  }
+  .del-btn:hover { color: #e03030; background: #2a1010; }
+
+  /* ── Progress Bar ── */
+  .prog-wrap { display: flex; align-items: center; gap: 8px; }
+  .prog-bar-bg {
+    flex: 1; height: 5px; background: #1e2535; border-radius: 10px; min-width: 60px;
+  }
+  .prog-bar-fill {
+    height: 100%; border-radius: 10px;
+    background: linear-gradient(90deg, #e03030, #ff7a5a);
+    transition: width .3s;
+  }
+  .prog-input {
+    width: 46px; border: 1.5px solid var(--border); border-radius: 5px;
+    padding: 3px 5px; font-size: 12px; font-family: 'DM Sans', sans-serif;
+    text-align: right; color: var(--text); background: transparent; outline: none;
+  }
+  .prog-input:focus { border-color: var(--accent); background: #1a2030; }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    padding: 16px;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: .3px;
+  }
+  .footer span { color: #e03030; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- Header -->
+  <div class="header-card">
+    <div class="header-title">
+      <span class="icon">🔥</span>
+      Fire &amp; Safety Work Tracker
+    </div>
+    <div class="header-meta">
+      <span>🕐 Last Updated: <strong id="lastUpdated"></strong></span>
+      <span>📋 Total Tasks: <strong id="totalCount">0</strong></span>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <button class="btn-add" onclick="addRow()">＋ Add Task</button>
+    <span class="toolbar-sep"></span>
+    <input class="search-box" type="text" placeholder="🔍  Search tasks…" oninput="filterTable(this.value)">
+    <span class="task-count" id="visibleCount"></span>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <div class="table-scroll">
+      <table id="taskTable">
+        <thead>
+          <tr>
+            <th>SL</th>
+            <th>Job Title</th>
+            <th>Description</th>
+            <th>Assigned By</th>
+            <th>Designation</th>
+            <th>Assigned To</th>
+            <th>Designation</th>
+            <th>Email / Phone</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Progress %</th>
+            <th>Status</th>
+            <th>Attachment</th>
+            <th>Remark</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="footer">Click any cell to edit &nbsp;•&nbsp; Click <span>Designation</span> to cycle &nbsp;•&nbsp; Click <span>Status</span> badge to change</div>
+</div>
+
+<script>
+const DESIGNATIONS = ['CTO','GM','AGM','Senior Manager','Manager','Senior Executive','Executive','Junior Executive'];
+const STATUSES = [
+  {label:'In Progress',  cls:'s-inprogress'},
+  {label:'Completed',    cls:'s-completed'},
+  {label:'Pending',      cls:'s-pending'},
+  {label:'Under Review', cls:'s-review'},
+  {label:'On Hold',      cls:'s-onhold'},
+  {label:'Cancelled',    cls:'s-cancelled'},
+];
+
+let rows = [
+  { jobTitle:'Fire Extinguisher Check',   desc:'Monthly inspection of all extinguishers', assignedBy:'Safety Manager', desig1:4, assignedTo:'Karim Ahmed',  desig2:5, contact:'karim@office.com',  startDate:'2025-05-01', endDate:'2025-05-07', progress:70, status:0, attachment:'', remark:'' },
+  { jobTitle:'Emergency Exit Audit',      desc:'Check all emergency exits & signage',      assignedBy:'Director Saheb', desig1:1, assignedTo:'Selina Begum', desig2:5, contact:'01711-000000',     startDate:'2025-05-05', endDate:'2025-05-08', progress:100,status:1, attachment:'', remark:'' },
+  { jobTitle:'Fire Drill Training',       desc:'Staff fire drill & evacuation training',   assignedBy:'Manager Rahim',  desig1:4, assignedTo:'Jamal Hossen', desig2:6, contact:'jamal@office.com', startDate:'2025-04-28', endDate:'2025-05-10', progress:20, status:2, attachment:'', remark:'Reschedule needed' },
+  { jobTitle:'Smoke Detector Maintenance',desc:'Test & replace smoke detector batteries',  assignedBy:'GM Office',      desig1:2, assignedTo:'Rafiq Islam',  desig2:6, contact:'01800-111222',     startDate:'2025-05-03', endDate:'2025-05-09', progress:50, status:3, attachment:'', remark:'' },
+];
+
+function renderAll() {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  rows.forEach((r, i) => tbody.appendChild(makeRow(r, i)));
+  updateCounts();
+}
+
+function makeRow(r, i) {
+  const tr = document.createElement('tr');
+  tr.dataset.idx = i;
+
+  const st = STATUSES[r.status];
+  const progPct = Math.min(100, Math.max(0, r.progress || 0));
+
+  tr.innerHTML = `
+    <td>${i + 1}</td>
+    <td><input class="cell-edit" value="${esc(r.jobTitle)}" onchange="updateField(${i},'jobTitle',this.value)"></td>
+    <td><input class="cell-edit" value="${esc(r.desc)}" onchange="updateField(${i},'desc',this.value)"></td>
+    <td><input class="cell-edit" value="${esc(r.assignedBy)}" onchange="updateField(${i},'assignedBy',this.value)"></td>
+    <td><button class="desig-btn" onclick="cycleDesig(${i},1)">${DESIGNATIONS[r.desig1]}</button></td>
+    <td><input class="cell-edit" value="${esc(r.assignedTo)}" onchange="updateField(${i},'assignedTo',this.value)"></td>
+    <td><button class="desig-btn" onclick="cycleDesig(${i},2)">${DESIGNATIONS[r.desig2]}</button></td>
+    <td><input class="cell-edit" value="${esc(r.contact)}" onchange="updateField(${i},'contact',this.value)"></td>
+    <td><input class="cell-edit" type="date" value="${r.startDate || ''}" onchange="updateField(${i},'startDate',this.value)" style="min-width:130px;color-scheme:dark"></td>
+    <td><input class="cell-edit" type="date" value="${r.endDate || ''}" onchange="updateField(${i},'endDate',this.value)" style="min-width:130px;color-scheme:dark"></td>
+    <td>
+      <div class="prog-wrap">
+        <div class="prog-bar-bg"><div class="prog-bar-fill" id="pfill-${i}" style="width:${progPct}%"></div></div>
+        <input class="prog-input" type="number" min="0" max="100" value="${progPct}" onchange="updateProg(${i},this.value)">
+      </div>
+    </td>
+    <td><span class="status-badge ${st.cls}" onclick="cycleStatus(${i})">${st.label}</span></td>
+    <td>${r.attachment
+      ? `<span class="attach-label" title="${esc(r.attachment)}">📎 ${esc(r.attachment)}</span>`
+      : `<button class="attach-btn" onclick="pickFile(${i})">＋ Attach</button>`}
+    </td>
+    <td><input class="cell-edit" value="${esc(r.remark)}" onchange="updateField(${i},'remark',this.value)" placeholder="…"></td>
+    <td><button class="del-btn" onclick="delRow(${i})" title="Delete row">✕</button></td>
+  `;
+  return tr;
+}
+
+function esc(s) {
+  return (s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function updateField(i, key, val) { rows[i][key] = val; }
+function cycleDesig(i, which) {
+  const key = which === 1 ? 'desig1' : 'desig2';
+  rows[i][key] = (rows[i][key] + 1) % DESIGNATIONS.length;
+  renderAll();
+}
+function cycleStatus(i) {
+  rows[i].status = (rows[i].status + 1) % STATUSES.length;
+  renderAll();
+}
+function updateProg(i, val) {
+  rows[i].progress = Math.min(100, Math.max(0, parseInt(val) || 0));
+  const fill = document.getElementById('pfill-' + i);
+  if (fill) fill.style.width = rows[i].progress + '%';
+}
+function addRow() {
+  rows.push({ jobTitle: 'New Task', desc: '', assignedBy: '', desig1: 4, assignedTo: '', desig2: 6, contact: '', startDate: '', endDate: '', progress: 0, status: 2, attachment: '', remark: '' });
+  renderAll();
+  setTimeout(() => { window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }, 50);
+}
+function delRow(i) {
+  if (rows.length === 1) { alert('At least one row is required.'); return; }
+  if (confirm('Delete this task?')) {
+    rows.splice(i, 1);
+    renderAll();
+  }
+}
+function pickFile(i) {
+  const inp = document.createElement('input');
+  inp.type = 'file';
+  inp.onchange = () => {
+    if (inp.files[0]) {
+      rows[i].attachment = inp.files[0].name;
+      renderAll();
+    }
+  };
+  inp.click();
+}
+function filterTable(q) {
+  const all = document.querySelectorAll('#tableBody tr');
+  let vis = 0;
+  all.forEach(tr => {
+    const txt = tr.innerText.toLowerCase();
+    const show = txt.includes(q.toLowerCase());
+    tr.style.display = show ? '' : 'none';
+    if (show) vis++;
+  });
+  document.getElementById('visibleCount').textContent = q ? `Showing ${vis} of ${rows.length}` : '';
+}
+function updateCounts() {
+  document.getElementById('totalCount').textContent = rows.length;
+  document.getElementById('visibleCount').textContent = '';
+}
+function setDate() {
+  const now = new Date();
+  document.getElementById('lastUpdated').textContent =
+    now.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) +
+    '  |  ' +
+    now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+}
+
+setDate();
+renderAll();
+</script>
+</body>
+</html>
