@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fire Pump Log Book — Seven Circle (Bangladesh) Ltd.</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1318;--card:#181e27;--border:#252d3a;--accent:#e03030;--text:#e8eaf0;--muted:#6b7892;--green:#16a085;--radius:12px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padding:20px 12px;color:var(--text)}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+.wrapper{max-width:1600px;margin:0 auto;position:relative;z-index:1}
+
+/* Header */
+.page-header{background:linear-gradient(135deg,#7b1416,#c0321a,#b52626);border-radius:var(--radius) var(--radius) 0 0;padding:20px 28px 16px;color:#fff;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.page-header::before{content:'';position:absolute;top:-50px;right:-50px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.06)}
+.page-header-title{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;letter-spacing:1px;text-transform:uppercase;position:relative;z-index:1}
+.page-header-sub{font-size:12px;opacity:.8;margin-top:4px;position:relative;z-index:1}
+.back-btn{background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);border-radius:8px;padding:8px 16px;color:#fff;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:6px;transition:all .2s;position:relative;z-index:1}
+.back-btn:hover{background:rgba(255,255,255,.25)}
+
+/* Tab Nav */
+.tab-nav{background:var(--card);display:flex;border-bottom:2px solid var(--border);padding:0 20px;gap:4px;flex-wrap:wrap}
+.tab-btn{background:none;border:none;padding:13px 20px;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;letter-spacing:.5px;white-space:nowrap}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:#e03030;border-bottom-color:#e03030}
+
+/* Tab Content */
+.tab-content{display:none;background:var(--card);border-radius:0 0 var(--radius) var(--radius);padding:20px}
+.tab-content.active{display:block}
+
+/* Section header */
+.section-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.section-title{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:#f5b8b8;letter-spacing:1px;text-transform:uppercase}
+.section-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+/* Buttons */
+.btn{border:none;padding:8px 16px;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:.6px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s}
+.btn-add{background:#e03030;color:#fff}
+.btn-add:hover{background:#c82020}
+.btn-print{background:linear-gradient(135deg,#1a5c33,#16a085);color:#fff}
+.btn-print:hover{filter:brightness(1.15)}
+.btn-filter{background:#1a2030;color:var(--muted);border:1.5px solid var(--border)}
+.btn-filter:hover{border-color:var(--accent);color:var(--text)}
+
+/* Filter row */
+.filter-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px;padding:12px 14px;background:#0f141a;border-radius:8px;border:1px solid var(--border)}
+.filter-row label{font-size:12px;color:var(--muted);font-weight:600;font-family:'Rajdhani',sans-serif;text-transform:uppercase}
+.filter-select{background:#1a2030;border:1.5px solid var(--border);border-radius:6px;padding:6px 10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none}
+.filter-select:focus{border-color:var(--accent)}
+.filter-select option{background:#1a2030}
+
+/* Table */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:1200px}
+thead th{background:#1f0a0a;color:#f5b8b8;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;padding:10px 8px;text-align:center;border:1px solid #3a1a1a;white-space:nowrap}
+tbody td{padding:8px 8px;border:1px solid #252d3a;text-align:center;vertical-align:middle;color:var(--text)}
+tbody tr:nth-child(even){background:#161b23}
+tbody tr:hover{background:#1e252f}
+.ok-badge{background:#0a2015;color:#55e09a;border:1px solid #1a5c33;border-radius:4px;padding:2px 8px;font-size:11px;font-weight:600}
+.na-badge{background:#1a1a1a;color:#666;border:1px solid #333;border-radius:4px;padding:2px 8px;font-size:11px}
+.ng-badge{background:#2a0808;color:#ff8080;border:1px solid #6b1a1a;border-radius:4px;padding:2px 8px;font-size:11px;font-weight:600}
+.action-btn{border:none;background:none;cursor:pointer;font-size:14px;padding:2px 4px;border-radius:4px;transition:background .15s}
+.action-btn:hover{background:#2a1010}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:1000;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto}
+.modal-box{background:#181e27;border:1.5px solid #3a1a1a;border-radius:14px;width:100%;max-width:700px;margin:20px auto;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+.modal-header{background:linear-gradient(135deg,#7b1416,#b52626);padding:16px 20px;border-radius:12px 12px 0 0;display:flex;justify-content:space-between;align-items:center}
+.modal-header h3{font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;color:#fff;letter-spacing:1px}
+.modal-close{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;opacity:.8;line-height:1}
+.modal-close:hover{opacity:1}
+.modal-body{padding:20px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.form-group{display:flex;flex-direction:column;gap:4px}
+.form-group.full{grid-column:1/-1}
+.form-group.half{grid-column:span 2}
+.form-group label{font-size:11px;font-weight:600;color:#f5b8b8;text-transform:uppercase;letter-spacing:.7px;font-family:'Rajdhani',sans-serif}
+.form-group input,.form-group select,.form-group textarea{background:#1a2030;border:1.5px solid var(--border);border-radius:6px;padding:7px 10px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text);outline:none;transition:border-color .2s}
+.form-group input:focus,.form-group select:focus{border-color:var(--accent)}
+.form-group select option{background:#1a2030}
+.form-group input[type="date"],.form-group input[type="time"]{color-scheme:dark}
+.modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
+.btn-save{background:var(--accent);color:#fff;padding:9px 22px;border:none;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-save:hover{background:#c82020}
+.btn-cancel{background:#252d3a;color:var(--muted);padding:9px 16px;border:none;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;cursor:pointer}
+
+/* Section divider in form */
+.form-section-title{grid-column:1/-1;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:#e03030;text-transform:uppercase;letter-spacing:.8px;padding:8px 0 4px;border-bottom:1px solid #3a1a1a;margin-top:4px}
+
+/* Weekly/Monthly checklist table */
+.checklist-tbl{min-width:900px}
+.checklist-tbl th,.checklist-tbl td{padding:8px 10px;border:1px solid #252d3a;font-size:12px}
+.checklist-tbl th{background:#1f0a0a;color:#f5b8b8;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;text-align:center}
+.checklist-tbl .group-row td{background:#1a1020;color:#c0a0f0;font-weight:700;font-family:'Rajdhani',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+.checklist-tbl td:nth-child(2){text-align:left}
+.checklist-tbl td:nth-child(3){text-align:left;font-size:11.5px;color:#9ab}
+.check-select{background:#1a2030;border:1px solid var(--border);border-radius:4px;padding:3px 6px;font-family:'DM Sans',sans-serif;font-size:11.5px;color:var(--text);outline:none;width:80px}
+.check-select:focus{border-color:var(--accent)}
+
+/* Print area */
+@media print {
+  body{background:#1a1a2e!important;padding:0;color:#e0e0e0!important}
+  .no-print{display:none!important}
+  .print-area{display:block!important}
+  .tab-content{display:block!important;border-radius:0;padding:0}
+  .modal-overlay{display:none!important}
+  .wrapper{max-width:100%}
+  table{page-break-inside:auto}
+  tr{page-break-inside:avoid}
+  thead{display:table-header-group}
+  .print-page{page-break-after:always}
+}
+.print-area{display:none}
+
+/* Print header */
+.print-doc-header{display:none}
+@media print{
+  .print-doc-header{display:block;text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #e03030}
+  .print-doc-header h2{font-size:16px;font-weight:700;color:#ff8080;margin-bottom:4px}
+  .print-doc-header p{font-size:12px;color:#aab}
+  .filter-row{display:none!important}
+  .section-actions{display:none!important}
+  .tab-nav{display:none!important}
+  .page-header{border-radius:0}
+  .back-btn{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <div class="page-header-title">🔥 Fire Pump Log Book</div>
+      <div class="page-header-sub">Seven Circle (Bangladesh) Ltd. — Administration Department — Seven Rings Cement</div>
+    </div>
+    <a href="index.html" class="back-btn no-print">← Back to Tracker</a>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-nav no-print">
+    <button class="tab-btn active" onclick="switchTab('daily',this)">📋 Daily Log</button>
+    <button class="tab-btn" onclick="switchTab('weekly',this)">📅 Weekly Checklist</button>
+    <button class="tab-btn" onclick="switchTab('monthly',this)">🗓️ Monthly Checklist</button>
+  </div>
+
+  <!-- ═══════════════ DAILY LOG TAB ═══════════════ -->
+  <div class="tab-content active" id="tab-daily">
+    <div class="print-doc-header">
+      <h2>Seven Circle (Bangladesh) Limited, Gazipur, Kaliganj</h2>
+      <p>Administration Department &nbsp;|&nbsp; Fire Pump Room Check Log Book</p>
+    </div>
+    <div class="section-header no-print">
+      <div class="section-title">📋 Fire Pump Room Check — Daily Log</div>
+      <div class="section-actions">
+        <button class="btn btn-add" onclick="openDailyModal()">＋ Add Entry</button>
+        <button class="btn btn-print" onclick="printTab('daily')">🖨️ Print / PDF</button>
+      </div>
+    </div>
+    <!-- Filter -->
+    <div class="filter-row no-print">
+      <label>Month:</label>
+      <select class="filter-select" id="daily_month" onchange="filterDaily()">
+        <option value="">All</option>
+        <option>January</option><option>February</option><option>March</option>
+        <option>April</option><option>May</option><option>June</option>
+        <option>July</option><option>August</option><option>September</option>
+        <option>October</option><option>November</option><option>December</option>
+      </select>
+      <label>Year:</label>
+      <select class="filter-select" id="daily_year" onchange="filterDaily()">
+        <option value="">All</option>
+        <option>2025</option><option>2026</option><option>2027</option>
+      </select>
+      <span style="font-size:12px;color:var(--muted)" id="daily_count"></span>
+    </div>
+    <!-- Print month/year display -->
+    <div style="display:none" id="daily_print_header" class="print-only">
+      <table style="width:100%;margin-bottom:8px;font-size:13px;color:#ccc;border:none">
+        <tr><td><strong>Month:</strong> <span id="daily_print_month"></span></td><td style="text-align:right"><strong>Year:</strong> <span id="daily_print_year"></span></td></tr>
+      </table>
+    </div>
+    <div class="tbl-wrap">
+      <table id="dailyTable">
+        <thead>
+          <tr>
+            <th rowspan="2">Date</th>
+            <th rowspan="2">Time</th>
+            <th colspan="3">Auto/Manual</th>
+            <th colspan="3">PSI Reading</th>
+            <th rowspan="2">Leakage in Pipe Line</th>
+            <th rowspan="2">Room Exhaust Fan</th>
+            <th rowspan="2">Battery Voltage Condition</th>
+            <th rowspan="2">Room Light ON/Off</th>
+            <th rowspan="2">Cleanliness of Pump Room</th>
+            <th rowspan="2">Water Level Check</th>
+            <th rowspan="2">Done by Sig</th>
+            <th rowspan="2">AGM Admin Signature</th>
+            <th rowspan="2">Remarks</th>
+            <th rowspan="2" class="no-print">Action</th>
+          </tr>
+          <tr>
+            <th>Jockey Pump A/M</th>
+            <th>Electric Pump A/M</th>
+            <th>Diesel Pump A/M</th>
+            <th>Jockey Pump PSI</th>
+            <th>Electric Pump PSI</th>
+            <th>Diesel Pump PSI</th>
+          </tr>
+        </thead>
+        <tbody id="dailyBody">
+          <tr><td colspan="18" style="text-align:center;padding:28px;color:#6b7892">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════════ WEEKLY TAB ═══════════════ -->
+  <div class="tab-content" id="tab-weekly">
+    <div class="print-doc-header">
+      <h2>Record Sheet — Fire Pump Record Sheet</h2>
+      <p>Seven Circle (Bangladesh) Ltd. &nbsp;|&nbsp; Doc No: SCB/ADM/01 &nbsp;|&nbsp; Department: Admin</p>
+      <p>Weekly Checklist of Fire Pump System as per NFPA-20</p>
+    </div>
+    <div class="section-header no-print">
+      <div class="section-title">📅 Weekly Checklist — NFPA-20</div>
+      <div class="section-actions">
+        <button class="btn btn-add" onclick="openWeeklyModal()">＋ New Weekly Entry</button>
+        <button class="btn btn-print" onclick="printTab('weekly')">🖨️ Print / PDF</button>
+      </div>
+    </div>
+    <div class="filter-row no-print">
+      <label>Week:</label>
+      <select class="filter-select" id="weekly_filter" onchange="filterWeekly()">
+        <option value="">All</option>
+      </select>
+      <span style="font-size:12px;color:var(--muted)" id="weekly_count"></span>
+    </div>
+    <div class="tbl-wrap">
+      <table class="checklist-tbl" id="weeklyTable">
+        <thead>
+          <tr>
+            <th style="width:36px">Sl.No</th>
+            <th style="min-width:200px;text-align:left">Description</th>
+            <th style="min-width:140px;text-align:left">Scope</th>
+            <th style="width:90px">Visual Inspection</th>
+            <th style="width:80px">Checking</th>
+            <th style="width:70px">Clean</th>
+            <th style="width:70px">Test</th>
+            <th style="width:90px">Sig Executive Fire & Safety</th>
+            <th style="width:80px">Sig Admin-AGM</th>
+            <th style="width:70px">Sig of GM</th>
+            <th style="width:90px;min-width:90px">Week / Date</th>
+            <th class="no-print" style="width:60px">Action</th>
+          </tr>
+        </thead>
+        <tbody id="weeklyBody">
+          <tr><td colspan="12" style="text-align:center;padding:28px;color:#6b7892">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════════ MONTHLY TAB ═══════════════ -->
+  <div class="tab-content" id="tab-monthly">
+    <div class="print-doc-header">
+      <h2>Record Sheet — Fire Pump Record Sheet</h2>
+      <p>Seven Circle (Bangladesh) Ltd. &nbsp;|&nbsp; Doc No: SCB/ADM/01 &nbsp;|&nbsp; Department: Admin</p>
+      <p>Monthly Checklist of Fire Pump System as per NFPA-20</p>
+    </div>
+    <div class="section-header no-print">
+      <div class="section-title">🗓️ Monthly Checklist — NFPA-20</div>
+      <div class="section-actions">
+        <button class="btn btn-add" onclick="openMonthlyModal()">＋ New Monthly Entry</button>
+        <button class="btn btn-print" onclick="printTab('monthly')">🖨️ Print / PDF</button>
+      </div>
+    </div>
+    <div class="filter-row no-print">
+      <label>Month/Year:</label>
+      <select class="filter-select" id="monthly_filter" onchange="filterMonthly()">
+        <option value="">All</option>
+      </select>
+      <span style="font-size:12px;color:var(--muted)" id="monthly_count"></span>
+    </div>
+    <div class="tbl-wrap">
+      <table class="checklist-tbl" id="monthlyTable">
+        <thead>
+          <tr>
+            <th style="width:36px">Sl.No</th>
+            <th style="min-width:200px;text-align:left">Description</th>
+            <th style="min-width:140px;text-align:left">Scope</th>
+            <th style="width:90px">Visual Inspection</th>
+            <th style="width:80px">Checking</th>
+            <th style="width:70px">Clean</th>
+            <th style="width:70px">Test</th>
+            <th style="width:90px">Sig Executive Fire & Safety</th>
+            <th style="width:80px">Sig Admin-AGM</th>
+            <th style="width:70px">Sig of GM</th>
+            <th style="width:90px">Month / Date</th>
+            <th class="no-print" style="width:60px">Action</th>
+          </tr>
+        </thead>
+        <tbody id="monthlyBody">
+          <tr><td colspan="12" style="text-align:center;padding:28px;color:#6b7892">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- end wrapper -->
+
+<!-- ══════════════ DAILY MODAL ══════════════ -->
+<div class="modal-overlay" id="dailyModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>📋 Daily Log Entry</h3>
+      <button class="modal-close" onclick="closeDailyModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><label>Date *</label><input id="d_date" type="date"></div>
+        <div class="form-group"><label>Time *</label><input id="d_time" type="time"></div>
+        <div class="form-group"></div>
+        <div class="form-section-title">Auto / Manual Status</div>
+        <div class="form-group"><label>Jockey Pump A/M</label>
+          <select id="d_jockeySt"><option>Auto</option><option>Manual</option><option>Off</option></select></div>
+        <div class="form-group"><label>Electric Pump A/M</label>
+          <select id="d_electricSt"><option>Auto</option><option>Manual</option><option>Off</option></select></div>
+        <div class="form-group"><label>Diesel Pump A/M</label>
+          <select id="d_dieselSt"><option>Auto</option><option>Manual</option><option>Off</option></select></div>
+        <div class="form-section-title">PSI Reading</div>
+        <div class="form-group"><label>Jockey Pump PSI</label><input id="d_jockeyPSI" type="number" placeholder="0"></div>
+        <div class="form-group"><label>Electric Pump PSI</label><input id="d_electricPSI" type="number" placeholder="0"></div>
+        <div class="form-group"><label>Diesel Pump PSI</label><input id="d_dieselPSI" type="number" placeholder="0"></div>
+        <div class="form-section-title">Condition Check</div>
+        <div class="form-group"><label>Leakage in Pipe Line</label>
+          <select id="d_leakage"><option>OK</option><option>N/G</option><option>N/A</option></select></div>
+        <div class="form-group"><label>Room Exhaust Fan</label>
+          <select id="d_fan"><option>OK</option><option>N/G</option><option>N/A</option></select></div>
+        <div class="form-group"><label>Battery Voltage</label>
+          <select id="d_battery"><option>OK</option><option>N/G</option><option>N/A</option></select></div>
+        <div class="form-group"><label>Room Light ON/Off</label>
+          <select id="d_light"><option>ON</option><option>OFF</option></select></div>
+        <div class="form-group"><label>Cleanliness Pump Room</label>
+          <select id="d_clean"><option>OK</option><option>N/G</option><option>N/A</option></select></div>
+        <div class="form-group"><label>Water Level Check</label>
+          <select id="d_water"><option>OK</option><option>N/G</option><option>N/A</option></select></div>
+        <div class="form-group"><label>Done by (Sig)</label><input id="d_doneby" type="text" placeholder="নাম লিখুন"></div>
+        <div class="form-group"><label>AGM Admin Sig</label><input id="d_agm" type="text" placeholder="নাম লিখুন"></div>
+        <div class="form-group full"><label>Remarks</label><input id="d_remarks" type="text" placeholder="কোনো মন্তব্য…"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeDailyModal()">বাতিল</button>
+      <button class="btn-save" onclick="saveDaily()">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ WEEKLY MODAL ══════════════ -->
+<div class="modal-overlay" id="weeklyModal">
+  <div class="modal-box" style="max-width:750px">
+    <div class="modal-header">
+      <h3>📅 Weekly Checklist Entry</h3>
+      <button class="modal-close" onclick="closeWeeklyModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid" style="grid-template-columns:1fr 1fr">
+        <div class="form-group"><label>Week Name / Date *</label><input id="w_weekname" type="text" placeholder="যেমন: Week 1, May 2026"></div>
+        <div class="form-group"><label>Date</label><input id="w_date" type="date"></div>
+        <div class="form-group"><label>Sig Executive Fire & Safety</label><input id="w_sig1" type="text" placeholder="নাম"></div>
+        <div class="form-group"><label>Sig Admin-AGM</label><input id="w_sig2" type="text" placeholder="নাম"></div>
+        <div class="form-group"><label>Sig of GM</label><input id="w_sig3" type="text" placeholder="নাম"></div>
+      </div>
+      <div style="margin-top:14px;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:#e03030;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Checklist Items</div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:12px" id="weeklyChecklistForm">
+          <thead>
+            <tr style="background:#1f0a0a">
+              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;width:36px">Sl</th>
+              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;text-align:left">Description</th>
+              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;width:90px">Visual Insp.</th>
+              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;width:80px">Checking</th>
+              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;width:70px">Clean</th>
+              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;width:70px">Test</th>
+            </tr>
+          </thead>
+          <tbody id="weeklyFormBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeWeeklyModal()">বাতিল</button>
+      <button class="btn-save" onclick="saveWeekly()">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ MONTHLY MODAL ══════════════ -->
+<div class="modal-overlay" id="monthlyModal">
+  <div class="modal-box" style="max-width:750px">
+    <div class="modal-header">
+      <h3>🗓️ Monthly Checklist Entry</h3>
+      <button class="modal-close" onclick="closeMonthlyModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid" style="grid-template-columns:1fr 1fr">
+        <div class="form-group"><label>Month / Year *</label><input id="m_monthname" type="text" placeholder="যেমন: May 2026"></div>
+        <div class="form-group"><label>Date</label><input id="m_date" type="date"></div>
+        <div class="form-group"><label>Sig Executive Fire & Safety</label><input id="m_sig1" type="text" placeholder="নাম"></div>
+        <div class="form-group"><label>Sig Admin-AGM</label><input id="m_sig2" type="text" placeholder="নাম"></div>
+        <div class="form-group"><label>Sig of GM</label><input id="m_sig3" type="text" placeholder="নাম"></div>
+      </div>
+      <div style="margin-top:14px;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:#e03030;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Checklist Items</div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:12px" id="monthlyChecklistForm">
+          <thead>
+            <tr style="background:#1f0a0a">
+              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;width:36px">Sl</th>
+              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;text-align:left">Description</th>
+              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;width:90px">Visual Insp.</th>
+              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;width:80px">Checking</th>
+              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;width:70px">Clean</th>
+              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;width:70px">Test</th>
+            </tr>
+          </thead>
+          <tbody id="monthlyFormBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeMonthlyModal()">বাতিল</button>
+      <button class="btn-save" onclick="saveMonthly()">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey:"AIzaSyDS1f3vKcohxGEvYdEBjVdBsm0E9ppmmBQ",
+  authDomain:"fire-safety-tracker-a1826.firebaseapp.com",
+  databaseURL:"https://fire-safety-tracker-a1826-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:"fire-safety-tracker-a1826",
+  storageBucket:"fire-safety-tracker-a1826.firebasestorage.app",
+  messagingSenderId:"561656890483",
+  appId:"1:561656890483:web:82b1cf24a0db230992d686"
+};
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+const DAILY_REF   = ref(db,'logbook/daily');
+const WEEKLY_REF  = ref(db,'logbook/weekly');
+const MONTHLY_REF = ref(db,'logbook/monthly');
+
+const esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const $   = id => document.getElementById(id);
+const fv  = id => ($( id)||{}).value||'';
+
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+/* ──────────── WEEKLY CHECKLIST ITEMS ──────────── */
+const WEEKLY_ITEMS = [
+  {group:'Water Reservoir Tank'},
+  {sl:1, desc:'Water Reservoir Tank Level', scope:'Visual Inspection checking', vi:true, ch:false, cl:false, ts:false},
+  {sl:2, desc:'Reservoir tank Float switch', scope:'Visual Inspection and testing', vi:true, ch:false, cl:'NA', ts:false},
+  {group:'Fuel System'},
+  {sl:3, desc:'Diesel Tank level, Make sure fuel tank is ¾ fuel', scope:'Visual Inspection and testing', vi:true, ch:false, cl:'NA', ts:'NA'},
+  {sl:4, desc:'Solenoid valve operation (Stoper solenoid)', scope:'Visual Inspection and testing', vi:true, ch:false, cl:'NA', ts:'NA'},
+  {sl:5, desc:'Water in the system (Below fuel tank level)', scope:'Checking and cleaning', vi:'NA', ch:true, cl:false, ts:'NA'},
+  {sl:6, desc:'Oil line of Diesel engine flexible hoses and connectors', scope:'Visual Inspection', vi:true, ch:false, cl:'NA', ts:'NA'},
+  {group:'Lubrication system'},
+  {sl:7, desc:'Oil level', scope:'Visual Inspection checking', vi:true, ch:false, cl:'NA', ts:'NA'},
+  {sl:8, desc:'Lube oil heater', scope:'Checking', vi:'NA', ch:true, cl:'NA', ts:'NA'},
+  {group:'Cooling system'},
+  {sl:9, desc:'Cooling water outlet level of diesel engine.', scope:'Visual Inspection checking', vi:true, ch:false, cl:'NA', ts:'NA'},
+  {sl:10, desc:'Adequate cooling water to heat exchanger', scope:'Checking', vi:'NA', ch:true, cl:'NA', ts:'NA'},
+  {sl:11, desc:'Condition of flexible hoses and connections', scope:'Visual Inspection checking', vi:true, ch:false, cl:'NA', ts:'NA'},
+  {group:'Engine Exhaust system'},
+  {sl:12, desc:'Exhaust pipe for leakage', scope:'Visual Inspection checking', vi:true, ch:false, cl:'NA', ts:'NA'},
+  {sl:13, desc:'Drain condensate trap in Exhaust pipe', scope:'Checking', vi:'NA', ch:true, cl:'NA', ts:'NA'},
+  {group:'Battery system'},
+  {sl:14, desc:'Electrolyte level', scope:'Checking', vi:'NA', ch:true, cl:'NA', ts:'NA'},
+  {sl:15, desc:'Cranking voltage is 9 volts or more in 12 volt system or 18 volts or more in 24 volt system', scope:'Checking', vi:'NA', ch:true, cl:'NA', ts:'NA'},
+  {group:'Electrical system'},
+  {sl:16, desc:'General inspection', scope:'Visual Inspection', vi:true, ch:false, cl:'NA', ts:'NA'},
+  {sl:17, desc:'water pump(s)', scope:'Visual Inspection', vi:true, ch:false, cl:'NA', ts:'NA'},
+  {sl:18, desc:'jacket water heater', scope:'Checking', vi:'NA', ch:true, cl:'NA', ts:'NA'},
+  {sl:19, desc:'Pump house, heating ventilating louvers', scope:'Visual Inspection checking', vi:true, ch:false, cl:'NA', ts:'NA'},
+];
+
+const MONTHLY_ITEMS = [
+  {group:'Electrical System'},
+  {sl:1, desc:'Exercise isolating switch and circuit breaker', scope:'Visual Inspection and checking', vi:true, ch:false, cl:'NA', ts:'NA'},
+  {sl:2, desc:'Circuit breakers or fuses', scope:'Visual Inspection', vi:true, ch:false, cl:'NA', ts:'NA'},
+  {group:'Battery System'},
+  {sl:3, desc:'Case exterior clean and dry', scope:'Testing', vi:'NA', ch:'NA', cl:false, ts:true},
+  {sl:4, desc:'Equalize charge', scope:'Checking', vi:'NA', ch:true, cl:'NA', ts:'NA'},
+  {sl:5, desc:'Specific gravity or state of charge', scope:'Visual Inspection', vi:true, ch:false, cl:'NA', ts:'NA'},
+  {sl:6, desc:'Charge and charger rate', scope:'Checking', vi:'NA', ch:true, cl:'NA', ts:'NA'},
+  {group:'Electrical Motor'},
+  {sl:7, desc:'Run Electrical pump for minimum 10 minutes', scope:'Visual Inspection, Clean and testing', vi:true, ch:'NA', cl:false, ts:false},
+];
+
+function buildChecklistFormRows(items, bodyId) {
+  const tbody = $(bodyId); if(!tbody) return;
+  tbody.innerHTML = '';
+  items.forEach(item => {
+    if(item.group) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td colspan="6" style="background:#1a1020;color:#c0a0f0;font-weight:700;font-family:'Rajdhani',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.5px;padding:7px 10px;border:1px solid #252d3a">${item.group}</td>`;
+      tbody.appendChild(tr); return;
+    }
+    const makeCell = (val) => {
+      if(val === 'NA') return `<td style="border:1px solid #252d3a;text-align:center"><span class="na-badge">NA</span></td>`;
+      return `<td style="border:1px solid #252d3a;text-align:center"><select class="check-select" id="chk_${bodyId}_${item.sl}_${val==='vi'?'vi':val==='ch'?'ch':val==='cl'?'cl':'ts'}"><option value="">—</option><option>✔ OK</option><option>✘ N/G</option><option>N/A</option></select></td>`;
+    };
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="border:1px solid #252d3a;text-align:center;color:#9ab;font-weight:600">${item.sl}</td>
+      <td style="border:1px solid #252d3a;padding:7px 10px;color:var(--text)">${esc(item.desc)}</td>
+      ${typeof item.vi==='boolean' ? makeCell('vi') : `<td style="border:1px solid #252d3a;text-align:center"><span class="na-badge">NA</span></td>`}
+      ${typeof item.ch==='boolean' ? makeCell('ch') : `<td style="border:1px solid #252d3a;text-align:center"><span class="na-badge">NA</span></td>`}
+      ${typeof item.cl==='boolean' ? makeCell('cl') : `<td style="border:1px solid #252d3a;text-align:center"><span class="na-badge">NA</span></td>`}
+      ${typeof item.ts==='boolean' ? makeCell('ts') : `<td style="border:1px solid #252d3a;text-align:center"><span class="na-badge">NA</span></td>`}
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function getChecklistValues(items, bodyId) {
+  const result = [];
+  items.forEach(item => {
+    if(item.group) return;
+    const getVal = (col) => {
+      const el = $(`chk_${bodyId}_${item.sl}_${col}`);
+      return el ? el.value : 'NA';
+    };
+    result.push({
+      sl: item.sl, desc: item.desc, scope: item.scope,
+      vi: typeof item.vi==='boolean' ? getVal('vi') : 'NA',
+      ch: typeof item.ch==='boolean' ? getVal('ch') : 'NA',
+      cl: typeof item.cl==='boolean' ? getVal('cl') : 'NA',
+      ts: typeof item.ts==='boolean' ? getVal('ts') : 'NA',
+    });
+  });
+  return result;
+}
+
+/* ──────────── DAILY ──────────── */
+let allDaily = {}, dailyEditKey = null;
+
+onValue(DAILY_REF, snap => { allDaily = snap.val()||{}; renderDaily(); });
+
+function statusBadge(v) {
+  if(!v||v==='—') return '—';
+  if(v==='OK'||v==='Auto'||v==='ON'||v.includes('✔')) return `<span class="ok-badge">${v}</span>`;
+  if(v==='N/G'||v==='OFF'||v.includes('✘')) return `<span class="ng-badge">${v}</span>`;
+  return `<span class="na-badge">${v||'—'}</span>`;
+}
+
+function renderDaily(filter_month='', filter_year='') {
+  const tbody = $('dailyBody'); if(!tbody) return;
+  const keys = Object.keys(allDaily);
+  let rows = keys.map(k => ({key:k, ...allDaily[k]}));
+  if(filter_month) rows = rows.filter(r => {
+    const d = new Date(r.date); return MONTHS[d.getMonth()]===filter_month;
+  });
+  if(filter_year) rows = rows.filter(r => new Date(r.date).getFullYear()==filter_year);
+  rows.sort((a,b) => new Date(a.date)-new Date(b.date));
+  $('daily_count').textContent = rows.length ? `${rows.length} records` : '';
+  if(!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="18" style="text-align:center;padding:28px;color:#6b7892">কোনো entry নেই।</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = '';
+  rows.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${r.date||'—'}</td><td>${r.time||'—'}</td>
+      <td>${statusBadge(r.jockeySt)}</td><td>${statusBadge(r.electricSt)}</td><td>${statusBadge(r.dieselSt)}</td>
+      <td>${r.jockeyPSI||'—'}</td><td>${r.electricPSI||'—'}</td><td>${r.dieselPSI||'—'}</td>
+      <td>${statusBadge(r.leakage)}</td><td>${statusBadge(r.fan)}</td><td>${statusBadge(r.battery)}</td>
+      <td>${statusBadge(r.light)}</td><td>${statusBadge(r.clean)}</td><td>${statusBadge(r.water)}</td>
+      <td style="font-size:11px">${esc(r.doneby)||'—'}</td>
+      <td style="font-size:11px">${esc(r.agm)||'—'}</td>
+      <td style="font-size:11px;max-width:100px">${esc(r.remarks)||'—'}</td>
+      <td class="no-print"><button class="action-btn" onclick="deleteDaily('${r.key}')">🗑️</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+window.filterDaily = () => renderDaily(fv('daily_month'), fv('daily_year'));
+
+window.openDailyModal = () => {
+  dailyEditKey = null;
+  const today = new Date().toISOString().split('T')[0];
+  $('d_date').value = today;
+  $('d_time').value = new Date().toTimeString().slice(0,5);
+  $('dailyModal').style.display='flex';
+};
+window.closeDailyModal = () => { $('dailyModal').style.display='none'; };
+window.deleteDaily = key => { if(confirm('Delete?')) remove(ref(db,'logbook/daily/'+key)); };
+
+window.saveDaily = () => {
+  if(!fv('d_date')) { alert('Date দিন!'); return; }
+  const data = {
+    date:fv('d_date'), time:fv('d_time'),
+    jockeySt:fv('d_jockeySt'), electricSt:fv('d_electricSt'), dieselSt:fv('d_dieselSt'),
+    jockeyPSI:fv('d_jockeyPSI'), electricPSI:fv('d_electricPSI'), dieselPSI:fv('d_dieselPSI'),
+    leakage:fv('d_leakage'), fan:fv('d_fan'), battery:fv('d_battery'),
+    light:fv('d_light'), clean:fv('d_clean'), water:fv('d_water'),
+    doneby:fv('d_doneby'), agm:fv('d_agm'), remarks:fv('d_remarks'),
+    createdAt: new Date().toLocaleString('en-GB'),
+  };
+  push(DAILY_REF, data);
+  closeDailyModal();
+};
+
+/* ──────────── WEEKLY ──────────── */
+let allWeekly = {};
+onValue(WEEKLY_REF, snap => { allWeekly = snap.val()||{}; renderWeekly(); updateWeeklyFilter(); });
+
+function renderWeekly(filterKey='') {
+  const tbody = $('weeklyBody'); if(!tbody) return;
+  let entries = Object.entries(allWeekly);
+  if(filterKey) entries = entries.filter(([k,v]) => k===filterKey || v.weekname===filterKey);
+  if(!entries.length) {
+    tbody.innerHTML = `<tr><td colspan="12" style="text-align:center;padding:28px;color:#6b7892">কোনো entry নেই।</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = '';
+  entries.forEach(([key, entry]) => {
+    // Group header row
+    const headerTr = document.createElement('tr');
+    headerTr.innerHTML = `<td colspan="11" style="background:#1a1030;color:#c0a0f0;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;padding:8px 12px;border:1px solid #252d3a">
+      📅 ${esc(entry.weekname||'—')} &nbsp;|&nbsp; Date: ${entry.date||'—'} &nbsp;|&nbsp; Sig Exec: ${esc(entry.sig1||'—')} &nbsp;|&nbsp; Sig AGM: ${esc(entry.sig2||'—')} &nbsp;|&nbsp; Sig GM: ${esc(entry.sig3||'—')}
+    </td>
+    <td class="no-print" style="border:1px solid #252d3a;text-align:center"><button class="action-btn" onclick="deleteWeekly('${key}')">🗑️</button></td>`;
+    tbody.appendChild(headerTr);
+
+    // Items
+    const items = entry.items || [];
+    WEEKLY_ITEMS.forEach(tmpl => {
+      if(tmpl.group) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td colspan="12" style="background:#1a1020;color:#c0a0f0;font-weight:700;font-family:'Rajdhani',sans-serif;font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;padding:6px 10px;border:1px solid #252d3a">${tmpl.group}</td>`;
+        tbody.appendChild(tr); return;
+      }
+      const item = items.find(i => i.sl===tmpl.sl) || {};
+      const cell = (v, def) => v ? `<td style="border:1px solid #252d3a;text-align:center">${statusBadge(v)}</td>` : `<td style="border:1px solid #252d3a;text-align:center"><span class="na-badge">NA</span></td>`;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="border:1px solid #252d3a;text-align:center;color:#9ab;font-weight:600">${tmpl.sl}</td>
+        <td style="border:1px solid #252d3a;padding:7px 10px">${esc(tmpl.desc)}</td>
+        <td style="border:1px solid #252d3a;padding:7px 10px;font-size:11.5px;color:#9ab">${esc(tmpl.scope)}</td>
+        ${typeof tmpl.vi==='boolean'?cell(item.vi):cell(null)}
+        ${typeof tmpl.ch==='boolean'?cell(item.ch):cell(null)}
+        ${typeof tmpl.cl==='boolean'?cell(item.cl):cell(null)}
+        ${typeof tmpl.ts==='boolean'?cell(item.ts):cell(null)}
+        <td style="border:1px solid #252d3a;text-align:center;font-size:11px"></td>
+        <td style="border:1px solid #252d3a;text-align:center;font-size:11px"></td>
+        <td style="border:1px solid #252d3a;text-align:center;font-size:11px"></td>
+        <td style="border:1px solid #252d3a;text-align:center;font-size:11px">${esc(entry.weekname||'')}</td>
+        <td class="no-print" style="border:1px solid #252d3a"></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  });
+}
+
+function updateWeeklyFilter() {
+  const sel = $('weekly_filter'); if(!sel) return;
+  const current = sel.value;
+  sel.innerHTML = '<option value="">All</option>';
+  Object.values(allWeekly).forEach(e => {
+    const opt = document.createElement('option');
+    opt.value = e.weekname; opt.textContent = e.weekname;
+    sel.appendChild(opt);
+  });
+  sel.value = current;
+}
+
+window.filterWeekly = () => renderWeekly(fv('weekly_filter'));
+
+window.openWeeklyModal = () => {
+  buildChecklistFormRows(WEEKLY_ITEMS, 'weeklyFormBody');
+  $('w_date').value = new Date().toISOString().split('T')[0];
+  $('weeklyModal').style.display='flex';
+};
+window.closeWeeklyModal = () => { $('weeklyModal').style.display='none'; };
+window.deleteWeekly = key => { if(confirm('Delete?')) remove(ref(db,'logbook/weekly/'+key)); };
+
+window.saveWeekly = () => {
+  const weekname = fv('w_weekname').trim();
+  if(!weekname) { alert('Week name দিন!'); return; }
+  const data = {
+    weekname, date:fv('w_date'),
+    sig1:fv('w_sig1'), sig2:fv('w_sig2'), sig3:fv('w_sig3'),
+    items: getChecklistValues(WEEKLY_ITEMS, 'weeklyFormBody'),
+    createdAt: new Date().toLocaleString('en-GB'),
+  };
+  push(WEEKLY_REF, data);
+  closeWeeklyModal();
+};
+
+/* ──────────── MONTHLY ──────────── */
+let allMonthly = {};
+onValue(MONTHLY_REF, snap => { allMonthly = snap.val()||{}; renderMonthly(); updateMonthlyFilter(); });
+
+function renderMonthly(filterKey='') {
+  const tbody = $('monthlyBody'); if(!tbody) return;
+  let entries = Object.entries(allMonthly);
+  if(filterKey) entries = entries.filter(([k,v]) => v.monthname===filterKey);
+  if(!entries.length) {
+    tbody.innerHTML = `<tr><td colspan="12" style="text-align:center;padding:28px;color:#6b7892">কোনো entry নেই।</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = '';
+  entries.forEach(([key, entry]) => {
+    const headerTr = document.createElement('tr');
+    headerTr.innerHTML = `<td colspan="11" style="background:#1a1030;color:#c0a0f0;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;padding:8px 12px;border:1px solid #252d3a">
+      🗓️ ${esc(entry.monthname||'—')} &nbsp;|&nbsp; Date: ${entry.date||'—'} &nbsp;|&nbsp; Sig Exec: ${esc(entry.sig1||'—')} &nbsp;|&nbsp; Sig AGM: ${esc(entry.sig2||'—')} &nbsp;|&nbsp; Sig GM: ${esc(entry.sig3||'—')}
+    </td>
+    <td class="no-print" style="border:1px solid #252d3a;text-align:center"><button class="action-btn" onclick="deleteMonthly('${key}')">🗑️</button></td>`;
+    tbody.appendChild(headerTr);
+
+    const items = entry.items || [];
+    MONTHLY_ITEMS.forEach(tmpl => {
+      if(tmpl.group) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td colspan="12" style="background:#1a1020;color:#c0a0f0;font-weight:700;font-family:'Rajdhani',sans-serif;font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;padding:6px 10px;border:1px solid #252d3a">${tmpl.group}</td>`;
+        tbody.appendChild(tr); return;
+      }
+      const item = items.find(i => i.sl===tmpl.sl) || {};
+      const cell = (v) => v ? `<td style="border:1px solid #252d3a;text-align:center">${statusBadge(v)}</td>` : `<td style="border:1px solid #252d3a;text-align:center"><span class="na-badge">NA</span></td>`;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="border:1px solid #252d3a;text-align:center;color:#9ab;font-weight:600">${tmpl.sl}</td>
+        <td style="border:1px solid #252d3a;padding:7px 10px">${esc(tmpl.desc)}</td>
+        <td style="border:1px solid #252d3a;padding:7px 10px;font-size:11.5px;color:#9ab">${esc(tmpl.scope)}</td>
+        ${typeof tmpl.vi==='boolean'?cell(item.vi):cell(null)}
+        ${typeof tmpl.ch==='boolean'?cell(item.ch):cell(null)}
+        ${typeof tmpl.cl==='boolean'?cell(item.cl):cell(null)}
+        ${typeof tmpl.ts==='boolean'?cell(item.ts):cell(null)}
+        <td style="border:1px solid #252d3a;text-align:center;font-size:11px"></td>
+        <td style="border:1px solid #252d3a;text-align:center;font-size:11px"></td>
+        <td style="border:1px solid #252d3a;text-align:center;font-size:11px"></td>
+        <td style="border:1px solid #252d3a;text-align:center;font-size:11px">${esc(entry.monthname||'')}</td>
+        <td class="no-print" style="border:1px solid #252d3a"></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  });
+}
+
+function updateMonthlyFilter() {
+  const sel = $('monthly_filter'); if(!sel) return;
+  const current = sel.value;
+  sel.innerHTML = '<option value="">All</option>';
+  Object.values(allMonthly).forEach(e => {
+    const opt = document.createElement('option');
+    opt.value = e.monthname; opt.textContent = e.monthname;
+    sel.appendChild(opt);
+  });
+  sel.value = current;
+}
+
+window.filterMonthly = () => renderMonthly(fv('monthly_filter'));
+
+window.openMonthlyModal = () => {
+  buildChecklistFormRows(MONTHLY_ITEMS, 'monthlyFormBody');
+  $('m_date').value = new Date().toISOString().split('T')[0];
+  $('monthlyModal').style.display='flex';
+};
+window.closeMonthlyModal = () => { $('monthlyModal').style.display='none'; };
+window.deleteMonthly = key => { if(confirm('Delete?')) remove(ref(db,'logbook/monthly/'+key)); };
+
+window.saveMonthly = () => {
+  const monthname = fv('m_monthname').trim();
+  if(!monthname) { alert('Month/Year দিন!'); return; }
+  const data = {
+    monthname, date:fv('m_date'),
+    sig1:fv('m_sig1'), sig2:fv('m_sig2'), sig3:fv('m_sig3'),
+    items: getChecklistValues(MONTHLY_ITEMS, 'monthlyFormBody'),
+    createdAt: new Date().toLocaleString('en-GB'),
+  };
+  push(MONTHLY_REF, data);
+  closeMonthlyModal();
+};
+
+/* ──────────── TAB & PRINT ──────────── */
+window.switchTab = (tab, btn) => {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  $('tab-'+tab).classList.add('active');
+  btn.classList.add('active');
+};
+
+window.printTab = (tab) => {
+  document.querySelectorAll('.tab-content').forEach(t => t.style.display='none');
+  $('tab-'+tab).style.display='block';
+  window.print();
+  document.querySelectorAll('.tab-content').forEach(t => t.style.display='');
+  $('tab-'+tab).classList.add('active');
+};
+</script>
+</body>
+</html>
