@@ -24,6 +24,7 @@
   const db  = getDatabase(app);
   const TASKS_REF    = ref(db, 'tasks');
   const REQUESTS_REF = ref(db, 'requests');
+  const PTW_REF      = ref(db, 'ptw');
 
   const ADMIN_PASSWORD = "safety@123";
   const DESIGNATIONS   = ['CTO','GM','AGM','Senior Manager','Manager','Senior Executive','Executive','Junior Executive'];
@@ -44,7 +45,9 @@
   let isAdmin    = false;
   let allTasks   = {};
   let allRequests= {};
+  let allPTW     = {};
   let editingKey = null;
+  let editingPTWKey = null;
 
   const esc = s => (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const $   = id => document.getElementById(id);
@@ -174,6 +177,103 @@
   window.approveReq = key => update(ref(db,'requests/'+key), {status:'approved'});
   window.rejectReq  = key => update(ref(db,'requests/'+key), {status:'rejected'});
   window.deleteReq  = key => { if(confirm('এই আবেদন delete করবেন?')) remove(ref(db,'requests/'+key)); };
+
+  /* ── PTW Firebase listener ── */
+  onValue(PTW_REF, snap => { allPTW = snap.val() || {}; renderPTW(); updatePTWSummary(); });
+
+  function updatePTWSummary() {
+    const vals = Object.values(allPTW);
+    const total = vals.length;
+    const open = vals.filter(r => r.status === 'Open').length;
+    const closed = vals.filter(r => r.status === 'Closed').length;
+    const el = id => document.getElementById(id);
+    if(el('ptw_total'))   el('ptw_total').textContent   = total;
+    if(el('ptw_approvedUpto')) el('ptw_approvedUpto').textContent = total;
+    if(el('ptw_open'))    el('ptw_open').textContent    = open;
+    if(el('ptw_closed'))  el('ptw_closed').textContent  = closed;
+  }
+
+  function renderPTW() {
+    const tbody = document.getElementById('ptwTableBody');
+    if (!tbody) return;
+    const keys = Object.keys(allPTW);
+    if (keys.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:32px;color:#6b7892">কোনো PTW নেই। ${isAdmin?'উপরে Add PTW বাটনে ক্লিক করুন।':''}</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = '';
+    keys.forEach((key, i) => {
+      const r = allPTW[key];
+      const isOpen = r.status === 'Open';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="text-align:center;font-weight:600;color:#9ab">${i+1}</td>
+        <td style="white-space:nowrap">${r.date||'—'}</td>
+        <td style="white-space:nowrap">${r.requiredFrom||'—'}</td>
+        <td style="white-space:nowrap">${r.requiredUpto||'—'}</td>
+        <td><span class="ptw-type-badge">${esc(r.permitType)||'—'}</span></td>
+        <td>${esc(r.location)||'—'}</td>
+        <td>${esc(r.requestedBy)||'—'}</td>
+        <td>${esc(r.approvedBy)||'—'}</td>
+        <td><span class="ptw-status ${isOpen?'ptw-open':'ptw-closed'}">${isOpen?'Open':'Closed'}</span></td>
+        <td style="white-space:nowrap">
+          ${isAdmin ? `
+            <button class="action-btn edit-btn" onclick="openEditPTW('${key}')">✏️</button>
+            <button class="action-btn del-btn"  onclick="deletePTW('${key}')">🗑️</button>
+          ` : '—'}
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  window.openPTWModal = function() { document.getElementById('ptwModal').style.display='flex'; };
+  window.closePTWModal = function() {
+    document.getElementById('ptwModal').style.display='none';
+    editingPTWKey = null;
+    ['ptw_date','ptw_reqFrom','ptw_reqUpto','ptw_location','ptw_requestedBy','ptw_approvedBy']
+      .forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+    document.getElementById('ptw_permitType').value = 'Hot Work Permit';
+    document.getElementById('ptw_status').value = 'Open';
+  };
+
+  window.openEditPTW = function(key) {
+    editingPTWKey = key;
+    const r = allPTW[key];
+    document.getElementById('ptw_date').value        = r.date        || '';
+    document.getElementById('ptw_reqFrom').value     = r.requiredFrom|| '';
+    document.getElementById('ptw_reqUpto').value     = r.requiredUpto|| '';
+    document.getElementById('ptw_permitType').value  = r.permitType  || 'Hot Work Permit';
+    document.getElementById('ptw_location').value    = r.location    || '';
+    document.getElementById('ptw_requestedBy').value = r.requestedBy || '';
+    document.getElementById('ptw_approvedBy').value  = r.approvedBy  || '';
+    document.getElementById('ptw_status').value      = r.status      || 'Open';
+    document.getElementById('ptwModal').style.display='flex';
+  };
+
+  window.savePTW = function() {
+    const date = document.getElementById('ptw_date').value;
+    if (!date) { alert('⚠️ Date আবশ্যক!'); return; }
+    const data = {
+      date, requiredFrom: document.getElementById('ptw_reqFrom').value,
+      requiredUpto: document.getElementById('ptw_reqUpto').value,
+      permitType: document.getElementById('ptw_permitType').value,
+      location: document.getElementById('ptw_location').value,
+      requestedBy: document.getElementById('ptw_requestedBy').value,
+      approvedBy: document.getElementById('ptw_approvedBy').value,
+      status: document.getElementById('ptw_status').value,
+    };
+    if (editingPTWKey) { update(ref(db,'ptw/'+editingPTWKey), data); }
+    else { data.createdAt = new Date().toLocaleString('en-GB'); push(PTW_REF, data); }
+    closePTWModal();
+  };
+
+  window.deletePTW = key => { if(confirm('এই PTW delete করবেন?')) remove(ref(db,'ptw/'+key)); };
+
+  window.togglePTWPanel = function() {
+    const p = document.getElementById('ptwPanel');
+    p.style.display = p.style.display === 'none' ? 'block' : 'none';
+  };
 
   /* ── Task Modal ── */
   window.openAdd = function() {
@@ -400,6 +500,29 @@ label.blue-label{color:#90c8f8}
 .note-box{background:#0d1a2e;border:1.5px solid #1a3a6e;border-radius:9px;padding:12px 16px;grid-column:1/-1;font-size:12px;color:#6ab8f7;line-height:1.7}
 .note-box strong{color:#90c8f8}
 
+/* PTW Panel */
+.ptw-panel{background:var(--card);border-top:2px solid #0e6655;margin-top:2px;display:none}
+.ptw-panel-header{padding:14px 20px;border-bottom:1px solid var(--border)}
+.ptw-summary{display:flex;gap:0;flex-wrap:wrap;margin-top:10px;border:1.5px solid #1a3a2a;border-radius:10px;overflow:hidden}
+.ptw-sum-cell{flex:1;min-width:100px;padding:10px 16px;text-align:center;border-right:1px solid #1a3a2a}
+.ptw-sum-cell:last-child{border-right:none}
+.ptw-sum-label{font-size:11px;color:#6b7892;text-transform:uppercase;letter-spacing:.8px;font-family:'Rajdhani',sans-serif;font-weight:600}
+.ptw-sum-val{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;margin-top:2px}
+.ptw-sum-val.total{color:#e8eaf0}
+.ptw-sum-val.open{color:#f0a500}
+.ptw-sum-val.closed{color:#28a745}
+.ptw-type-badge{background:#1a1a2e;border:1.5px solid #2a2a5e;border-radius:6px;padding:3px 9px;font-size:11.5px;font-weight:600;color:#90c8f8;white-space:nowrap}
+.ptw-status{display:inline-block;padding:3px 12px;border-radius:20px;font-size:11.5px;font-weight:700;letter-spacing:.3px}
+.ptw-open{background:#2e1a00;color:#f0a500;border:1.5px solid #6b4900}
+.ptw-closed{background:#0a2015;color:#55e09a;border:1.5px solid #1a5c33}
+.ptw-table{min-width:900px}
+.ptw-table thead tr{background:linear-gradient(90deg,#0a2010,#0e3a1e)}
+.ptw-table thead th{color:#a0f0c0}
+.btn-ptw{background:linear-gradient(135deg,#0e6655,#16a085);color:#fff;font-size:13px;box-shadow:0 2px 12px rgba(22,160,133,.3)}
+.btn-ptw:hover{background:linear-gradient(135deg,#12856b,#1abc9c);transform:translateY(-1px)}
+.ptw-modal-box{border-color:#1a5c33}
+.ptw-modal-header{background:linear-gradient(135deg,#0e6655,#16a085)}
+
 @media(max-width:600px){
   .form-grid{grid-template-columns:1fr}
   .form-group.full{grid-column:1}
@@ -407,6 +530,7 @@ label.blue-label{color:#90c8f8}
   .search-box{width:140px}
   .footer{gap:10px}
   .footer-divider{display:none}
+  .ptw-summary{flex-direction:column}
 }
 </style>
 </head>
@@ -427,6 +551,7 @@ label.blue-label{color:#90c8f8}
     <button class="btn btn-add" id="addTaskBtn" onclick="openAdd()">＋ Add Task</button>
     <button class="btn btn-admin" id="adminBtn" style="background:#7b1416" onclick="toggleAdmin()">🔐 Admin Login</button>
     <button class="btn btn-joborder" onclick="openJobOrder()">📋 New Job Order</button>
+    <button class="btn btn-ptw" onclick="togglePTWPanel()">🛡️ PTW</button>
     <button class="btn btn-requests" id="reqBtn" onclick="toggleReqPanel()" style="display:none">
       📥 Requests
       <span class="req-badge" id="reqBadge"></span>
@@ -472,6 +597,58 @@ label.blue-label{color:#90c8f8}
           </tr>
         </thead>
         <tbody id="reqTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PTW Panel -->
+  <div class="ptw-panel" id="ptwPanel">
+    <div class="ptw-panel-header">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+        <div>
+          <div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:#1abc9c;letter-spacing:1px;text-transform:uppercase">🛡️ Permit to Work (PTW) Tracker</div>
+        </div>
+        <button class="btn btn-ptw" id="addPTWBtn" onclick="openPTWModal()" style="display:none;font-size:13px">＋ Add PTW</button>
+      </div>
+      <!-- Summary Row -->
+      <div class="ptw-summary" style="margin-top:12px">
+        <div class="ptw-sum-cell" style="background:#0d2a1a">
+          <div class="ptw-sum-label">Total Permit</div>
+          <div class="ptw-sum-val total" id="ptw_total">0</div>
+        </div>
+        <div class="ptw-sum-cell" style="background:#0d2a1a">
+          <div class="ptw-sum-label">Approved Upto</div>
+          <div class="ptw-sum-val total" id="ptw_approvedUpto">0</div>
+        </div>
+        <div class="ptw-sum-cell" style="background:#2e1a00">
+          <div class="ptw-sum-label">Open</div>
+          <div class="ptw-sum-val open" id="ptw_open">0</div>
+        </div>
+        <div class="ptw-sum-cell" style="background:#0a2015">
+          <div class="ptw-sum-label">Closed</div>
+          <div class="ptw-sum-val closed" id="ptw_closed">0</div>
+        </div>
+      </div>
+    </div>
+    <div class="table-scroll" style="padding:0 0 8px">
+      <table class="ptw-table">
+        <thead>
+          <tr>
+            <th style="width:42px;text-align:center">Sr. No.</th>
+            <th>Date</th>
+            <th>Required From</th>
+            <th>Required Upto</th>
+            <th>Type of Permit</th>
+            <th>Location</th>
+            <th>Requested By</th>
+            <th>Approved By</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="ptwTableBody">
+          <tr><td colspan="10" style="text-align:center;padding:32px;color:#6b7892">Loading…</td></tr>
+        </tbody>
       </table>
     </div>
   </div>
@@ -574,16 +751,78 @@ label.blue-label{color:#90c8f8}
   </div>
 </div>
 
+<!-- ── PTW Modal ── -->
+<div class="modal-overlay" id="ptwModal">
+  <div class="modal-box ptw-modal-box" style="max-width:600px">
+    <div class="modal-header ptw-modal-header">
+      <h3>🛡️ Permit to Work (PTW)</h3>
+      <button class="modal-close" onclick="closePTWModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label style="color:#a0f0c0">Date *</label>
+          <input id="ptw_date" type="date" style="color-scheme:dark">
+        </div>
+        <div class="form-group">
+          <label style="color:#a0f0c0">Type of Permit</label>
+          <select id="ptw_permitType">
+            <option>Hot Work Permit</option>
+            <option>Hot Work</option>
+            <option>Excavation</option>
+            <option>Confined Space</option>
+            <option>Lifting Clearance Permit</option>
+            <option>Cold Work Permit</option>
+            <option>Electrical Work Permit</option>
+            <option>Working at Height</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label style="color:#a0f0c0">Required From (Time)</label>
+          <input id="ptw_reqFrom" type="time" value="08:00" style="color-scheme:dark">
+        </div>
+        <div class="form-group">
+          <label style="color:#a0f0c0">Required Upto (Time)</label>
+          <input id="ptw_reqUpto" type="time" value="17:00" style="color-scheme:dark">
+        </div>
+        <div class="form-group full">
+          <label style="color:#a0f0c0">Location</label>
+          <input id="ptw_location" type="text" placeholder="যেমন: Main Gate 1, Workshop, Jetty…">
+        </div>
+        <div class="form-group">
+          <label style="color:#a0f0c0">Requested By</label>
+          <input id="ptw_requestedBy" type="text" placeholder="নাম লিখুন">
+        </div>
+        <div class="form-group">
+          <label style="color:#a0f0c0">Approved By</label>
+          <input id="ptw_approvedBy" type="text" placeholder="নাম লিখুন">
+        </div>
+        <div class="form-group full">
+          <label style="color:#a0f0c0">Status</label>
+          <select id="ptw_status">
+            <option value="Open">Open</option>
+            <option value="Closed">Closed</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closePTWModal()">বাতিল</button>
+      <button class="btn-save" style="background:linear-gradient(135deg,#0e6655,#16a085)" onclick="savePTW()">💾 Save করুন</button>
+    </div>
+  </div>
+</div>
+
 <script>
-  // Show requests button only for admin - handled via updateAdminUI
   document.addEventListener('DOMContentLoaded', () => {
     const reqBtn = document.getElementById('reqBtn');
-    // Watch admin state
+    const addPTWBtn = document.getElementById('addPTWBtn');
     const observer = new MutationObserver(() => {
       const isAdminMode = document.getElementById('adminBtn').textContent.includes('Logout');
       if (reqBtn) reqBtn.style.display = isAdminMode ? 'flex' : 'none';
+      if (addPTWBtn) addPTWBtn.style.display = isAdminMode ? 'flex' : 'none';
     });
-    observer.observe(document.getElementById('adminBtn'), {childList: true, characterData: true, subtree: true});
+    observer.observe(document.getElementById('adminBtn'), {childList:true,characterData:true,subtree:true});
   });
 </script>
 </body>
