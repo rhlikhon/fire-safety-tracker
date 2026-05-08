@@ -22,7 +22,8 @@
 
   const app = initializeApp(firebaseConfig);
   const db  = getDatabase(app);
-  const TASKS_REF = ref(db, 'tasks');
+  const TASKS_REF    = ref(db, 'tasks');
+  const REQUESTS_REF = ref(db, 'requests');
 
   const ADMIN_PASSWORD = "safety@123";
   const DESIGNATIONS   = ['CTO','GM','AGM','Senior Manager','Manager','Senior Executive','Executive','Junior Executive'];
@@ -34,9 +35,15 @@
     {label:'On Hold',      cls:'s-onhold'},
     {label:'Cancelled',    cls:'s-cancelled'},
   ];
+  const REQ_STATUSES = {
+    pending:  {label:'Pending',  cls:'s-pending'},
+    approved: {label:'Approved', cls:'s-completed'},
+    rejected: {label:'Rejected', cls:'s-cancelled'},
+  };
 
   let isAdmin    = false;
   let allTasks   = {};
+  let allRequests= {};
   let editingKey = null;
 
   const esc = s => (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -45,10 +52,10 @@
 
   /* ── Admin ── */
   window.toggleAdmin = function() {
-    if (isAdmin) { isAdmin = false; renderAll(); updateAdminUI(); return; }
+    if (isAdmin) { isAdmin = false; renderAll(); renderRequests(); updateAdminUI(); return; }
     const pw = prompt('🔐 Admin Password লিখুন:');
     if (pw === ADMIN_PASSWORD) {
-      isAdmin = true; renderAll(); updateAdminUI();
+      isAdmin = true; renderAll(); renderRequests(); updateAdminUI();
       alert('✅ Admin mode চালু হয়েছে!');
     } else if (pw !== null) {
       alert('❌ ভুল password!');
@@ -61,40 +68,43 @@
     btn.textContent = isAdmin ? '🔓 Admin (Logout)' : '🔐 Admin Login';
     btn.style.background = isAdmin ? '#1a5c33' : '#7b1416';
     $('addTaskBtn').style.display = isAdmin ? 'flex' : 'none';
+    // show/hide requests panel
+    const rPanel = $('requestsPanel');
+    if (rPanel) rPanel.style.display = isAdmin ? 'block' : 'none';
   }
 
-  /* ── Firebase listener ── */
-  onValue(TASKS_REF, snap => {
-    allTasks = snap.val() || {};
-    renderAll();
+  /* ── Firebase listeners ── */
+  onValue(TASKS_REF, snap => { allTasks = snap.val() || {}; renderAll(); });
+  onValue(REQUESTS_REF, snap => {
+    allRequests = snap.val() || {};
+    renderRequests();
+    // update badge
+    const pending = Object.values(allRequests).filter(r => r.status === 'pending').length;
+    const badge = $('reqBadge');
+    if (badge) { badge.textContent = pending > 0 ? pending : ''; badge.style.display = pending > 0 ? 'flex' : 'none'; }
   });
 
-  /* ── Render ── */
+  /* ── Render Tasks ── */
   function renderAll() {
     const tbody = $('tableBody');
     if (!tbody) return;
     const keys = Object.keys(allTasks);
     $('totalCount').textContent = keys.length;
-
     if (keys.length === 0) {
       tbody.innerHTML = `<tr><td colspan="16" style="text-align:center;padding:48px;color:#6b7892;font-size:14px;">
         কোনো task নেই।${isAdmin ? '<br><br>উপরে <strong style="color:#e03030">+ Add Task</strong> বাটনে ক্লিক করুন।' : '<br><br>Admin task যোগ করলে এখানে দেখাবে।'}
       </td></tr>`;
       return;
     }
-
     tbody.innerHTML = '';
     keys.forEach((key, i) => {
       const r   = allTasks[key];
       const st  = STATUSES[r.status] || STATUSES[0];
       const pct = Math.min(100, Math.max(0, parseInt(r.progress)||0));
-
-      // Document link cell
       let docCell = '<span style="color:#3a4560;font-size:12px">—</span>';
       if (r.docLink && r.docLink.trim()) {
         docCell = `<a href="${esc(r.docLink)}" target="_blank" class="doc-link-btn">📄 দেখুন</a>`;
       }
-
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${i+1}</td>
@@ -128,16 +138,53 @@
     });
   }
 
-  /* ── Modal ── */
+  /* ── Render Requests (Admin only) ── */
+  function renderRequests() {
+    const tbody = $('reqTableBody');
+    if (!tbody) return;
+    const keys = Object.keys(allRequests);
+    if (keys.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:24px;color:#6b7892;font-size:13px;">কোনো আবেদন নেই।</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = '';
+    keys.forEach((key, i) => {
+      const r  = allRequests[key];
+      const st = REQ_STATUSES[r.status] || REQ_STATUSES.pending;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${i+1}</td>
+        <td><strong style="color:#eee">${esc(r.jobTitle)}</strong></td>
+        <td style="font-size:12px;color:#9ab;max-width:160px;white-space:normal">${esc(r.desc)||'—'}</td>
+        <td>${esc(r.requesterName)||'—'}</td>
+        <td style="font-size:12px;color:#aab">${esc(r.requesterContact)||'—'}</td>
+        <td style="font-size:11px;color:#6b7892;white-space:nowrap">${r.submittedAt||''}</td>
+        <td><span class="status-badge ${st.cls}">${st.label}</span></td>
+        <td style="white-space:nowrap">
+          ${r.status === 'pending' ? `
+            <button class="action-btn" onclick="approveReq('${key}')" title="Approve" style="color:#55e09a;font-size:18px">✔️</button>
+            <button class="action-btn" onclick="rejectReq('${key}')"  title="Reject"  style="color:#ff8080;font-size:18px">✖️</button>
+          ` : `<button class="action-btn del-btn" onclick="deleteReq('${key}')">🗑️</button>`}
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  window.approveReq = key => update(ref(db,'requests/'+key), {status:'approved'});
+  window.rejectReq  = key => update(ref(db,'requests/'+key), {status:'rejected'});
+  window.deleteReq  = key => { if(confirm('এই আবেদন delete করবেন?')) remove(ref(db,'requests/'+key)); };
+
+  /* ── Task Modal ── */
   window.openAdd = function() {
     editingKey = null;
     $('modalTitle').textContent = '➕ নতুন Task যোগ করুন';
     ['f_jobTitle','f_desc','f_assignedBy','f_assignedTo','f_contact',
-     'f_startDate','f_endDate','f_remark','f_docLink'].forEach(id => { if($(id)) $(id).value = ''; });
-    $('f_desig1').value = 4; $('f_desig2').value = 6;
-    $('f_progress').value = 0; $('f_status').value = 0;
-    $('docLinkPreview').style.display = 'none';
-    $('modal').style.display = 'flex';
+     'f_startDate','f_endDate','f_remark','f_docLink'].forEach(id => { if($(id)) $(id).value=''; });
+    $('f_desig1').value=4; $('f_desig2').value=6;
+    $('f_progress').value=0; $('f_status').value=0;
+    $('docLinkPreview').style.display='none';
+    $('modal').style.display='flex';
   };
 
   window.openEdit = function(key) {
@@ -157,52 +204,72 @@
     $('f_status').value     = r.status     ?? 0;
     $('f_remark').value     = r.remark     || '';
     $('f_docLink').value    = r.docLink    || '';
-    updateDocPreview(r.docLink || '');
-    $('modal').style.display = 'flex';
+    updateDocPreview(r.docLink||'');
+    $('modal').style.display='flex';
   };
 
-  window.closeModal = function() { $('modal').style.display = 'none'; editingKey = null; };
+  window.closeModal = function() { $('modal').style.display='none'; editingKey=null; };
 
   window.updateDocPreview = function(val) {
-    const preview = $('docLinkPreview');
-    if (val && val.trim().startsWith('http')) {
-      preview.style.display = 'flex';
-      preview.href = val.trim();
-    } else {
-      preview.style.display = 'none';
-    }
+    const p = $('docLinkPreview');
+    if (val && val.trim().startsWith('http')) { p.style.display='flex'; p.href=val.trim(); }
+    else p.style.display='none';
   };
 
   window.saveTask = function() {
     const jobTitle = fv('f_jobTitle').trim();
     if (!jobTitle) { alert('⚠️ Job Title আবশ্যক!'); return; }
     const docLink = fv('f_docLink').trim();
-    if (docLink && !docLink.startsWith('http')) {
-      alert('⚠️ Document Link সঠিক নয়!\nhttp:// বা https:// দিয়ে শুরু হওয়া link দিন।');
-      return;
-    }
+    if (docLink && !docLink.startsWith('http')) { alert('⚠️ সঠিক link দিন (https:// দিয়ে শুরু)'); return; }
     const task = {
-      jobTitle, desc: fv('f_desc'), assignedBy: fv('f_assignedBy'),
-      desig1: parseInt(fv('f_desig1'))||4, assignedTo: fv('f_assignedTo'),
-      desig2: parseInt(fv('f_desig2'))||6, contact: fv('f_contact'),
-      startDate: fv('f_startDate'), endDate: fv('f_endDate'),
-      progress: parseInt(fv('f_progress'))||0, status: parseInt(fv('f_status'))||0,
-      remark: fv('f_remark'), docLink,
+      jobTitle, desc:fv('f_desc'), assignedBy:fv('f_assignedBy'),
+      desig1:parseInt(fv('f_desig1'))||4, assignedTo:fv('f_assignedTo'),
+      desig2:parseInt(fv('f_desig2'))||6, contact:fv('f_contact'),
+      startDate:fv('f_startDate'), endDate:fv('f_endDate'),
+      progress:parseInt(fv('f_progress'))||0, status:parseInt(fv('f_status'))||0,
+      remark:fv('f_remark'), docLink,
     };
-    if (editingKey) {
-      update(ref(db, 'tasks/' + editingKey), task);
-    } else {
-      task.createdAt = new Date().toLocaleString('en-GB');
-      push(TASKS_REF, task);
-    }
+    if (editingKey) { update(ref(db,'tasks/'+editingKey), task); }
+    else { task.createdAt = new Date().toLocaleString('en-GB'); push(TASKS_REF, task); }
     closeModal();
   };
 
-  window.deleteTask = function(key) {
-    if (confirm('⚠️ এই task টা permanently delete করবেন?')) remove(ref(db, 'tasks/' + key));
+  window.deleteTask = key => { if(confirm('⚠️ এই task permanently delete করবেন?')) remove(ref(db,'tasks/'+key)); };
+
+  /* ── Job Order Request Modal ── */
+  window.openJobOrder = function() { $('jobOrderModal').style.display='flex'; };
+  window.closeJobOrder = function() {
+    $('jobOrderModal').style.display='none';
+    ['jo_jobTitle','jo_desc','jo_requesterName','jo_requesterContact'].forEach(id=>{ if($(id)) $(id).value=''; });
+    $('jo_success').style.display='none';
   };
 
-  window.filterTable = function(q) {
+  window.submitJobOrder = function() {
+    const jobTitle = fv('jo_jobTitle').trim();
+    const name     = fv('jo_requesterName').trim();
+    if (!jobTitle) { alert('⚠️ কাজের নাম আবশ্যক!'); return; }
+    if (!name)     { alert('⚠️ আপনার নাম দিন!'); return; }
+    const req = {
+      jobTitle,
+      desc:              fv('jo_desc'),
+      requesterName:     name,
+      requesterContact:  fv('jo_requesterContact'),
+      status:            'pending',
+      submittedAt:       new Date().toLocaleString('en-GB'),
+    };
+    push(REQUESTS_REF, req);
+    ['jo_jobTitle','jo_desc','jo_requesterName','jo_requesterContact'].forEach(id=>{ if($(id)) $(id).value=''; });
+    $('jo_success').style.display='flex';
+  };
+
+  /* ── Requests Panel toggle ── */
+  window.toggleReqPanel = function() {
+    const p = $('requestsPanel');
+    p.style.display = p.style.display === 'none' ? 'block' : 'none';
+  };
+
+  /* ── Search ── */
+  window.filterTable = q => {
     document.querySelectorAll('#tableBody tr').forEach(tr => {
       tr.style.display = tr.innerText.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
     });
@@ -220,20 +287,31 @@
 body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padding:24px 12px;color:var(--text)}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
 .wrapper{max-width:1800px;margin:0 auto;position:relative;z-index:1}
+
+/* Header */
 .header-card{background:linear-gradient(135deg,#7b1416,#c0321a,#b52626);border-radius:var(--radius) var(--radius) 0 0;padding:22px 28px 18px;color:#fff;position:relative;overflow:hidden}
 .header-card::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06)}
 .header-title{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;display:flex;align-items:center;gap:12px;position:relative;z-index:1}
 .header-meta{font-size:12px;opacity:.8;margin-top:8px;display:flex;gap:20px;flex-wrap:wrap;position:relative;z-index:1}
+
+/* Toolbar */
 .toolbar{background:var(--card);padding:11px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);flex-wrap:wrap}
 .btn{border:none;padding:9px 18px;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:.8px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s}
 .btn-add{background:var(--accent);color:#fff;box-shadow:0 2px 12px rgba(224,48,48,.3);display:none}
 .btn-add:hover{background:#c82020;transform:translateY(-1px)}
 .btn-admin{color:#fff;font-size:13px}
+.btn-joborder{background:linear-gradient(135deg,#0d3a6e,#1565c0);color:#fff;font-size:13px;box-shadow:0 2px 12px rgba(21,101,192,.3)}
+.btn-joborder:hover{background:linear-gradient(135deg,#1a4a80,#1976d2);transform:translateY(-1px)}
+.btn-requests{background:#1a2a1a;color:#55e09a;border:1.5px solid #1a5c33;font-size:13px;position:relative}
+.btn-requests:hover{background:#1e3a1e}
+.req-badge{position:absolute;top:-6px;right:-6px;background:#e03030;color:#fff;border-radius:50%;width:18px;height:18px;font-size:11px;font-weight:700;align-items:center;justify-content:center;display:none;font-family:'Rajdhani',sans-serif}
 .toolbar-sep{flex:1}
 .search-box{border:1.5px solid var(--border);border-radius:8px;padding:8px 13px;font-family:'DM Sans',sans-serif;font-size:13px;width:210px;outline:none;background:#1a2030;color:var(--text);transition:border-color .2s}
 .search-box:focus{border-color:var(--accent)}
 .search-box::placeholder{color:var(--muted)}
-.table-wrap{background:var(--card);border-radius:0 0 var(--radius) var(--radius);box-shadow:0 8px 32px rgba(0,0,0,.45);overflow:hidden}
+
+/* Table */
+.table-wrap{background:var(--card);overflow:hidden}
 .table-scroll{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:13px;min-width:1400px}
 thead tr{background:linear-gradient(90deg,#1f0a0a,#3a1010)}
@@ -256,18 +334,35 @@ td:first-child{text-align:center;color:var(--muted);font-weight:600;font-size:12
 .prog-wrap{display:flex;align-items:center;gap:8px}
 .prog-bar-bg{flex:1;height:5px;background:#1e2535;border-radius:10px;min-width:55px}
 .prog-bar-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,#e03030,#ff7a5a);transition:width .3s}
-
-/* Document link button */
 .doc-link-btn{display:inline-flex;align-items:center;gap:5px;background:#0d2a40;border:1.5px solid #1a5080;border-radius:7px;padding:4px 11px;font-size:12px;font-weight:600;color:#6ab8f7;text-decoration:none;white-space:nowrap;transition:all .2s}
-.doc-link-btn:hover{background:#143a55;border-color:#2196f3;color:#90d0ff;transform:scale(1.04)}
-
+.doc-link-btn:hover{background:#143a55;color:#90d0ff;transform:scale(1.04)}
 .action-btn{border:none;background:none;cursor:pointer;font-size:16px;padding:3px 5px;border-radius:5px;transition:background .15s}
 .edit-btn:hover{background:#1a2a1a}.del-btn:hover{background:#2a1010}
 
-/* Modal */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:1000;align-items:center;justify-content:center;padding:16px}
+/* Requests Panel */
+.requests-panel{background:var(--card);border-top:2px solid #1a5c33;margin-top:2px;border-radius:0 0 var(--radius) var(--radius);display:none}
+.requests-panel-header{padding:14px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.requests-panel-header h3{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:#55e09a;letter-spacing:1px;text-transform:uppercase}
+.req-table{min-width:900px}
+.req-table thead tr{background:linear-gradient(90deg,#0a2015,#1a3a25)}
+.req-table thead th{color:#a0f0c0}
+
+/* Footer */
+.footer{background:linear-gradient(135deg,#1a0a0a,#2a1010);border-top:2px solid #3a1a1a;padding:18px 28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;border-radius:0 0 var(--radius) var(--radius)}
+.footer-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#e03030,#ff7a5a);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 2px 12px rgba(224,48,48,.4)}
+.footer-info{flex:1}
+.footer-name{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:.5px}
+.footer-desig{font-size:12px;color:#f0a0a0;margin-top:2px}
+.footer-company{font-size:11.5px;color:#6b7892;margin-top:3px}
+.footer-divider{width:1px;height:36px;background:#3a1a1a;flex-shrink:0}
+.footer-badge{background:#2a0808;border:1.5px solid #6b1a1a;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:#ff8080;font-family:'Rajdhani',sans-serif;letter-spacing:.5px;white-space:nowrap}
+
+/* Modals */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:1000;align-items:center;justify-content:center;padding:16px}
 .modal-box{background:#181e27;border:1.5px solid #3a1a1a;border-radius:14px;width:100%;max-width:580px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+.modal-box.blue-modal{border-color:#1a3a6e}
 .modal-header{background:linear-gradient(135deg,#7b1416,#b52626);padding:18px 22px;border-radius:12px 12px 0 0;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1}
+.modal-header.blue{background:linear-gradient(135deg,#0d3a6e,#1565c0)}
 .modal-header h3{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:#fff;letter-spacing:1px}
 .modal-close{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;opacity:.8;line-height:1}
 .modal-close:hover{opacity:1}
@@ -276,32 +371,49 @@ td:first-child{text-align:center;color:var(--muted);font-weight:600;font-size:12
 .form-group{display:flex;flex-direction:column;gap:5px}
 .form-group.full{grid-column:1/-1}
 label{font-size:11.5px;font-weight:600;color:#f5b8b8;text-transform:uppercase;letter-spacing:.8px;font-family:'Rajdhani',sans-serif}
+label.blue-label{color:#90c8f8}
 .form-group input,.form-group select,.form-group textarea{background:#1a2030;border:1.5px solid var(--border);border-radius:7px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color .2s}
 .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent)}
+.form-group input.blue-focus:focus{border-color:#1976d2}
 .form-group select option{background:#1a2030}
 .form-group input[type="date"]{color-scheme:dark}
-.form-group textarea{resize:vertical;min-height:60px}
-
-/* Doc link section in modal */
+.form-group textarea{resize:vertical;min-height:70px}
 .doc-section{background:#0a1520;border:1.5px solid #1a3a55;border-radius:10px;padding:14px;grid-column:1/-1}
 .doc-section-title{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:#6ab8f7;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;display:flex;align-items:center;gap:7px}
 .doc-help{font-size:11.5px;color:#5a7a99;margin-top:8px;line-height:1.6}
 .doc-help strong{color:#6ab8f7}
 .doc-preview-btn{display:none;align-items:center;gap:6px;margin-top:10px;background:#0d2a40;border:1.5px solid #1a5080;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:600;color:#6ab8f7;text-decoration:none;width:fit-content;transition:all .2s}
 .doc-preview-btn:hover{background:#143a55;color:#90d0ff}
-
 .modal-footer{padding:16px 22px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;position:sticky;bottom:0;background:#181e27}
 .btn-save{background:var(--accent);color:#fff;padding:10px 24px;border:none;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:.8px;transition:all .2s}
 .btn-save:hover{background:#c82020;transform:translateY(-1px)}
+.btn-save.blue-save{background:linear-gradient(135deg,#1565c0,#1976d2)}
+.btn-save.blue-save:hover{background:linear-gradient(135deg,#1a72d0,#2196f3);transform:translateY(-1px)}
 .btn-cancel{background:#252d3a;color:var(--muted);padding:10px 18px;border:none;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;cursor:pointer}
 .btn-cancel:hover{background:#1e2535}
-.footer{text-align:center;padding:14px;font-size:11.5px;color:var(--muted)}
-.footer span{color:#e03030}
-@media(max-width:600px){.form-grid{grid-template-columns:1fr}.form-group.full{grid-column:1}.header-title{font-size:20px}.search-box{width:150px}}
+
+/* Job Order success */
+.success-msg{display:none;align-items:center;gap:10px;background:#0a2015;border:1.5px solid #1a5c33;border-radius:10px;padding:14px 18px;margin-top:16px;grid-column:1/-1}
+.success-msg span{font-size:13px;color:#55e09a;font-weight:500}
+
+/* Note box */
+.note-box{background:#0d1a2e;border:1.5px solid #1a3a6e;border-radius:9px;padding:12px 16px;grid-column:1/-1;font-size:12px;color:#6ab8f7;line-height:1.7}
+.note-box strong{color:#90c8f8}
+
+@media(max-width:600px){
+  .form-grid{grid-template-columns:1fr}
+  .form-group.full{grid-column:1}
+  .header-title{font-size:20px}
+  .search-box{width:140px}
+  .footer{gap:10px}
+  .footer-divider{display:none}
+}
 </style>
 </head>
 <body>
 <div class="wrapper">
+
+  <!-- Header -->
   <div class="header-card">
     <div class="header-title"><span>🔥</span> Fire &amp; Safety Work Tracker</div>
     <div class="header-meta">
@@ -309,12 +421,21 @@ label{font-size:11.5px;font-weight:600;color:#f5b8b8;text-transform:uppercase;le
       <span>📋 মোট Task: <strong id="totalCount">0</strong></span>
     </div>
   </div>
+
+  <!-- Toolbar -->
   <div class="toolbar">
     <button class="btn btn-add" id="addTaskBtn" onclick="openAdd()">＋ Add Task</button>
     <button class="btn btn-admin" id="adminBtn" style="background:#7b1416" onclick="toggleAdmin()">🔐 Admin Login</button>
+    <button class="btn btn-joborder" onclick="openJobOrder()">📋 New Job Order</button>
+    <button class="btn btn-requests" id="reqBtn" onclick="toggleReqPanel()" style="display:none">
+      📥 Requests
+      <span class="req-badge" id="reqBadge"></span>
+    </button>
     <span class="toolbar-sep"></span>
     <input class="search-box" type="text" placeholder="🔍  Search…" oninput="filterTable(this.value)">
   </div>
+
+  <!-- Main Table -->
   <div class="table-wrap">
     <div class="table-scroll">
       <table>
@@ -335,10 +456,40 @@ label{font-size:11.5px;font-weight:600;color:#f5b8b8;text-transform:uppercase;le
       </table>
     </div>
   </div>
-  <div class="footer">Normal user শুধু দেখতে পাবে &nbsp;•&nbsp; <span>Admin</span> login করলে Add / Edit / Delete করা যাবে</div>
+
+  <!-- Requests Panel (Admin only) -->
+  <div class="requests-panel" id="requestsPanel">
+    <div class="requests-panel-header">
+      <h3>📥 New Job Order Requests</h3>
+    </div>
+    <div class="table-scroll" style="padding:0 0 8px">
+      <table class="req-table">
+        <thead>
+          <tr>
+            <th>SL</th><th>Job Title</th><th>Description</th>
+            <th>Requester Name</th><th>Contact</th>
+            <th>Submitted At</th><th>Status</th><th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="reqTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-avatar" style="background:none;padding:0;overflow:hidden;border:2.5px solid #e03030"><img src="data:image/jpeg;base64,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" style="width:100%;height:100%;object-fit:cover;border-radius:50%"></div>
+    <div class="footer-info">
+      <div class="footer-name">Md. Likhon Mia</div>
+      <div class="footer-desig">Executive — Fire &amp; Safety</div>
+      <div class="footer-company">Seven Circle (Bangladesh) Ltd. &nbsp;|&nbsp; Seven Rings Cement</div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-badge">🏢 Administration Division</div>
+  </div>
 </div>
 
-<!-- Modal -->
+<!-- ── Task Modal ── -->
 <div class="modal-overlay" id="modal">
   <div class="modal-box">
     <div class="modal-header">
@@ -357,7 +508,7 @@ label{font-size:11.5px;font-weight:600;color:#f5b8b8;text-transform:uppercase;le
         <div class="form-group"><label>তার Designation</label>
           <select id="f_desig2"><option value="0">CTO</option><option value="1">GM</option><option value="2">AGM</option><option value="3">Senior Manager</option><option value="4">Manager</option><option value="5">Senior Executive</option><option value="6" selected>Executive</option><option value="7">Junior Executive</option></select>
         </div>
-        <div class="form-group full"><label>Email / Phone</label><input id="f_contact" type="text" placeholder="email বা phone number"></div>
+        <div class="form-group full"><label>Email / Phone</label><input id="f_contact" type="text"></div>
         <div class="form-group"><label>Start Date</label><input id="f_startDate" type="date"></div>
         <div class="form-group"><label>End Date</label><input id="f_endDate" type="date"></div>
         <div class="form-group"><label>Progress % (0–100)</label><input id="f_progress" type="number" min="0" max="100" value="0"></div>
@@ -365,22 +516,14 @@ label{font-size:11.5px;font-weight:600;color:#f5b8b8;text-transform:uppercase;le
           <select id="f_status"><option value="0">Pending</option><option value="1">In Progress</option><option value="2">Under Review</option><option value="3">Completed</option><option value="4">On Hold</option><option value="5">Cancelled</option></select>
         </div>
         <div class="form-group full"><label>Remark</label><input id="f_remark" type="text" placeholder="যেকোনো মন্তব্য…"></div>
-
-        <!-- Document Link Section -->
         <div class="doc-section">
           <div class="doc-section-title">📄 Document Link (Google Drive)</div>
           <div class="form-group">
             <label>Google Drive Link</label>
-            <input id="f_docLink" type="url" placeholder="https://drive.google.com/file/d/…"
-              oninput="updateDocPreview(this.value)">
+            <input id="f_docLink" type="url" placeholder="https://drive.google.com/file/d/…" oninput="updateDocPreview(this.value)">
           </div>
-          <div class="doc-help">
-            <strong>কীভাবে link নেবেন:</strong><br>
-            Google Drive → ফাইলে right click → <strong>"Share"</strong> → <strong>"Anyone with the link"</strong> → <strong>"Copy link"</strong> → এখানে paste করুন
-          </div>
-          <a class="doc-preview-btn" id="docLinkPreview" target="_blank">
-            👁️ Preview — link সঠিক কিনা দেখুন
-          </a>
+          <div class="doc-help"><strong>কীভাবে link নেবেন:</strong><br>Google Drive → ফাইলে right click → <strong>"Share"</strong> → <strong>"Anyone with the link"</strong> → <strong>"Copy link"</strong> → এখানে paste করুন</div>
+          <a class="doc-preview-btn" id="docLinkPreview" target="_blank">👁️ Preview করুন</a>
         </div>
       </div>
     </div>
@@ -390,5 +533,58 @@ label{font-size:11.5px;font-weight:600;color:#f5b8b8;text-transform:uppercase;le
     </div>
   </div>
 </div>
+
+<!-- ── New Job Order Modal ── -->
+<div class="modal-overlay" id="jobOrderModal">
+  <div class="modal-box blue-modal">
+    <div class="modal-header blue">
+      <h3>📋 New Job Order Request</h3>
+      <button class="modal-close" onclick="closeJobOrder()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="note-box">
+          📌 <strong>নোট:</strong> এই ফর্মের মাধ্যমে আপনি নতুন কাজের আবেদন করতে পারবেন। Admin আপনার আবেদন review করে approved বা rejected করবেন।
+        </div>
+        <div class="form-group full">
+          <label class="blue-label">কাজের নাম / Job Title *</label>
+          <input id="jo_jobTitle" class="blue-focus" type="text" placeholder="যে কাজটি করতে চান লিখুন">
+        </div>
+        <div class="form-group full">
+          <label class="blue-label">বিস্তারিত / Description</label>
+          <textarea id="jo_desc" class="blue-focus" placeholder="কাজের বিস্তারিত বিবরণ লিখুন…"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="blue-label">আপনার নাম *</label>
+          <input id="jo_requesterName" class="blue-focus" type="text" placeholder="আপনার পূর্ণ নাম">
+        </div>
+        <div class="form-group">
+          <label class="blue-label">Phone / Email</label>
+          <input id="jo_requesterContact" class="blue-focus" type="text" placeholder="যোগাযোগের নম্বর বা email">
+        </div>
+        <div class="success-msg" id="jo_success">
+          <span>✅ আপনার আবেদন সফলভাবে জমা হয়েছে! Admin শীঘ্রই review করবেন।</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeJobOrder()">বন্ধ করুন</button>
+      <button class="btn-save blue-save" onclick="submitJobOrder()">📤 আবেদন করুন</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Show requests button only for admin - handled via updateAdminUI
+  document.addEventListener('DOMContentLoaded', () => {
+    const reqBtn = document.getElementById('reqBtn');
+    // Watch admin state
+    const observer = new MutationObserver(() => {
+      const isAdminMode = document.getElementById('adminBtn').textContent.includes('Logout');
+      if (reqBtn) reqBtn.style.display = isAdminMode ? 'flex' : 'none';
+    });
+    observer.observe(document.getElementById('adminBtn'), {childList: true, characterData: true, subtree: true});
+  });
+</script>
 </body>
 </html>
