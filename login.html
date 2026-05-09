@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login — Fire & Safety System</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#0f1318;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+/* Animated bg circles */
+.bg-circle{position:fixed;border-radius:50%;pointer-events:none;animation:pulse 4s ease-in-out infinite}
+.bg-circle-1{width:400px;height:400px;background:radial-gradient(circle,rgba(224,48,48,.08),transparent 70%);top:-100px;right:-100px;animation-delay:0s}
+.bg-circle-2{width:300px;height:300px;background:radial-gradient(circle,rgba(224,48,48,.05),transparent 70%);bottom:-80px;left:-80px;animation-delay:2s}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:.7}}
+
+.login-card{background:#181e27;border:1.5px solid #252d3a;border-radius:20px;padding:40px 36px;width:100%;max-width:420px;position:relative;z-index:1;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+
+/* Logo area */
+.logo-area{text-align:center;margin-bottom:32px}
+.logo-icon{width:72px;height:72px;background:linear-gradient(135deg,#7b1416,#e03030);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 14px;box-shadow:0 8px 24px rgba(224,48,48,.35)}
+.logo-title{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:#fff;letter-spacing:1.5px;text-transform:uppercase}
+.logo-sub{font-size:12px;color:#6b7892;margin-top:4px}
+.logo-company{font-size:11px;color:#e03030;font-weight:600;margin-top:6px;letter-spacing:.5px}
+
+/* Form */
+.form-group{margin-bottom:18px}
+.form-group label{display:block;font-size:11.5px;font-weight:700;color:#f5b8b8;text-transform:uppercase;letter-spacing:.8px;font-family:'Rajdhani',sans-serif;margin-bottom:7px}
+.form-group input{width:100%;background:#1a2030;border:1.5px solid #252d3a;border-radius:10px;padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:14px;color:#e8eaf0;outline:none;transition:all .2s}
+.form-group input:focus{border-color:#e03030;background:#1e2535;box-shadow:0 0 0 3px rgba(224,48,48,.1)}
+.form-group input::placeholder{color:#3a4560}
+
+.btn-login{width:100%;background:linear-gradient(135deg,#b52626,#e03030);color:#fff;border:none;border-radius:10px;padding:14px;font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .2s;margin-top:8px;text-transform:uppercase}
+.btn-login:hover{background:linear-gradient(135deg,#c82020,#ff4040);transform:translateY(-1px);box-shadow:0 8px 24px rgba(224,48,48,.4)}
+.btn-login:active{transform:none}
+.btn-login:disabled{opacity:.6;cursor:not-allowed;transform:none}
+
+.error-msg{background:#2a0808;border:1.5px solid #6b1a1a;border-radius:8px;padding:10px 14px;font-size:13px;color:#ff8080;margin-top:12px;display:none;text-align:center}
+.loading-msg{text-align:center;color:#6b7892;font-size:13px;margin-top:12px;display:none}
+
+/* Divider */
+.divider{border:none;border-top:1px solid #252d3a;margin:24px 0}
+
+/* Footer */
+.login-footer{text-align:center;font-size:11px;color:#3a4560;margin-top:20px;line-height:1.6}
+.login-footer span{color:#e03030}
+</style>
+</head>
+<body>
+<div class="bg-circle bg-circle-1"></div>
+<div class="bg-circle bg-circle-2"></div>
+
+<div class="login-card">
+  <div class="logo-area">
+    <div class="logo-icon">🔥</div>
+    <div class="logo-title">Fire & Safety</div>
+    <div class="logo-sub">Work Management System</div>
+    <div class="logo-company">Seven Circle (Bangladesh) Ltd. — Seven Rings Cement</div>
+  </div>
+
+  <div class="form-group">
+    <label>Email Address</label>
+    <input type="email" id="email" placeholder="your@email.com" autocomplete="email">
+  </div>
+  <div class="form-group">
+    <label>Password</label>
+    <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+  </div>
+
+  <button class="btn-login" id="loginBtn" onclick="doLogin()">🔐 Login</button>
+  <div class="error-msg" id="errorMsg"></div>
+  <div class="loading-msg" id="loadingMsg">⏳ Logging in…</div>
+
+  <hr class="divider">
+  <div class="login-footer">
+    Administration Department &nbsp;•&nbsp; <span>Fire & Safety Division</span><br>
+    Char Mirpur, Kaliganj, Gazipur
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig={
+  apiKey:"AIzaSyDS1f3vKcohxGEvYdEBjVdBsm0E9ppmmBQ",
+  authDomain:"fire-safety-tracker-a1826.firebaseapp.com",
+  databaseURL:"https://fire-safety-tracker-a1826-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:"fire-safety-tracker-a1826",
+  storageBucket:"fire-safety-tracker-a1826.firebasestorage.app",
+  messagingSenderId:"561656890483",
+  appId:"1:561656890483:web:82b1cf24a0db230992d686"
+};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+
+// Already logged in → redirect
+onAuthStateChanged(auth, user=>{
+  if(user) window.location.href='dashboard.html';
+});
+
+window.doLogin=async function(){
+  const email=document.getElementById('email').value.trim();
+  const pass=document.getElementById('password').value;
+  const btn=document.getElementById('loginBtn');
+  const err=document.getElementById('errorMsg');
+  const loading=document.getElementById('loadingMsg');
+
+  if(!email||!pass){err.textContent='Email ও Password দিন।';err.style.display='block';return;}
+
+  btn.disabled=true;
+  err.style.display='none';
+  loading.style.display='block';
+
+  try{
+    await signInWithEmailAndPassword(auth,email,pass);
+    window.location.href='dashboard.html';
+  }catch(e){
+    let msg='Login failed। Email বা Password ভুল।';
+    if(e.code==='auth/user-not-found') msg='এই email-এ কোনো account নেই।';
+    if(e.code==='auth/wrong-password') msg='Password ভুল।';
+    if(e.code==='auth/too-many-requests') msg='অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পর আবার চেষ্টা করুন।';
+    err.textContent=msg;
+    err.style.display='block';
+    btn.disabled=false;
+    loading.style.display='none';
+  }
+};
+
+// Enter key
+document.addEventListener('keydown',e=>{if(e.key==='Enter') window.doLogin();});
+</script>
+</body>
+</html>
