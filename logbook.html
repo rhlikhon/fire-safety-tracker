@@ -3,520 +3,354 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fire Pump Log Book — Seven Circle (Bangladesh) Ltd.</title>
+<title>Fire Safety Log Book</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0f1318;--card:#181e27;--border:#252d3a;--accent:#e03030;--text:#e8eaf0;--muted:#6b7892;--green:#16a085;--radius:12px}
+:root{--bg:#0f1318;--card:#181e27;--border:#252d3a;--accent:#e03030;--text:#e8eaf0;--muted:#6b7892;--radius:12px}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padding:20px 12px;color:var(--text)}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padding:16px 10px;color:var(--text)}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
-.wrapper{max-width:1600px;margin:0 auto;position:relative;z-index:1}
+.wrapper{max-width:1700px;margin:0 auto;position:relative;z-index:1}
 
-/* Header */
-.page-header{background:linear-gradient(135deg,#7b1416,#c0321a,#b52626);border-radius:var(--radius) var(--radius) 0 0;padding:20px 28px 16px;color:#fff;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
-.page-header::before{content:'';position:absolute;top:-50px;right:-50px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.06)}
-.page-header-title{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;letter-spacing:1px;text-transform:uppercase;position:relative;z-index:1}
-.page-header-sub{font-size:12px;opacity:.8;margin-top:4px;position:relative;z-index:1}
-.back-btn{background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);border-radius:8px;padding:8px 16px;color:#fff;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:6px;transition:all .2s;position:relative;z-index:1}
+/* Page Header */
+.page-header{background:linear-gradient(135deg,#7b1416,#c0321a,#b52626);border-radius:var(--radius) var(--radius) 0 0;padding:18px 24px 14px;color:#fff;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.page-header::before{content:'';position:absolute;top:-50px;right:-50px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.06)}
+.page-header-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;letter-spacing:1px;text-transform:uppercase;position:relative;z-index:1}
+.page-header-sub{font-size:11px;opacity:.8;margin-top:3px;position:relative;z-index:1}
+.back-btn{background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);border-radius:7px;padding:7px 14px;color:#fff;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px;transition:all .2s;position:relative;z-index:1}
 .back-btn:hover{background:rgba(255,255,255,.25)}
 
-/* Tab Nav */
-.tab-nav{background:var(--card);display:flex;border-bottom:2px solid var(--border);padding:0 20px;gap:4px;flex-wrap:wrap}
-.tab-btn{background:none;border:none;padding:13px 20px;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;letter-spacing:.5px;white-space:nowrap}
-.tab-btn:hover{color:var(--text)}
-.tab-btn.active{color:#e03030;border-bottom-color:#e03030}
+/* Main Section Nav */
+.main-nav{background:var(--card);border-bottom:2px solid var(--border);padding:0 14px;display:flex;flex-wrap:wrap;gap:2px;overflow-x:auto}
+.main-nav-btn{background:none;border:none;padding:11px 15px;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;white-space:nowrap;letter-spacing:.4px}
+.main-nav-btn:hover{color:var(--text)}
+.main-nav-btn.active{color:#e03030;border-bottom-color:#e03030}
 
-/* Tab Content */
-.tab-content{display:none;background:var(--card);border-radius:0 0 var(--radius) var(--radius);padding:20px}
-.tab-content.active{display:block}
+/* Sub Nav */
+.sub-nav{background:#161b23;border-bottom:1px solid var(--border);padding:0 14px;display:flex;flex-wrap:wrap;gap:2px}
+.sub-nav-btn{background:none;border:none;padding:8px 13px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:2.5px solid transparent;margin-bottom:-1px;transition:all .2s;white-space:nowrap}
+.sub-nav-btn:hover{color:var(--text)}
+.sub-nav-btn.active{color:#16a085;border-bottom-color:#16a085}
 
-/* Section header */
-.section-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px}
-.section-title{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:#f5b8b8;letter-spacing:1px;text-transform:uppercase}
-.section-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+/* Content Panel */
+.section-wrap{display:none}
+.section-wrap.active{display:block}
+.content-panel{display:none;background:var(--card);border-radius:0 0 var(--radius) var(--radius);padding:18px}
+.content-panel.active{display:block}
+
+/* Toolbar */
+.sec-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.sec-title{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:#f5b8b8;letter-spacing:1px;text-transform:uppercase}
+.sec-actions{display:flex;gap:7px;flex-wrap:wrap}
 
 /* Buttons */
-.btn{border:none;padding:8px 16px;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:.6px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s}
+.btn{border:none;padding:7px 14px;border-radius:7px;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:.5px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .2s;text-decoration:none}
 .btn-add{background:#e03030;color:#fff}
 .btn-add:hover{background:#c82020}
-.btn-print{background:linear-gradient(135deg,#1a5c33,#16a085);color:#fff}
-.btn-print:hover{filter:brightness(1.15)}
-.btn-filter{background:#1a2030;color:var(--muted);border:1.5px solid var(--border)}
-.btn-filter:hover{border-color:var(--accent);color:var(--text)}
+.btn-print{background:linear-gradient(135deg,#0e6655,#16a085);color:#fff}
+.btn-print:hover{filter:brightness(1.12)}
+.btn-del{background:#2a1010;color:#ff8080;border:1px solid #6b1a1a}
+.btn-del:hover{background:#3a1515}
 
-/* Filter row */
-.filter-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px;padding:12px 14px;background:#0f141a;border-radius:8px;border:1px solid var(--border)}
-.filter-row label{font-size:12px;color:var(--muted);font-weight:600;font-family:'Rajdhani',sans-serif;text-transform:uppercase}
-.filter-select{background:#1a2030;border:1.5px solid var(--border);border-radius:6px;padding:6px 10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none}
-.filter-select:focus{border-color:var(--accent)}
-.filter-select option{background:#1a2030}
+/* Filter */
+.filter-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px;padding:9px 12px;background:#0f141a;border-radius:7px;border:1px solid var(--border)}
+.filter-row label{font-size:11px;color:var(--muted);font-weight:700;font-family:'Rajdhani',sans-serif;text-transform:uppercase}
+.fsel{background:#1a2030;border:1.5px solid var(--border);border-radius:5px;padding:5px 9px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text);outline:none}
+.fsel:focus{border-color:var(--accent)}
+.fsel option{background:#1a2030}
 
 /* Table */
 .tbl-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:12px;min-width:1200px}
-thead th{background:#1f0a0a;color:#f5b8b8;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;padding:10px 8px;text-align:center;border:1px solid #3a1a1a;white-space:nowrap}
-tbody td{padding:8px 8px;border:1px solid #252d3a;text-align:center;vertical-align:middle;color:var(--text)}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+thead th{background:#1f0a0a;color:#f5b8b8;font-family:'Rajdhani',sans-serif;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;padding:8px 7px;text-align:center;border:1px solid #3a1a1a;white-space:nowrap}
+thead th.tl{text-align:left}
+tbody td{padding:7px 7px;border:1px solid #252d3a;text-align:center;vertical-align:middle}
+tbody td.tl{text-align:left}
 tbody tr:nth-child(even){background:#161b23}
 tbody tr:hover{background:#1e252f}
-.ok-badge{background:#0a2015;color:#55e09a;border:1px solid #1a5c33;border-radius:4px;padding:2px 8px;font-size:11px;font-weight:600}
-.na-badge{background:#1a1a1a;color:#666;border:1px solid #333;border-radius:4px;padding:2px 8px;font-size:11px}
-.ng-badge{background:#2a0808;color:#ff8080;border:1px solid #6b1a1a;border-radius:4px;padding:2px 8px;font-size:11px;font-weight:600}
-.action-btn{border:none;background:none;cursor:pointer;font-size:14px;padding:2px 4px;border-radius:4px;transition:background .15s}
-.action-btn:hover{background:#2a1010}
+.grp-row td{background:#1a1020!important;color:#c0a0f0;font-weight:700;font-family:'Rajdhani',sans-serif;font-size:11px;text-transform:uppercase;text-align:left!important;padding:5px 10px!important}
+.entry-hdr td{background:#12200e!important;color:#a0f0c0;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;text-align:left!important;padding:6px 10px!important}
+
+/* Badges */
+.ok-b{background:#0a2015;color:#55e09a;border:1px solid #1a5c33;border-radius:4px;padding:1px 7px;font-size:10px;font-weight:700}
+.ng-b{background:#2a0808;color:#ff8080;border:1px solid #6b1a1a;border-radius:4px;padding:1px 7px;font-size:10px;font-weight:700}
+.na-b{background:#1a1a1a;color:#555;border:1px solid #2a2a2a;border-radius:4px;padding:1px 7px;font-size:10px}
+.ab-b{background:#061825;color:#6ab8f7;border:1px solid #0d4070;border-radius:4px;padding:1px 7px;font-size:10px;font-weight:700}
+.abt{border:none;background:none;cursor:pointer;font-size:13px;padding:2px 4px;border-radius:4px}
+.abt:hover{background:#2a1010}
 
 /* Modal */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:1000;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto}
-.modal-box{background:#181e27;border:1.5px solid #3a1a1a;border-radius:14px;width:100%;max-width:700px;margin:20px auto;box-shadow:0 20px 60px rgba(0,0,0,.7)}
-.modal-header{background:linear-gradient(135deg,#7b1416,#b52626);padding:16px 20px;border-radius:12px 12px 0 0;display:flex;justify-content:space-between;align-items:center}
-.modal-header h3{font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;color:#fff;letter-spacing:1px}
-.modal-close{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;opacity:.8;line-height:1}
-.modal-close:hover{opacity:1}
-.modal-body{padding:20px}
-.form-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-.form-group{display:flex;flex-direction:column;gap:4px}
-.form-group.full{grid-column:1/-1}
-.form-group.half{grid-column:span 2}
-.form-group label{font-size:11px;font-weight:600;color:#f5b8b8;text-transform:uppercase;letter-spacing:.7px;font-family:'Rajdhani',sans-serif}
-.form-group input,.form-group select,.form-group textarea{background:#1a2030;border:1.5px solid var(--border);border-radius:6px;padding:7px 10px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text);outline:none;transition:border-color .2s}
-.form-group input:focus,.form-group select:focus{border-color:var(--accent)}
-.form-group select option{background:#1a2030}
-.form-group input[type="date"],.form-group input[type="time"]{color-scheme:dark}
-.modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
-.btn-save{background:var(--accent);color:#fff;padding:9px 22px;border:none;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
-.btn-save:hover{background:#c82020}
-.btn-cancel{background:#252d3a;color:var(--muted);padding:9px 16px;border:none;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;cursor:pointer}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.84);z-index:2000;align-items:flex-start;justify-content:center;padding:12px;overflow-y:auto}
+.modal-box{background:#181e27;border:1.5px solid #3a1a1a;border-radius:13px;width:100%;max-width:720px;margin:16px auto;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+.modal-header{background:linear-gradient(135deg,#7b1416,#b52626);padding:13px 18px;border-radius:11px 11px 0 0;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1}
+.modal-header h3{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:1px}
+.mclose{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;opacity:.8;line-height:1}
+.mclose:hover{opacity:1}
+.mbody{padding:18px}
+.fg{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.fg label{font-size:10.5px;font-weight:700;color:#f5b8b8;text-transform:uppercase;letter-spacing:.7px;font-family:'Rajdhani',sans-serif}
+.fg input,.fg select,.fg textarea{background:#1a2030;border:1.5px solid var(--border);border-radius:6px;padding:7px 10px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text);outline:none;transition:border-color .2s;width:100%}
+.fg input:focus,.fg select:focus{border-color:var(--accent)}
+.fg select option{background:#1a2030}
+input[type="date"],input[type="time"]{color-scheme:dark}
+.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.fgrid .fg{margin-bottom:0}
+.full{grid-column:1/-1}
+.half{grid-column:span 2}
+.fsec{font-family:'Rajdhani',sans-serif;font-size:11.5px;font-weight:700;color:#e03030;text-transform:uppercase;letter-spacing:.8px;padding:7px 0 3px;border-bottom:1px solid #3a1a1a;grid-column:1/-1;margin-top:4px}
+.mfoot{padding:12px 18px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;position:sticky;bottom:0;background:#181e27}
+.msave{background:var(--accent);color:#fff;padding:8px 20px;border:none;border-radius:7px;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;cursor:pointer}
+.msave:hover{background:#c82020}
+.mcancel{background:#252d3a;color:var(--muted);padding:8px 14px;border:none;border-radius:7px;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;cursor:pointer}
 
-/* Section divider in form */
-.form-section-title{grid-column:1/-1;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:#e03030;text-transform:uppercase;letter-spacing:.8px;padding:8px 0 4px;border-bottom:1px solid #3a1a1a;margin-top:4px}
+/* Checklist form in modal */
+.cl-tbl{width:100%;border-collapse:collapse;font-size:11.5px;margin-top:8px}
+.cl-tbl th{background:#1f0a0a;color:#f5b8b8;font-family:'Rajdhani',sans-serif;font-size:10px;text-transform:uppercase;padding:6px;border:1px solid #3a1a1a;text-align:center}
+.cl-tbl th.tl{text-align:left}
+.cl-tbl td{border:1px solid #252d3a;padding:4px 6px;text-align:center;vertical-align:middle}
+.cl-tbl td.tl{text-align:left}
+.cl-tbl .cgrp{background:#1a1020;color:#c0a0f0;font-weight:700;font-family:'Rajdhani',sans-serif;font-size:10.5px;text-transform:uppercase;text-align:left;padding:5px 8px}
+.csel{background:#1a2030;border:1px solid var(--border);border-radius:3px;padding:2px 4px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text);outline:none;width:72px}
 
-/* Weekly/Monthly checklist table */
-.checklist-tbl{min-width:900px}
-.checklist-tbl th,.checklist-tbl td{padding:8px 10px;border:1px solid #252d3a;font-size:12px}
-.checklist-tbl th{background:#1f0a0a;color:#f5b8b8;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;text-align:center}
-.checklist-tbl .group-row td{background:#1a1020;color:#c0a0f0;font-weight:700;font-family:'Rajdhani',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
-.checklist-tbl td:nth-child(2){text-align:left}
-.checklist-tbl td:nth-child(3){text-align:left;font-size:11.5px;color:#9ab}
-.check-select{background:#1a2030;border:1px solid var(--border);border-radius:4px;padding:3px 6px;font-family:'DM Sans',sans-serif;font-size:11.5px;color:var(--text);outline:none;width:80px}
-.check-select:focus{border-color:var(--accent)}
-
-/* Print area */
-.print-area{display:none}
-.print-doc-header{display:none}
-
-@media print {
-  @page {
-    size: A4 landscape;
-    margin: 6mm 6mm 6mm 6mm;
-  }
-
-  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-
-  body {
-    background: #1a1a2e !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    color: #e0e0e0 !important;
-    font-size: 8px !important;
-  }
-
-  .no-print { display: none !important; }
-  .modal-overlay { display: none !important; }
-  .wrapper { max-width: 100% !important; padding: 0 !important; }
-  .tab-nav { display: none !important; }
-  .filter-row { display: none !important; }
-  .section-actions { display: none !important; }
-  .section-header { display: none !important; }
-  .page-header { border-radius: 0 !important; padding: 6px 10px !important; }
-  .page-header-title { font-size: 13px !important; }
-  .page-header-sub { font-size: 9px !important; }
-  .tab-content { display: block !important; border-radius: 0 !important; padding: 4px !important; }
-  .tbl-wrap, .table-scroll-print { overflow: visible !important; }
-
-  /* Print doc header */
-  .print-doc-header {
-    display: block !important;
-    text-align: center;
-    margin-bottom: 6px;
-    padding-bottom: 5px;
-    border-bottom: 1.5px solid #e03030;
-  }
-  .print-doc-header h2 { font-size: 11px !important; font-weight: 700; color: #ff8080 !important; margin-bottom: 2px; }
-  .print-doc-header p { font-size: 8px !important; color: #bbb !important; }
-
-  /* Table print styles */
-  table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    font-size: 7px !important;
-    min-width: unset !important;
-    table-layout: fixed !important;
-  }
-  thead { display: table-header-group; }
-  tr { page-break-inside: avoid; }
-
-  thead th {
-    padding: 3px 3px !important;
-    font-size: 7px !important;
-    background: #1f0a0a !important;
-    color: #f5b8b8 !important;
-    border: 0.5px solid #3a1a1a !important;
-    white-space: normal !important;
-    word-break: break-word;
-  }
-  tbody td {
-    padding: 2px 3px !important;
-    font-size: 7px !important;
-    border: 0.5px solid #333 !important;
-    word-break: break-word;
-  }
-
-  /* Checklist table */
-  .checklist-tbl th, .checklist-tbl td {
-    padding: 2px 3px !important;
-    font-size: 7px !important;
-    border: 0.5px solid #333 !important;
-  }
-  .checklist-tbl .group-row td {
-    font-size: 7px !important;
-    padding: 3px 5px !important;
-  }
-
-  /* Badges */
-  .ok-badge, .na-badge, .ng-badge {
-    font-size: 7px !important;
-    padding: 1px 4px !important;
-  }
-
-  /* Force single page */
-  html, body { height: auto !important; }
-  .tab-content.active { page-break-after: avoid; }
+/* Print */
+@media print{
+  @page{size:A4 landscape;margin:5mm}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  body{background:#1a1a2e!important;padding:0!important;font-size:7px!important}
+  .no-print{display:none!important}
+  .modal-overlay{display:none!important}
+  .wrapper{max-width:100%!important;padding:0!important}
+  .main-nav,.sub-nav,.sec-header,.filter-row,.back-btn{display:none!important}
+  .page-header{border-radius:0!important;padding:5px 10px!important}
+  .page-header-title{font-size:11px!important}
+  .page-header-sub{font-size:7px!important}
+  .content-panel{display:block!important;border-radius:0!important;padding:3px!important}
+  .print-hdr{display:block!important}
+  table{font-size:6.5px!important;min-width:unset!important;table-layout:fixed!important;width:100%!important}
+  thead th,tbody td{padding:2px 3px!important;font-size:6.5px!important;border:0.5px solid #444!important;white-space:normal!important;word-break:break-word!important}
+  .ok-b,.ng-b,.na-b,.ab-b{font-size:6px!important;padding:0 3px!important}
+  .tbl-wrap{overflow:visible!important}
+  tr{page-break-inside:avoid}
+  thead{display:table-header-group}
+  .print-hdr{text-align:center;margin-bottom:5px;padding-bottom:4px;border-bottom:1px solid #e03030}
+  .print-hdr h2{font-size:10px!important;color:#ff8080!important;margin-bottom:2px}
+  .print-hdr p{font-size:7px!important;color:#bbb!important}
 }
+.print-hdr{display:none}
 </style>
 </head>
 <body>
 <div class="wrapper">
 
-  <!-- Header -->
-  <div class="page-header">
-    <div>
-      <div class="page-header-title">🔥 Fire Pump Log Book</div>
-      <div class="page-header-sub">Seven Circle (Bangladesh) Ltd. — Administration Department — Seven Rings Cement</div>
-    </div>
-    <a href="index.html" class="back-btn no-print">← Back to Tracker</a>
+<!-- Page Header -->
+<div class="page-header">
+  <div>
+    <div class="page-header-title">📒 Fire Safety Log Book</div>
+    <div class="page-header-sub">Seven Circle (Bangladesh) Ltd. — Administration Department — Seven Rings Cement</div>
   </div>
+  <a href="index.html" class="back-btn no-print">← Back to Tracker</a>
+</div>
 
-  <!-- Tabs -->
-  <div class="tab-nav no-print">
-    <button class="tab-btn active" onclick="switchTab('daily',this)">📋 Daily Log</button>
-    <button class="tab-btn" onclick="switchTab('weekly',this)">📅 Weekly Checklist</button>
-    <button class="tab-btn" onclick="switchTab('monthly',this)">🗓️ Monthly Checklist</button>
+<!-- Main Nav -->
+<div class="main-nav no-print">
+  <button class="main-nav-btn active" onclick="switchMain('fp',this)">1️⃣ Fire Pump Room</button>
+  <button class="main-nav-btn" onclick="switchMain('fd',this)">2️⃣ Fire Door</button>
+  <button class="main-nav-btn" onclick="switchMain('fe',this)">3️⃣ Fire Extinguisher</button>
+  <button class="main-nav-btn" onclick="switchMain('sp',this)">4️⃣ Sprinkler / Spin Cooler</button>
+  <button class="main-nav-btn" onclick="switchMain('st',this)">5️⃣ Stand Pipe</button>
+</div>
+
+<!-- ═══ SECTION 1: FIRE PUMP ROOM ═══ -->
+<div id="sec-fp" class="section-wrap active">
+  <div class="sub-nav no-print" id="subnav-fp">
+    <button class="sub-nav-btn active" onclick="switchSub('fp','daily',this)">📋 Daily</button>
+    <button class="sub-nav-btn" onclick="switchSub('fp','weekly',this)">📅 Weekly</button>
+    <button class="sub-nav-btn" onclick="switchSub('fp','monthly',this)">🗓️ Monthly</button>
+    <button class="sub-nav-btn" onclick="switchSub('fp','quarterly',this)">📆 Quarterly</button>
+    <button class="sub-nav-btn" onclick="switchSub('fp','semi',this)">📈 Semi-Annual</button>
+    <button class="sub-nav-btn" onclick="switchSub('fp','annual',this)">🏆 Annual</button>
   </div>
-
-  <!-- ═══════════════ DAILY LOG TAB ═══════════════ -->
-  <div class="tab-content active" id="tab-daily">
-    <div class="print-doc-header">
-      <h2>Seven Circle (Bangladesh) Limited, Gazipur, Kaliganj</h2>
-      <p>Administration Department &nbsp;|&nbsp; Fire Pump Room Check Log Book</p>
-    </div>
-    <div class="section-header no-print">
-      <div class="section-title">📋 Fire Pump Room Check — Daily Log</div>
-      <div class="section-actions">
-        <button class="btn btn-add" onclick="openDailyModal()">＋ Add Entry</button>
-        <button class="btn btn-print" onclick="printTab('daily')">🖨️ Print / PDF</button>
-      </div>
-    </div>
-    <!-- Filter -->
-    <div class="filter-row no-print">
-      <label>Month:</label>
-      <select class="filter-select" id="daily_month" onchange="filterDaily()">
-        <option value="">All</option>
-        <option>January</option><option>February</option><option>March</option>
-        <option>April</option><option>May</option><option>June</option>
-        <option>July</option><option>August</option><option>September</option>
-        <option>October</option><option>November</option><option>December</option>
-      </select>
-      <label>Year:</label>
-      <select class="filter-select" id="daily_year" onchange="filterDaily()">
-        <option value="">All</option>
-        <option>2025</option><option>2026</option><option>2027</option>
-      </select>
-      <span style="font-size:12px;color:var(--muted)" id="daily_count"></span>
-    </div>
-    <!-- Print month/year display -->
-    <div style="display:none" id="daily_print_header" class="print-only">
-      <table style="width:100%;margin-bottom:8px;font-size:13px;color:#ccc;border:none">
-        <tr><td><strong>Month:</strong> <span id="daily_print_month"></span></td><td style="text-align:right"><strong>Year:</strong> <span id="daily_print_year"></span></td></tr>
-      </table>
-    </div>
-    <div class="tbl-wrap">
-      <table id="dailyTable" style="table-layout:fixed">
-        <colgroup>
-          <col style="width:62px"><col style="width:44px">
-          <col style="width:52px"><col style="width:52px"><col style="width:52px">
-          <col style="width:52px"><col style="width:52px"><col style="width:52px">
-          <col style="width:52px"><col style="width:50px"><col style="width:60px">
-          <col style="width:52px"><col style="width:68px"><col style="width:55px">
-          <col style="width:55px"><col style="width:65px"><col style="width:60px">
-          <col style="width:50px">
-        </colgroup>
-        <thead>
-          <tr>
-            <th rowspan="2">Date</th>
-            <th rowspan="2">Time</th>
-            <th colspan="3">Auto/Manual</th>
-            <th colspan="3">PSI Reading</th>
-            <th rowspan="2">Leakage in Pipe Line</th>
-            <th rowspan="2">Room Exhaust Fan</th>
-            <th rowspan="2">Battery Voltage Condition</th>
-            <th rowspan="2">Room Light ON/Off</th>
-            <th rowspan="2">Cleanliness of Pump Room</th>
-            <th rowspan="2">Water Level Check</th>
-            <th rowspan="2">Done by Sig</th>
-            <th rowspan="2">AGM Admin Signature</th>
-            <th rowspan="2">Remarks</th>
-            <th rowspan="2" class="no-print">Action</th>
-          </tr>
-          <tr>
-            <th>Jockey Pump A/M</th>
-            <th>Electric Pump A/M</th>
-            <th>Diesel Pump A/M</th>
-            <th>Jockey Pump PSI</th>
-            <th>Electric Pump PSI</th>
-            <th>Diesel Pump PSI</th>
-          </tr>
-        </thead>
-        <tbody id="dailyBody">
-          <tr><td colspan="18" style="text-align:center;padding:28px;color:#6b7892">Loading…</td></tr>
-        </tbody>
-      </table>
-    </div>
+  <!-- Daily -->
+  <div class="content-panel active" id="fp-daily">
+    <div class="print-hdr"><h2>Seven Circle (Bangladesh) Limited — Fire Pump Room Check Log Book (Daily)</h2><p>Administration Department | Seven Rings Cement | Doc No: SCB/ADM/01</p></div>
+    <div class="sec-header no-print"><div class="sec-title">🔥 Fire Pump Room — Daily Check</div><div class="sec-actions"><button class="btn btn-add" onclick="openDailyModal()">＋ Add Entry</button><button class="btn btn-print" onclick="doPrint('fp','daily')">🖨️ Print</button></div></div>
+    <div class="filter-row no-print"><label>Month:</label><select class="fsel" id="fp_dm" onchange="renderDaily()"><option value="">All</option><option>January</option><option>February</option><option>March</option><option>April</option><option>May</option><option>June</option><option>July</option><option>August</option><option>September</option><option>October</option><option>November</option><option>December</option></select><label>Year:</label><select class="fsel" id="fp_dy" onchange="renderDaily()"><option value="">All</option><option>2025</option><option>2026</option><option>2027</option></select><span style="font-size:11px;color:var(--muted)" id="fp_dc"></span></div>
+    <div class="tbl-wrap"><table style="min-width:1380px"><thead><tr>
+      <th>Date</th><th>Time</th><th>Jockey Pump A/M</th><th>Electric Pump A/M</th><th>Diesel Pump A/M</th><th>Jockey PSI</th><th>Electric PSI</th><th>Diesel PSI</th><th>Leakage Pipe</th><th>Exhaust Fan</th><th>Battery Voltage</th><th>Room Light</th><th>Cleanliness</th><th>Water Level</th><th>Done by Sig</th><th>AGM Admin Sig</th><th>Remarks</th><th class="no-print"></th>
+    </tr></thead><tbody id="fp-daily-body"><tr><td colspan="18" style="padding:24px;color:#6b7892">Loading…</td></tr></tbody></table></div>
   </div>
-
-  <!-- ═══════════════ WEEKLY TAB ═══════════════ -->
-  <div class="tab-content" id="tab-weekly">
-    <div class="print-doc-header">
-      <h2>Record Sheet — Fire Pump Record Sheet</h2>
-      <p>Seven Circle (Bangladesh) Ltd. &nbsp;|&nbsp; Doc No: SCB/ADM/01 &nbsp;|&nbsp; Department: Admin</p>
-      <p>Weekly Checklist of Fire Pump System as per NFPA-20</p>
-    </div>
-    <div class="section-header no-print">
-      <div class="section-title">📅 Weekly Checklist — NFPA-20</div>
-      <div class="section-actions">
-        <button class="btn btn-add" onclick="openWeeklyModal()">＋ New Weekly Entry</button>
-        <button class="btn btn-print" onclick="printTab('weekly')">🖨️ Print / PDF</button>
-      </div>
-    </div>
-    <div class="filter-row no-print">
-      <label>Week:</label>
-      <select class="filter-select" id="weekly_filter" onchange="filterWeekly()">
-        <option value="">All</option>
-      </select>
-      <span style="font-size:12px;color:var(--muted)" id="weekly_count"></span>
-    </div>
-    <div class="tbl-wrap">
-      <table class="checklist-tbl" id="weeklyTable">
-        <thead>
-          <tr>
-            <th style="width:36px">Sl.No</th>
-            <th style="min-width:200px;text-align:left">Description</th>
-            <th style="min-width:140px;text-align:left">Scope</th>
-            <th style="width:90px">Visual Inspection</th>
-            <th style="width:80px">Checking</th>
-            <th style="width:70px">Clean</th>
-            <th style="width:70px">Test</th>
-            <th style="width:90px">Sig Executive Fire & Safety</th>
-            <th style="width:80px">Sig Admin-AGM</th>
-            <th style="width:70px">Sig of GM</th>
-            <th style="width:90px;min-width:90px">Week / Date</th>
-            <th class="no-print" style="width:60px">Action</th>
-          </tr>
-        </thead>
-        <tbody id="weeklyBody">
-          <tr><td colspan="12" style="text-align:center;padding:28px;color:#6b7892">Loading…</td></tr>
-        </tbody>
-      </table>
-    </div>
+  <!-- Weekly -->
+  <div class="content-panel" id="fp-weekly">
+    <div class="print-hdr"><h2>Fire Pump Room — Weekly Checklist (NFPA-20)</h2><p>Seven Circle (Bangladesh) Ltd. | SCB/ADM/01 | Admin Dept.</p></div>
+    <div class="sec-header no-print"><div class="sec-title">📅 Weekly Checklist</div><div class="sec-actions"><button class="btn btn-add" onclick="openClModal('fp','weekly','Week Name')">＋ New Entry</button><button class="btn btn-print" onclick="doPrint('fp','weekly')">🖨️ Print</button></div></div>
+    <div class="filter-row no-print"><label>Filter:</label><select class="fsel" id="fp_wf" onchange="renderCl('fp','weekly')"><option value="">All</option></select></div>
+    <div class="tbl-wrap" id="fp-weekly-wrap"><table id="fp-weekly-tbl" style="min-width:950px"><thead><tr><th style="width:34px">Sl</th><th class="tl" style="min-width:200px">Description</th><th class="tl" style="min-width:120px">Scope</th><th style="width:78px">Visual Insp.</th><th style="width:72px">Checking</th><th style="width:64px">Clean</th><th style="width:64px">Test</th><th style="width:82px">Sig Exec F&S</th><th style="width:72px">Sig AGM</th><th style="width:62px">Sig GM</th><th style="width:78px">Week/Date</th><th class="no-print" style="width:36px"></th></tr></thead><tbody id="fp-weekly-body"><tr><td colspan="12" style="padding:24px;color:#6b7892">Loading…</td></tr></tbody></table></div>
   </div>
-
-  <!-- ═══════════════ MONTHLY TAB ═══════════════ -->
-  <div class="tab-content" id="tab-monthly">
-    <div class="print-doc-header">
-      <h2>Record Sheet — Fire Pump Record Sheet</h2>
-      <p>Seven Circle (Bangladesh) Ltd. &nbsp;|&nbsp; Doc No: SCB/ADM/01 &nbsp;|&nbsp; Department: Admin</p>
-      <p>Monthly Checklist of Fire Pump System as per NFPA-20</p>
-    </div>
-    <div class="section-header no-print">
-      <div class="section-title">🗓️ Monthly Checklist — NFPA-20</div>
-      <div class="section-actions">
-        <button class="btn btn-add" onclick="openMonthlyModal()">＋ New Monthly Entry</button>
-        <button class="btn btn-print" onclick="printTab('monthly')">🖨️ Print / PDF</button>
-      </div>
-    </div>
-    <div class="filter-row no-print">
-      <label>Month/Year:</label>
-      <select class="filter-select" id="monthly_filter" onchange="filterMonthly()">
-        <option value="">All</option>
-      </select>
-      <span style="font-size:12px;color:var(--muted)" id="monthly_count"></span>
-    </div>
-    <div class="tbl-wrap">
-      <table class="checklist-tbl" id="monthlyTable">
-        <thead>
-          <tr>
-            <th style="width:36px">Sl.No</th>
-            <th style="min-width:200px;text-align:left">Description</th>
-            <th style="min-width:140px;text-align:left">Scope</th>
-            <th style="width:90px">Visual Inspection</th>
-            <th style="width:80px">Checking</th>
-            <th style="width:70px">Clean</th>
-            <th style="width:70px">Test</th>
-            <th style="width:90px">Sig Executive Fire & Safety</th>
-            <th style="width:80px">Sig Admin-AGM</th>
-            <th style="width:70px">Sig of GM</th>
-            <th style="width:90px">Month / Date</th>
-            <th class="no-print" style="width:60px">Action</th>
-          </tr>
-        </thead>
-        <tbody id="monthlyBody">
-          <tr><td colspan="12" style="text-align:center;padding:28px;color:#6b7892">Loading…</td></tr>
-        </tbody>
-      </table>
-    </div>
+  <!-- Monthly -->
+  <div class="content-panel" id="fp-monthly">
+    <div class="print-hdr"><h2>Fire Pump Room — Monthly Checklist (NFPA-20)</h2><p>Seven Circle (Bangladesh) Ltd. | SCB/ADM/01</p></div>
+    <div class="sec-header no-print"><div class="sec-title">🗓️ Monthly Checklist</div><div class="sec-actions"><button class="btn btn-add" onclick="openClModal('fp','monthly','Month / Year')">＋ New Entry</button><button class="btn btn-print" onclick="doPrint('fp','monthly')">🖨️ Print</button></div></div>
+    <div class="filter-row no-print"><label>Filter:</label><select class="fsel" id="fp_mf" onchange="renderCl('fp','monthly')"><option value="">All</option></select></div>
+    <div class="tbl-wrap"><table id="fp-monthly-tbl" style="min-width:950px"><thead><tr><th style="width:34px">Sl</th><th class="tl" style="min-width:200px">Description</th><th class="tl" style="min-width:120px">Scope</th><th style="width:78px">Visual Insp.</th><th style="width:72px">Checking</th><th style="width:64px">Clean</th><th style="width:64px">Test</th><th style="width:82px">Sig Exec F&S</th><th style="width:72px">Sig AGM</th><th style="width:62px">Sig GM</th><th style="width:78px">Month/Date</th><th class="no-print" style="width:36px"></th></tr></thead><tbody id="fp-monthly-body"><tr><td colspan="12" style="padding:24px;color:#6b7892">Loading…</td></tr></tbody></table></div>
   </div>
+  <!-- Quarterly -->
+  <div class="content-panel" id="fp-quarterly">
+    <div class="print-hdr"><h2>Fire Pump Room — Quarterly Checklist (NFPA-20)</h2><p>Seven Circle (Bangladesh) Ltd. | SCB/ADM/01</p></div>
+    <div class="sec-header no-print"><div class="sec-title">📆 Quarterly Checklist</div><div class="sec-actions"><button class="btn btn-add" onclick="openClModal('fp','quarterly','Quarter (e.g. Q1 2026)')">＋ New Entry</button><button class="btn btn-print" onclick="doPrint('fp','quarterly')">🖨️ Print</button></div></div>
+    <div class="filter-row no-print"><label>Filter:</label><select class="fsel" id="fp_qf" onchange="renderCl('fp','quarterly')"><option value="">All</option></select></div>
+    <div class="tbl-wrap"><table id="fp-quarterly-tbl" style="min-width:950px"><thead><tr><th style="width:34px">Sl</th><th class="tl" style="min-width:200px">Description</th><th class="tl" style="min-width:120px">Scope</th><th style="width:78px">Visual Insp.</th><th style="width:72px">Checking</th><th style="width:64px">Clean</th><th style="width:64px">Test</th><th style="width:82px">Sig Exec F&S</th><th style="width:72px">Sig AGM</th><th style="width:62px">Sig GM</th><th style="width:78px">Quarter/Date</th><th class="no-print" style="width:36px"></th></tr></thead><tbody id="fp-quarterly-body"><tr><td colspan="12" style="padding:24px;color:#6b7892">Loading…</td></tr></tbody></table></div>
+  </div>
+  <!-- Semi-Annual -->
+  <div class="content-panel" id="fp-semi">
+    <div class="print-hdr"><h2>Fire Pump Room — Semi-Annual Checklist (NFPA-20)</h2><p>Seven Circle (Bangladesh) Ltd. | SCB/ADM/01</p></div>
+    <div class="sec-header no-print"><div class="sec-title">📈 Semi-Annual Checklist</div><div class="sec-actions"><button class="btn btn-add" onclick="openClModal('fp','semi','Period (e.g. Jan-Jun 2026)')">＋ New Entry</button><button class="btn btn-print" onclick="doPrint('fp','semi')">🖨️ Print</button></div></div>
+    <div class="filter-row no-print"><label>Filter:</label><select class="fsel" id="fp_sf" onchange="renderCl('fp','semi')"><option value="">All</option></select></div>
+    <div class="tbl-wrap"><table id="fp-semi-tbl" style="min-width:950px"><thead><tr><th style="width:34px">Sl</th><th class="tl" style="min-width:200px">Description</th><th class="tl" style="min-width:120px">Scope</th><th style="width:78px">Visual Insp.</th><th style="width:72px">Checking</th><th style="width:64px">Clean</th><th style="width:64px">Test</th><th style="width:82px">Sig Exec F&S</th><th style="width:72px">Sig AGM</th><th style="width:62px">Sig GM</th><th style="width:78px">Period/Date</th><th class="no-print" style="width:36px"></th></tr></thead><tbody id="fp-semi-body"><tr><td colspan="12" style="padding:24px;color:#6b7892">Loading…</td></tr></tbody></table></div>
+  </div>
+  <!-- Annual -->
+  <div class="content-panel" id="fp-annual">
+    <div class="print-hdr"><h2>Fire Pump Room — Annual Checklist (NFPA-20)</h2><p>Seven Circle (Bangladesh) Ltd. | SCB/ADM/01</p></div>
+    <div class="sec-header no-print"><div class="sec-title">🏆 Annual Checklist</div><div class="sec-actions"><button class="btn btn-add" onclick="openClModal('fp','annual','Year (e.g. 2026)')">＋ New Entry</button><button class="btn btn-print" onclick="doPrint('fp','annual')">🖨️ Print</button></div></div>
+    <div class="filter-row no-print"><label>Filter:</label><select class="fsel" id="fp_af" onchange="renderCl('fp','annual')"><option value="">All</option></select></div>
+    <div class="tbl-wrap"><table id="fp-annual-tbl" style="min-width:950px"><thead><tr><th style="width:34px">Sl</th><th class="tl" style="min-width:200px">Description</th><th class="tl" style="min-width:120px">Scope</th><th style="width:78px">Visual Insp.</th><th style="width:72px">Checking</th><th style="width:64px">Clean</th><th style="width:64px">Test</th><th style="width:82px">Sig Exec F&S</th><th style="width:72px">Sig AGM</th><th style="width:62px">Sig GM</th><th style="width:78px">Year/Date</th><th class="no-print" style="width:36px"></th></tr></thead><tbody id="fp-annual-body"><tr><td colspan="12" style="padding:24px;color:#6b7892">Loading…</td></tr></tbody></table></div>
+  </div>
+</div>
 
-</div><!-- end wrapper -->
+<!-- ═══ SECTION 2: FIRE DOOR ═══ -->
+<div id="sec-fd" class="section-wrap">
+  <div class="sub-nav no-print" id="subnav-fd">
+    <button class="sub-nav-btn active" onclick="switchSub('fd','monthly',this)">🗓️ Monthly</button>
+    <button class="sub-nav-btn" onclick="switchSub('fd','quarterly',this)">📆 Quarterly</button>
+    <button class="sub-nav-btn" onclick="switchSub('fd','semi',this)">📈 Semi-Annual</button>
+    <button class="sub-nav-btn" onclick="switchSub('fd','annual',this)">🏆 Annual</button>
+  </div>
+  <div class="content-panel active" id="fd-monthly"><div class="print-hdr"><h2>Fire Door — Monthly Checklist</h2><p>Seven Circle (Bangladesh) Ltd. | Admin Dept.</p></div><div class="sec-header no-print"><div class="sec-title">🚪 Fire Door — Monthly</div><div class="sec-actions"><button class="btn btn-add" onclick="openClModal('fd','monthly','Month / Year')">＋ New Entry</button><button class="btn btn-print" onclick="doPrint('fd','monthly')">🖨️ Print</button></div></div><div class="filter-row no-print"><label>Filter:</label><select class="fsel" id="fd_mf" onchange="renderCl('fd','monthly')"><option value="">All</option></select></div><div class="tbl-wrap"><table id="fd-monthly-tbl" style="min-width:900px"><thead><tr><th style="width:34px">Sl</th><th class="tl" style="min-width:220px">Description</th><th class="tl" style="min-width:120px">Scope</th><th style="width:78px">Visual Insp.</th><th style="width:72px">Checking</th><th style="width:64px">Clean</th><th style="width:64px">Test</th><th style="width:82px">Sig Exec F&S</th><th style="width:72px">Sig AGM</th><th style="width:62px">Sig GM</th><th style="width:78px">Month/Date</th><th class="no-print" style="width:36px"></th></tr></thead><tbody id="fd-monthly-body"><tr><td colspan="12" style="padding:24px;color:#6b7892">Loading…</td></tr></tbody></table></div></div>
+  <div class="content-panel" id="fd-quarterly"><div class="print-hdr"><h2>Fire Door — Quarterly Checklist</h2><p>Seven Circle (Bangladesh) Ltd.</p></div><div class="sec-header no-print"><div class="sec-title">🚪 Fire Door — Quarterly</div><div class="sec-actions"><button class="btn btn-add" onclick="openClModal('fd','quarterly','Quarter')">＋ New Entry</button><button class="btn btn-print" onclick="doPrint('fd','quarterly')">🖨️ Print</button></div></div><div class="filter-row no-print"><label>Filter:</label><select class="fsel" id="fd_qf" onchange="renderCl('fd','quarterly')"><option value="">All</option></select></div><div class="tbl-wrap"><table id="fd-quarterly-tbl" style="min-width:900px"><thead><tr><th style="width:34px">Sl</th><th class="tl" style="min-width:220px">Description</th><th class="tl" style="min-width:120px">Scope</th><th style="width:78px">Visual Insp.</th><th style="width:72px">Checking</th><th style="width:64px">Clean</th><th style="width:64px">Test</th><th style="width:82px">Sig Exec F&S</th><th style="width:72px">Sig AGM</th><th style="width:62px">Sig GM</th><th style="width:78px">Quarter/Date</th><th class="no-print" style="width:36px"></th></tr></thead><tbody id="fd-quarterly-body"><tr><td colspan="12" style="padding:24px;color:#6b7892">Loading…</td></tr></tbody></table></div></div>
+  <div class="content-panel" id="fd-semi"><div class="print-hdr"><h2>Fire Door — Semi-Annual Checklist</h2><p>Seven Circle (Bangladesh) Ltd.</p></div><div class="sec-header no-print"><div class="sec-title">🚪 Fire Door — Semi-Annual</div><div class="sec-actions"><button class="btn btn-add" onclick="openClModal('fd','semi','Period')">＋ New Entry</button><button class="btn btn-print" onclick="doPrint('fd','semi')">🖨️ Print</button></div></div><div class="filter-row no-print"><label>Filter:</label><select class="fsel" id="fd_sf" onchange="renderCl('fd','semi')"><option value="">All</option></select></div><div class="tbl-wrap"><table id="fd-semi-tbl" style="min-width:900px"><thead><tr><th style="width:34px">Sl</th><th class="tl" style="min-width:220px">Description</th><th class="tl" style="min-width:120px">Scope</th><th style="width:78px">Visual Insp.</th><th style="width:72px">Checking</th><th style="width:64px">Clean</th><th style="width:64px">Test</th><th style="width:82px">Sig Exec F&S</th><th style="width:72px">Sig AGM</th><th style="width:62px">Sig GM</th><th style="width:78px">Period/Date</th><th class="no-print" style="width:36px"></th></tr></thead><tbody id="fd-semi-body"><tr><td colspan="12" style="padding:24px;color:#6b7892">Loading…</td></tr></tbody></table></div></div>
+  <div class="content-panel" id="fd-annual"><div class="print-hdr"><h2>Fire Door — Annual Checklist</h2><p>Seven Circle (Bangladesh) Ltd.</p></div><div class="sec-header no-print"><div class="sec-title">🚪 Fire Door — Annual</div><div class="sec-actions"><button class="btn btn-add" onclick="openClModal('fd','annual','Year')">＋ New Entry</button><button class="btn btn-print" onclick="doPrint('fd','annual')">🖨️ Print</button></div></div><div class="filter-row no-print"><label>Filter:</label><select class="fsel" id="fd_af" onchange="renderCl('fd','annual')"><option value="">All</option></select></div><div class="tbl-wrap"><table id="fd-annual-tbl" style="min-width:900px"><thead><tr><th style="width:34px">Sl</th><th class="tl" style="min-width:220px">Description</th><th class="tl" style="min-width:120px">Scope</th><th style="width:78px">Visual Insp.</th><th style="width:72px">Checking</th><th style="width:64px">Clean</th><th style="width:64px">Test</th><th style="width:82px">Sig Exec F&S</th><th style="width:72px">Sig AGM</th><th style="width:62px">Sig GM</th><th style="width:78px">Year/Date</th><th class="no-print" style="width:36px"></th></tr></thead><tbody id="fd-annual-body"><tr><td colspan="12" style="padding:24px;color:#6b7892">Loading…</td></tr></tbody></table></div></div>
+</div>
 
-<!-- ══════════════ DAILY MODAL ══════════════ -->
-<div class="modal-overlay" id="dailyModal">
+<!-- ═══ SECTION 3: FIRE EXTINGUISHER ═══ -->
+<div id="sec-fe" class="section-wrap">
+  <div class="sub-nav no-print" id="subnav-fe">
+    <button class="sub-nav-btn active" onclick="switchSub('fe','monthly',this)">🗓️ Monthly</button>
+    <button class="sub-nav-btn" onclick="switchSub('fe','quarterly',this)">📆 Quarterly</button>
+    <button class="sub-nav-btn" onclick="switchSub('fe','semi',this)">📈 Semi-Annual</button>
+    <button class="sub-nav-btn" onclick="switchSub('fe','annual',this)">🏆 Annual</button>
+  </div>
+  <div class="content-panel active" id="fe-monthly"><div class="print-hdr"><h2>Fire Extinguisher — Monthly Checklist</h2><p>Seven Circle (Bangladesh) Ltd.</p></div><div class="sec-header no-print"><div class="sec-title">🧯 Fire Extinguisher — Monthly</div><div class="sec-actions"><button class="btn btn-add" onclick="openClModal('fe','monthly','Month / Year')">＋ New Entry</button><button class="btn btn-print" onclick="doPrint('fe','monthly')">🖨️ Print</button></div></div><div class="filter-row no-print"><label>Filter:</label><select class="fsel" id="fe_mf" onchange="renderCl('fe','monthly')"><option value="">All</option></select></div><div class="tbl-wrap"><table id="fe-monthly-tbl" style="min-width:900px"><thead><tr><th style="width:34px">Sl</th><th class="tl" style="min-width:220px">Description</th><th class="tl" style="min-width:120px">Scope</th><th style="width:78px">Visual Insp.</th><th style="width:72px">Checking</th><th style="width:64px">Clean</th><th style="width:64px">Test</th><th style="width:82px">Sig Exec F&S</th><th style="width:72px">Sig AGM</th><th style="width:62px">Sig GM</th><th style="width:78px">Month/Date</th><th class="no-print" style="width:36px"></th></tr></thead><tbody id="fe-monthly-body"><tr><td colspan="12" style="padding:24px;color:#6b7892">Loading…</td></tr></tbody></table></div></div>
+  <div class="content-panel" id="fe-quarterly"><div class="print-hdr"><h2>Fire Extinguisher — Quarterly Checklist</h2><p>Seven Circle (Bangladesh) Ltd.</p></div><div class="sec-header no-print"><div class="sec-title">🧯 Fire Extinguisher — Quarterly</div><div class="sec-actions"><button class="btn btn-add" onclick="openClModal('fe','quarterly','Quarter')">＋ New Entry</button><button class="btn btn-print" onclick="doPrint('fe','quarterly')">🖨️ Print</button></div></div><div class="filter-row no-print"><label>Filter:</label><select class="fsel" id="fe_qf" onchange="renderCl('fe','quarterly')"><option value="">All</option></select></div><div class="tbl-wrap"><table id="fe-quarterly-tbl" style="min-width:900px"><thead><tr><th style="width:34px">Sl</th><th class="tl" style="min-width:220px">Description</th><th class="tl" style="min-width:120px">Scope</th><th style="width:78px">Visual Insp.</th><th style="width:72px">Checking</th><th style="width:64px">Clean</th><th style="width:64px">Test</th><th style="width:82px">Sig Exec F&S</th><th style="width:72px">Sig AGM</th><th style="width:62px">Sig GM</th><th style="width:78px">Quarter/Date</th><th class="no-print" style="width:36px"></th></tr></thead><tbody id="fe-quarterly-body"><tr><td colspan="12" style="padding:24px;color:#6b7892">Loading…</td></tr></tbody></table></div></div>
+  <div class="content-panel" id="fe-semi"><div class="print-hdr"><h2>Fire Extinguisher — Semi-Annual Checklist</h2><p>Seven Circle (Bangladesh) Ltd.</p></div><div class="sec-header no-print"><div class="sec-title">🧯 Fire Extinguisher — Semi-Annual</div><div class="sec-actions"><button class="btn btn-add" onclick="openClModal('fe','semi','Period')">＋ New Entry</button><button class="btn btn-print" onclick="doPrint('fe','semi')">🖨️ Print</button></div></div><div class="filter-row no-print"><label>Filter:</label><select class="fsel" id="fe_sf" onchange="renderCl('fe','semi')"><option value="">All</option></select></div><div class="tbl-wrap"><table id="fe-semi-tbl" style="min-width:900px"><thead><tr><th style="width:34px">Sl</th><th class="tl" style="min-width:220px">Description</th><th class="tl" style="min-width:120px">Scope</th><th style="width:78px">Visual Insp.</th><th style="width:72px">Checking</th><th style="width:64px">Clean</th><th style="width:64px">Test</th><th style="width:82px">Sig Exec F&S</th><th style="width:72px">Sig AGM</th><th style="width:62px">Sig GM</th><th style="width:78px">Period/Date</th><th class="no-print" style="width:36px"></th></tr></thead><tbody id="fe-semi-body"><tr><td colspan="12" style="padding:24px;color:#6b7892">Loading…</td></tr></tbody></table></div></div>
+  <div class="content-panel" id="fe-annual"><div class="print-hdr"><h2>Fire Extinguisher — Annual Checklist</h2><p>Seven Circle (Bangladesh) Ltd.</p></div><div class="sec-header no-print"><div class="sec-title">🧯 Fire Extinguisher — Annual</div><div class="sec-actions"><button class="btn btn-add" onclick="openClModal('fe','annual','Year')">＋ New Entry</button><button class="btn btn-print" onclick="doPrint('fe','annual')">🖨️ Print</button></div></div><div class="filter-row no-print"><label>Filter:</label><select class="fsel" id="fe_af" onchange="renderCl('fe','annual')"><option value="">All</option></select></div><div class="tbl-wrap"><table id="fe-annual-tbl" style="min-width:900px"><thead><tr><th style="width:34px">Sl</th><th class="tl" style="min-width:220px">Description</th><th class="tl" style="min-width:120px">Scope</th><th style="width:78px">Visual Insp.</th><th style="width:72px">Checking</th><th style="width:64px">Clean</th><th style="width:64px">Test</th><th style="width:82px">Sig Exec F&S</th><th style="width:72px">Sig AGM</th><th style="width:62px">Sig GM</th><th style="width:78px">Year/Date</th><th class="no-print" style="width:36px"></th></tr></thead><tbody id="fe-annual-body"><tr><td colspan="12" style="padding:24px;color:#6b7892">Loading…</td></tr></tbody></table></div></div>
+</div>
+
+<!-- ═══ SECTION 4: SPRINKLER ═══ -->
+<div id="sec-sp" class="section-wrap">
+  <div class="sub-nav no-print" id="subnav-sp">
+    <button class="sub-nav-btn active" onclick="switchSub('sp','monthly',this)">🗓️ Monthly</button>
+    <button class="sub-nav-btn" onclick="switchSub('sp','quarterly',this)">📆 Quarterly</button>
+    <button class="sub-nav-btn" onclick="switchSub('sp','semi',this)">📈 Semi-Annual</button>
+    <button class="sub-nav-btn" onclick="switchSub('sp','annual',this)">🏆 Annual</button>
+  </div>
+  <div class="content-panel active" id="sp-monthly"><div class="print-hdr"><h2>Sprinkler/Spin Cooler — Monthly Checklist</h2><p>Seven Circle (Bangladesh) Ltd.</p></div><div class="sec-header no-print"><div class="sec-title">💦 Sprinkler — Monthly</div><div class="sec-actions"><button class="btn btn-add" onclick="openClModal('sp','monthly','Month / Year')">＋ New Entry</button><button class="btn btn-print" onclick="doPrint('sp','monthly')">🖨️ Print</button></div></div><div class="filter-row no-print"><label>Filter:</label><select class="fsel" id="sp_mf" onchange="renderCl('sp','monthly')"><option value="">All</option></select></div><div class="tbl-wrap"><table id="sp-monthly-tbl" style="min-width:900px"><thead><tr><th style="width:34px">Sl</th><th class="tl" style="min-width:220px">Description</th><th class="tl" style="min-width:120px">Scope</th><th style="width:78px">Visual Insp.</th><th style="width:72px">Checking</th><th style="width:64px">Clean</th><th style="width:64px">Test</th><th style="width:82px">Sig Exec F&S</th><th style="width:72px">Sig AGM</th><th style="width:62px">Sig GM</th><th style="width:78px">Month/Date</th><th class="no-print" style="width:36px"></th></tr></thead><tbody id="sp-monthly-body"><tr><td colspan="12" style="padding:24px;color:#6b7892">Loading…</td></tr></tbody></table></div></div>
+  <div class="content-panel" id="sp-quarterly"><div class="print-hdr"><h2>Sprinkler/Spin Cooler — Quarterly Checklist</h2><p>Seven Circle (Bangladesh) Ltd.</p></div><div class="sec-header no-print"><div class="sec-title">💦 Sprinkler — Quarterly</div><div class="sec-actions"><button class="btn btn-add" onclick="openClModal('sp','quarterly','Quarter')">＋ New Entry</button><button class="btn btn-print" onclick="doPrint('sp','quarterly')">🖨️ Print</button></div></div><div class="filter-row no-print"><label>Filter:</label><select class="fsel" id="sp_qf" onchange="renderCl('sp','quarterly')"><option value="">All</option></select></div><div class="tbl-wrap"><table id="sp-quarterly-tbl" style="min-width:900px"><thead><tr><th style="width:34px">Sl</th><th class="tl" style="min-width:220px">Description</th><th class="tl" style="min-width:120px">Scope</th><th style="width:78px">Visual Insp.</th><th style="width:72px">Checking</th><th style="width:64px">Clean</th><th style="width:64px">Test</th><th style="width:82px">Sig Exec F&S</th><th style="width:72px">Sig AGM</th><th style="width:62px">Sig GM</th><th style="width:78px">Quarter/Date</th><th class="no-print" style="width:36px"></th></tr></thead><tbody id="sp-quarterly-body"><tr><td colspan="12" style="padding:24px;color:#6b7892">Loading…</td></tr></tbody></table></div></div>
+  <div class="content-panel" id="sp-semi"><div class="print-hdr"><h2>Sprinkler/Spin Cooler — Semi-Annual Checklist</h2><p>Seven Circle (Bangladesh) Ltd.</p></div><div class="sec-header no-print"><div class="sec-title">💦 Sprinkler — Semi-Annual</div><div class="sec-actions"><button class="btn btn-add" onclick="openClModal('sp','semi','Period')">＋ New Entry</button><button class="btn btn-print" onclick="doPrint('sp','semi')">🖨️ Print</button></div></div><div class="filter-row no-print"><label>Filter:</label><select class="fsel" id="sp_sf" onchange="renderCl('sp','semi')"><option value="">All</option></select></div><div class="tbl-wrap"><table id="sp-semi-tbl" style="min-width:900px"><thead><tr><th style="width:34px">Sl</th><th class="tl" style="min-width:220px">Description</th><th class="tl" style="min-width:120px">Scope</th><th style="width:78px">Visual Insp.</th><th style="width:72px">Checking</th><th style="width:64px">Clean</th><th style="width:64px">Test</th><th style="width:82px">Sig Exec F&S</th><th style="width:72px">Sig AGM</th><th style="width:62px">Sig GM</th><th style="width:78px">Period/Date</th><th class="no-print" style="width:36px"></th></tr></thead><tbody id="sp-semi-body"><tr><td colspan="12" style="padding:24px;color:#6b7892">Loading…</td></tr></tbody></table></div></div>
+  <div class="content-panel" id="sp-annual"><div class="print-hdr"><h2>Sprinkler/Spin Cooler — Annual Checklist</h2><p>Seven Circle (Bangladesh) Ltd.</p></div><div class="sec-header no-print"><div class="sec-title">💦 Sprinkler — Annual</div><div class="sec-actions"><button class="btn btn-add" onclick="openClModal('sp','annual','Year')">＋ New Entry</button><button class="btn btn-print" onclick="doPrint('sp','annual')">🖨️ Print</button></div></div><div class="filter-row no-print"><label>Filter:</label><select class="fsel" id="sp_af" onchange="renderCl('sp','annual')"><option value="">All</option></select></div><div class="tbl-wrap"><table id="sp-annual-tbl" style="min-width:900px"><thead><tr><th style="width:34px">Sl</th><th class="tl" style="min-width:220px">Description</th><th class="tl" style="min-width:120px">Scope</th><th style="width:78px">Visual Insp.</th><th style="width:72px">Checking</th><th style="width:64px">Clean</th><th style="width:64px">Test</th><th style="width:82px">Sig Exec F&S</th><th style="width:72px">Sig AGM</th><th style="width:62px">Sig GM</th><th style="width:78px">Year/Date</th><th class="no-print" style="width:36px"></th></tr></thead><tbody id="sp-annual-body"><tr><td colspan="12" style="padding:24px;color:#6b7892">Loading…</td></tr></tbody></table></div></div>
+</div>
+
+<!-- ═══ SECTION 5: STAND PIPE ═══ -->
+<div id="sec-st" class="section-wrap">
+  <div class="sub-nav no-print" id="subnav-st">
+    <button class="sub-nav-btn active" onclick="switchSub('st','monthly',this)">🗓️ Monthly</button>
+    <button class="sub-nav-btn" onclick="switchSub('st','quarterly',this)">📆 Quarterly</button>
+    <button class="sub-nav-btn" onclick="switchSub('st','semi',this)">📈 Semi-Annual</button>
+    <button class="sub-nav-btn" onclick="switchSub('st','annual',this)">🏆 Annual</button>
+  </div>
+  <div class="content-panel active" id="st-monthly"><div class="print-hdr"><h2>Stand Pipe — Monthly Checklist</h2><p>Seven Circle (Bangladesh) Ltd.</p></div><div class="sec-header no-print"><div class="sec-title">🏗️ Stand Pipe — Monthly</div><div class="sec-actions"><button class="btn btn-add" onclick="openClModal('st','monthly','Month / Year')">＋ New Entry</button><button class="btn btn-print" onclick="doPrint('st','monthly')">🖨️ Print</button></div></div><div class="filter-row no-print"><label>Filter:</label><select class="fsel" id="st_mf" onchange="renderCl('st','monthly')"><option value="">All</option></select></div><div class="tbl-wrap"><table id="st-monthly-tbl" style="min-width:900px"><thead><tr><th style="width:34px">Sl</th><th class="tl" style="min-width:220px">Description</th><th class="tl" style="min-width:120px">Scope</th><th style="width:78px">Visual Insp.</th><th style="width:72px">Checking</th><th style="width:64px">Clean</th><th style="width:64px">Test</th><th style="width:82px">Sig Exec F&S</th><th style="width:72px">Sig AGM</th><th style="width:62px">Sig GM</th><th style="width:78px">Month/Date</th><th class="no-print" style="width:36px"></th></tr></thead><tbody id="st-monthly-body"><tr><td colspan="12" style="padding:24px;color:#6b7892">Loading…</td></tr></tbody></table></div></div>
+  <div class="content-panel" id="st-quarterly"><div class="print-hdr"><h2>Stand Pipe — Quarterly Checklist</h2><p>Seven Circle (Bangladesh) Ltd.</p></div><div class="sec-header no-print"><div class="sec-title">🏗️ Stand Pipe — Quarterly</div><div class="sec-actions"><button class="btn btn-add" onclick="openClModal('st','quarterly','Quarter')">＋ New Entry</button><button class="btn btn-print" onclick="doPrint('st','quarterly')">🖨️ Print</button></div></div><div class="filter-row no-print"><label>Filter:</label><select class="fsel" id="st_qf" onchange="renderCl('st','quarterly')"><option value="">All</option></select></div><div class="tbl-wrap"><table id="st-quarterly-tbl" style="min-width:900px"><thead><tr><th style="width:34px">Sl</th><th class="tl" style="min-width:220px">Description</th><th class="tl" style="min-width:120px">Scope</th><th style="width:78px">Visual Insp.</th><th style="width:72px">Checking</th><th style="width:64px">Clean</th><th style="width:64px">Test</th><th style="width:82px">Sig Exec F&S</th><th style="width:72px">Sig AGM</th><th style="width:62px">Sig GM</th><th style="width:78px">Quarter/Date</th><th class="no-print" style="width:36px"></th></tr></thead><tbody id="st-quarterly-body"><tr><td colspan="12" style="padding:24px;color:#6b7892">Loading…</td></tr></tbody></table></div></div>
+  <div class="content-panel" id="st-semi"><div class="print-hdr"><h2>Stand Pipe — Semi-Annual Checklist</h2><p>Seven Circle (Bangladesh) Ltd.</p></div><div class="sec-header no-print"><div class="sec-title">🏗️ Stand Pipe — Semi-Annual</div><div class="sec-actions"><button class="btn btn-add" onclick="openClModal('st','semi','Period')">＋ New Entry</button><button class="btn btn-print" onclick="doPrint('st','semi')">🖨️ Print</button></div></div><div class="filter-row no-print"><label>Filter:</label><select class="fsel" id="st_sf" onchange="renderCl('st','semi')"><option value="">All</option></select></div><div class="tbl-wrap"><table id="st-semi-tbl" style="min-width:900px"><thead><tr><th style="width:34px">Sl</th><th class="tl" style="min-width:220px">Description</th><th class="tl" style="min-width:120px">Scope</th><th style="width:78px">Visual Insp.</th><th style="width:72px">Checking</th><th style="width:64px">Clean</th><th style="width:64px">Test</th><th style="width:82px">Sig Exec F&S</th><th style="width:72px">Sig AGM</th><th style="width:62px">Sig GM</th><th style="width:78px">Period/Date</th><th class="no-print" style="width:36px"></th></tr></thead><tbody id="st-semi-body"><tr><td colspan="12" style="padding:24px;color:#6b7892">Loading…</td></tr></tbody></table></div></div>
+  <div class="content-panel" id="st-annual"><div class="print-hdr"><h2>Stand Pipe — Annual Checklist</h2><p>Seven Circle (Bangladesh) Ltd.</p></div><div class="sec-header no-print"><div class="sec-title">🏗️ Stand Pipe — Annual</div><div class="sec-actions"><button class="btn btn-add" onclick="openClModal('st','annual','Year')">＋ New Entry</button><button class="btn btn-print" onclick="doPrint('st','annual')">🖨️ Print</button></div></div><div class="filter-row no-print"><label>Filter:</label><select class="fsel" id="st_af" onchange="renderCl('st','annual')"><option value="">All</option></select></div><div class="tbl-wrap"><table id="st-annual-tbl" style="min-width:900px"><thead><tr><th style="width:34px">Sl</th><th class="tl" style="min-width:220px">Description</th><th class="tl" style="min-width:120px">Scope</th><th style="width:78px">Visual Insp.</th><th style="width:72px">Checking</th><th style="width:64px">Clean</th><th style="width:64px">Test</th><th style="width:82px">Sig Exec F&S</th><th style="width:72px">Sig AGM</th><th style="width:62px">Sig GM</th><th style="width:78px">Year/Date</th><th class="no-print" style="width:36px"></th></tr></thead><tbody id="st-annual-body"><tr><td colspan="12" style="padding:24px;color:#6b7892">Loading…</td></tr></tbody></table></div></div>
+</div>
+
+<!-- ═══ DAILY MODAL ═══ -->
+<div class="modal-overlay" id="daily-modal">
   <div class="modal-box">
-    <div class="modal-header">
-      <h3>📋 Daily Log Entry</h3>
-      <button class="modal-close" onclick="closeDailyModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-grid">
-        <div class="form-group"><label>Date *</label><input id="d_date" type="date"></div>
-        <div class="form-group"><label>Time *</label><input id="d_time" type="time"></div>
-        <div class="form-group"></div>
-        <div class="form-section-title">Auto / Manual Status</div>
-        <div class="form-group"><label>Jockey Pump A/M</label>
-          <select id="d_jockeySt"><option>Auto</option><option>Manual</option><option>Off</option></select></div>
-        <div class="form-group"><label>Electric Pump A/M</label>
-          <select id="d_electricSt"><option>Auto</option><option>Manual</option><option>Off</option></select></div>
-        <div class="form-group"><label>Diesel Pump A/M</label>
-          <select id="d_dieselSt"><option>Auto</option><option>Manual</option><option>Off</option></select></div>
-        <div class="form-section-title">PSI Reading</div>
-        <div class="form-group"><label>Jockey Pump PSI</label><input id="d_jockeyPSI" type="number" placeholder="0"></div>
-        <div class="form-group"><label>Electric Pump PSI</label><input id="d_electricPSI" type="number" placeholder="0"></div>
-        <div class="form-group"><label>Diesel Pump PSI</label><input id="d_dieselPSI" type="number" placeholder="0"></div>
-        <div class="form-section-title">Condition Check</div>
-        <div class="form-group"><label>Leakage in Pipe Line</label>
-          <select id="d_leakage"><option>OK</option><option>N/G</option><option>N/A</option></select></div>
-        <div class="form-group"><label>Room Exhaust Fan</label>
-          <select id="d_fan"><option>OK</option><option>N/G</option><option>N/A</option></select></div>
-        <div class="form-group"><label>Battery Voltage</label>
-          <select id="d_battery"><option>OK</option><option>N/G</option><option>N/A</option></select></div>
-        <div class="form-group"><label>Room Light ON/Off</label>
-          <select id="d_light"><option>ON</option><option>OFF</option></select></div>
-        <div class="form-group"><label>Cleanliness Pump Room</label>
-          <select id="d_clean"><option>OK</option><option>N/G</option><option>N/A</option></select></div>
-        <div class="form-group"><label>Water Level Check</label>
-          <select id="d_water"><option>OK</option><option>N/G</option><option>N/A</option></select></div>
-        <div class="form-group"><label>Done by (Sig)</label><input id="d_doneby" type="text" placeholder="নাম লিখুন"></div>
-        <div class="form-group"><label>AGM Admin Sig</label><input id="d_agm" type="text" placeholder="নাম লিখুন"></div>
-        <div class="form-group full"><label>Remarks</label><input id="d_remarks" type="text" placeholder="কোনো মন্তব্য…"></div>
+    <div class="modal-header"><h3>📋 Daily Log Entry — Fire Pump Room</h3><button class="mclose" onclick="closeM('daily-modal')">✕</button></div>
+    <div class="mbody">
+      <div class="fgrid">
+        <div class="fg"><label>Date *</label><input id="d_date" type="date"></div>
+        <div class="fg"><label>Time *</label><input id="d_time" type="time"></div>
+        <div class="fg"></div>
+        <div class="fsec">Auto / Manual Status</div>
+        <div class="fg"><label>Jockey Pump A/M</label><select id="d_jSt"><option>Auto</option><option>Manual</option><option>Off</option></select></div>
+        <div class="fg"><label>Electric Pump A/M</label><select id="d_eSt"><option>Auto</option><option>Manual</option><option>Off</option></select></div>
+        <div class="fg"><label>Diesel Pump A/M</label><select id="d_dSt"><option>Auto</option><option>Manual</option><option>Off</option></select></div>
+        <div class="fsec">PSI Reading</div>
+        <div class="fg"><label>Jockey Pump PSI</label><input id="d_jP" type="number" placeholder="0"></div>
+        <div class="fg"><label>Electric Pump PSI</label><input id="d_eP" type="number" placeholder="0"></div>
+        <div class="fg"><label>Diesel Pump PSI</label><input id="d_dP" type="number" placeholder="0"></div>
+        <div class="fsec">Condition Check</div>
+        <div class="fg"><label>Leakage in Pipe Line</label><select id="d_lk"><option>OK</option><option>N/G</option><option>N/A</option></select></div>
+        <div class="fg"><label>Room Exhaust Fan</label><select id="d_fn"><option>OK</option><option>N/G</option><option>N/A</option></select></div>
+        <div class="fg"><label>Battery Voltage</label><select id="d_bt"><option>OK</option><option>N/G</option><option>N/A</option></select></div>
+        <div class="fg"><label>Room Light</label><select id="d_lt"><option>ON</option><option>OFF</option></select></div>
+        <div class="fg"><label>Cleanliness Pump Room</label><select id="d_cl"><option>OK</option><option>N/G</option><option>N/A</option></select></div>
+        <div class="fg"><label>Water Level Check</label><select id="d_wt"><option>OK</option><option>N/G</option><option>N/A</option></select></div>
+        <div class="fg"><label>Done by (Sig)</label><input id="d_dn" type="text" placeholder="নাম"></div>
+        <div class="fg"><label>AGM Admin Sig</label><input id="d_ag" type="text" placeholder="নাম"></div>
+        <div class="fg full"><label>Remarks</label><input id="d_rm" type="text" placeholder="মন্তব্য…"></div>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeDailyModal()">বাতিল</button>
-      <button class="btn-save" onclick="saveDaily()">💾 Save</button>
-    </div>
+    <div class="mfoot"><button class="mcancel" onclick="closeM('daily-modal')">বাতিল</button><button class="msave" onclick="saveDaily()">💾 Save</button></div>
   </div>
 </div>
 
-<!-- ══════════════ WEEKLY MODAL ══════════════ -->
-<div class="modal-overlay" id="weeklyModal">
-  <div class="modal-box" style="max-width:750px">
-    <div class="modal-header">
-      <h3>📅 Weekly Checklist Entry</h3>
-      <button class="modal-close" onclick="closeWeeklyModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-grid" style="grid-template-columns:1fr 1fr">
-        <div class="form-group"><label>Week Name / Date *</label><input id="w_weekname" type="text" placeholder="যেমন: Week 1, May 2026"></div>
-        <div class="form-group"><label>Date</label><input id="w_date" type="date"></div>
-        <div class="form-group"><label>Sig Executive Fire & Safety</label><input id="w_sig1" type="text" placeholder="নাম"></div>
-        <div class="form-group"><label>Sig Admin-AGM</label><input id="w_sig2" type="text" placeholder="নাম"></div>
-        <div class="form-group"><label>Sig of GM</label><input id="w_sig3" type="text" placeholder="নাম"></div>
+<!-- ═══ CHECKLIST MODAL (generic) ═══ -->
+<div class="modal-overlay" id="cl-modal">
+  <div class="modal-box" style="max-width:760px">
+    <div class="modal-header"><h3 id="cl-title">Checklist Entry</h3><button class="mclose" onclick="closeM('cl-modal')">✕</button></div>
+    <div class="mbody">
+      <div class="fgrid" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="fg"><label id="cl-plabel">Period *</label><input id="cl_p" type="text" placeholder="e.g. May 2026"></div>
+        <div class="fg"><label>Date</label><input id="cl_d" type="date"></div>
+        <div class="fg"></div>
+        <div class="fg"><label>Sig Executive F&S</label><input id="cl_s1" type="text" placeholder="নাম"></div>
+        <div class="fg"><label>Sig Admin-AGM</label><input id="cl_s2" type="text" placeholder="নাম"></div>
+        <div class="fg"><label>Sig of GM</label><input id="cl_s3" type="text" placeholder="নাম"></div>
       </div>
-      <div style="margin-top:14px;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:#e03030;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Checklist Items</div>
-      <div style="overflow-x:auto">
-        <table style="width:100%;border-collapse:collapse;font-size:12px" id="weeklyChecklistForm">
-          <thead>
-            <tr style="background:#1f0a0a">
-              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;width:36px">Sl</th>
-              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;text-align:left">Description</th>
-              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;width:90px">Visual Insp.</th>
-              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;width:80px">Checking</th>
-              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;width:70px">Clean</th>
-              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;width:70px">Test</th>
-            </tr>
-          </thead>
-          <tbody id="weeklyFormBody"></tbody>
-        </table>
+      <!-- Checklist items -->
+      <div style="margin:12px 0 6px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:#e03030;text-transform:uppercase;letter-spacing:.8px">Checklist Items</div>
+      <div style="overflow-x:auto;max-height:52vh;overflow-y:auto">
+        <table class="cl-tbl"><thead><tr>
+          <th style="width:30px">Sl</th>
+          <th class="tl" style="min-width:200px">Description</th>
+          <th class="tl" style="min-width:110px">Scope</th>
+          <th style="width:80px">Visual Insp.</th>
+          <th style="width:75px">Checking</th>
+          <th style="width:68px">Clean</th>
+          <th style="width:68px">Test</th>
+        </tr></thead>
+        <tbody id="cl-form-body"></tbody></table>
       </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeWeeklyModal()">বাতিল</button>
-      <button class="btn-save" onclick="saveWeekly()">💾 Save</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════ MONTHLY MODAL ══════════════ -->
-<div class="modal-overlay" id="monthlyModal">
-  <div class="modal-box" style="max-width:750px">
-    <div class="modal-header">
-      <h3>🗓️ Monthly Checklist Entry</h3>
-      <button class="modal-close" onclick="closeMonthlyModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-grid" style="grid-template-columns:1fr 1fr">
-        <div class="form-group"><label>Month / Year *</label><input id="m_monthname" type="text" placeholder="যেমন: May 2026"></div>
-        <div class="form-group"><label>Date</label><input id="m_date" type="date"></div>
-        <div class="form-group"><label>Sig Executive Fire & Safety</label><input id="m_sig1" type="text" placeholder="নাম"></div>
-        <div class="form-group"><label>Sig Admin-AGM</label><input id="m_sig2" type="text" placeholder="নাম"></div>
-        <div class="form-group"><label>Sig of GM</label><input id="m_sig3" type="text" placeholder="নাম"></div>
-      </div>
-      <div style="margin-top:14px;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:#e03030;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Checklist Items</div>
-      <div style="overflow-x:auto">
-        <table style="width:100%;border-collapse:collapse;font-size:12px" id="monthlyChecklistForm">
-          <thead>
-            <tr style="background:#1f0a0a">
-              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;width:36px">Sl</th>
-              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;text-align:left">Description</th>
-              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;width:90px">Visual Insp.</th>
-              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;width:80px">Checking</th>
-              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;width:70px">Clean</th>
-              <th style="padding:7px;border:1px solid #3a1a1a;color:#f5b8b8;width:70px">Test</th>
-            </tr>
-          </thead>
-          <tbody id="monthlyFormBody"></tbody>
-        </table>
+      <!-- Add item row -->
+      <div style="margin-top:10px;padding:10px;background:#0f141a;border-radius:7px;border:1px dashed #3a1a1a">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;color:#f5b8b8;text-transform:uppercase;letter-spacing:.7px;margin-bottom:7px">➕ নতুন Item যোগ করুন</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end">
+          <div class="fg" style="margin:0"><label>Description</label><input id="new_desc" type="text" placeholder="Item description"></div>
+          <div class="fg" style="margin:0"><label>Scope</label><input id="new_scope" type="text" placeholder="Visual Inspection / Checking…"></div>
+          <button class="btn btn-add" style="height:34px;margin-top:auto" onclick="addClItem()">＋ Add</button>
+        </div>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeMonthlyModal()">বাতিল</button>
-      <button class="btn-save" onclick="saveMonthly()">💾 Save</button>
-    </div>
+    <div class="mfoot"><button class="mcancel" onclick="closeM('cl-modal')">বাতিল</button><button class="msave" onclick="saveCl()">💾 Save</button></div>
   </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-const firebaseConfig = {
+const firebaseConfig={
   apiKey:"AIzaSyDS1f3vKcohxGEvYdEBjVdBsm0E9ppmmBQ",
   authDomain:"fire-safety-tracker-a1826.firebaseapp.com",
   databaseURL:"https://fire-safety-tracker-a1826-default-rtdb.asia-southeast1.firebasedatabase.app",
@@ -525,363 +359,222 @@ const firebaseConfig = {
   messagingSenderId:"561656890483",
   appId:"1:561656890483:web:82b1cf24a0db230992d686"
 };
-const app = initializeApp(firebaseConfig);
-const db  = getDatabase(app);
-const DAILY_REF   = ref(db,'logbook/daily');
-const WEEKLY_REF  = ref(db,'logbook/weekly');
-const MONTHLY_REF = ref(db,'logbook/monthly');
+const app=initializeApp(firebaseConfig);
+const db=getDatabase(app);
 
-const esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-const $   = id => document.getElementById(id);
-const fv  = id => ($( id)||{}).value||'';
+const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const $=id=>document.getElementById(id);
+const fv=id=>($( id)||{}).value||'';
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-
-/* ──────────── WEEKLY CHECKLIST ITEMS ──────────── */
-const WEEKLY_ITEMS = [
-  {group:'Water Reservoir Tank'},
-  {sl:1, desc:'Water Reservoir Tank Level', scope:'Visual Inspection checking', vi:true, ch:false, cl:false, ts:false},
-  {sl:2, desc:'Reservoir tank Float switch', scope:'Visual Inspection and testing', vi:true, ch:false, cl:'NA', ts:false},
-  {group:'Fuel System'},
-  {sl:3, desc:'Diesel Tank level, Make sure fuel tank is ¾ fuel', scope:'Visual Inspection and testing', vi:true, ch:false, cl:'NA', ts:'NA'},
-  {sl:4, desc:'Solenoid valve operation (Stoper solenoid)', scope:'Visual Inspection and testing', vi:true, ch:false, cl:'NA', ts:'NA'},
-  {sl:5, desc:'Water in the system (Below fuel tank level)', scope:'Checking and cleaning', vi:'NA', ch:true, cl:false, ts:'NA'},
-  {sl:6, desc:'Oil line of Diesel engine flexible hoses and connectors', scope:'Visual Inspection', vi:true, ch:false, cl:'NA', ts:'NA'},
-  {group:'Lubrication system'},
-  {sl:7, desc:'Oil level', scope:'Visual Inspection checking', vi:true, ch:false, cl:'NA', ts:'NA'},
-  {sl:8, desc:'Lube oil heater', scope:'Checking', vi:'NA', ch:true, cl:'NA', ts:'NA'},
-  {group:'Cooling system'},
-  {sl:9, desc:'Cooling water outlet level of diesel engine.', scope:'Visual Inspection checking', vi:true, ch:false, cl:'NA', ts:'NA'},
-  {sl:10, desc:'Adequate cooling water to heat exchanger', scope:'Checking', vi:'NA', ch:true, cl:'NA', ts:'NA'},
-  {sl:11, desc:'Condition of flexible hoses and connections', scope:'Visual Inspection checking', vi:true, ch:false, cl:'NA', ts:'NA'},
-  {group:'Engine Exhaust system'},
-  {sl:12, desc:'Exhaust pipe for leakage', scope:'Visual Inspection checking', vi:true, ch:false, cl:'NA', ts:'NA'},
-  {sl:13, desc:'Drain condensate trap in Exhaust pipe', scope:'Checking', vi:'NA', ch:true, cl:'NA', ts:'NA'},
-  {group:'Battery system'},
-  {sl:14, desc:'Electrolyte level', scope:'Checking', vi:'NA', ch:true, cl:'NA', ts:'NA'},
-  {sl:15, desc:'Cranking voltage is 9 volts or more in 12 volt system or 18 volts or more in 24 volt system', scope:'Checking', vi:'NA', ch:true, cl:'NA', ts:'NA'},
-  {group:'Electrical system'},
-  {sl:16, desc:'General inspection', scope:'Visual Inspection', vi:true, ch:false, cl:'NA', ts:'NA'},
-  {sl:17, desc:'water pump(s)', scope:'Visual Inspection', vi:true, ch:false, cl:'NA', ts:'NA'},
-  {sl:18, desc:'jacket water heater', scope:'Checking', vi:'NA', ch:true, cl:'NA', ts:'NA'},
-  {sl:19, desc:'Pump house, heating ventilating louvers', scope:'Visual Inspection checking', vi:true, ch:false, cl:'NA', ts:'NA'},
-];
-
-const MONTHLY_ITEMS = [
-  {group:'Electrical System'},
-  {sl:1, desc:'Exercise isolating switch and circuit breaker', scope:'Visual Inspection and checking', vi:true, ch:false, cl:'NA', ts:'NA'},
-  {sl:2, desc:'Circuit breakers or fuses', scope:'Visual Inspection', vi:true, ch:false, cl:'NA', ts:'NA'},
-  {group:'Battery System'},
-  {sl:3, desc:'Case exterior clean and dry', scope:'Testing', vi:'NA', ch:'NA', cl:false, ts:true},
-  {sl:4, desc:'Equalize charge', scope:'Checking', vi:'NA', ch:true, cl:'NA', ts:'NA'},
-  {sl:5, desc:'Specific gravity or state of charge', scope:'Visual Inspection', vi:true, ch:false, cl:'NA', ts:'NA'},
-  {sl:6, desc:'Charge and charger rate', scope:'Checking', vi:'NA', ch:true, cl:'NA', ts:'NA'},
-  {group:'Electrical Motor'},
-  {sl:7, desc:'Run Electrical pump for minimum 10 minutes', scope:'Visual Inspection, Clean and testing', vi:true, ch:'NA', cl:false, ts:false},
-];
-
-function buildChecklistFormRows(items, bodyId) {
-  const tbody = $(bodyId); if(!tbody) return;
-  tbody.innerHTML = '';
-  items.forEach(item => {
-    if(item.group) {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td colspan="6" style="background:#1a1020;color:#c0a0f0;font-weight:700;font-family:'Rajdhani',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.5px;padding:7px 10px;border:1px solid #252d3a">${item.group}</td>`;
-      tbody.appendChild(tr); return;
-    }
-    const makeCell = (val) => {
-      if(val === 'NA') return `<td style="border:1px solid #252d3a;text-align:center"><span class="na-badge">NA</span></td>`;
-      return `<td style="border:1px solid #252d3a;text-align:center"><select class="check-select" id="chk_${bodyId}_${item.sl}_${val==='vi'?'vi':val==='ch'?'ch':val==='cl'?'cl':'ts'}"><option value="">—</option><option>✔ OK</option><option>✘ N/G</option><option>N/A</option></select></td>`;
-    };
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td style="border:1px solid #252d3a;text-align:center;color:#9ab;font-weight:600">${item.sl}</td>
-      <td style="border:1px solid #252d3a;padding:7px 10px;color:var(--text)">${esc(item.desc)}</td>
-      ${typeof item.vi==='boolean' ? makeCell('vi') : `<td style="border:1px solid #252d3a;text-align:center"><span class="na-badge">NA</span></td>`}
-      ${typeof item.ch==='boolean' ? makeCell('ch') : `<td style="border:1px solid #252d3a;text-align:center"><span class="na-badge">NA</span></td>`}
-      ${typeof item.cl==='boolean' ? makeCell('cl') : `<td style="border:1px solid #252d3a;text-align:center"><span class="na-badge">NA</span></td>`}
-      ${typeof item.ts==='boolean' ? makeCell('ts') : `<td style="border:1px solid #252d3a;text-align:center"><span class="na-badge">NA</span></td>`}
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-function getChecklistValues(items, bodyId) {
-  const result = [];
-  items.forEach(item => {
-    if(item.group) return;
-    const getVal = (col) => {
-      const el = $(`chk_${bodyId}_${item.sl}_${col}`);
-      return el ? el.value : 'NA';
-    };
-    result.push({
-      sl: item.sl, desc: item.desc, scope: item.scope,
-      vi: typeof item.vi==='boolean' ? getVal('vi') : 'NA',
-      ch: typeof item.ch==='boolean' ? getVal('ch') : 'NA',
-      cl: typeof item.cl==='boolean' ? getVal('cl') : 'NA',
-      ts: typeof item.ts==='boolean' ? getVal('ts') : 'NA',
+const SECS=['fp','fd','fe','sp','st'];
+const FREQS={fp:['daily','weekly','monthly','quarterly','semi','annual'],fd:['monthly','quarterly','semi','annual'],fe:['monthly','quarterly','semi','annual'],sp:['monthly','quarterly','semi','annual'],st:['monthly','quarterly','semi','annual']};
+const DB={};
+SECS.forEach(s=>{
+  DB[s]={};
+  FREQS[s].forEach(f=>{
+    DB[s][f]={};
+    onValue(ref(db,`logbook3/${s}/${f}`),snap=>{
+      DB[s][f]=snap.val()||{};
+      if(s==='fp'&&f==='daily') renderDaily();
+      else renderCl(s,f);
     });
   });
-  return result;
-}
+});
 
-/* ──────────── DAILY ──────────── */
-let allDaily = {}, dailyEditKey = null;
-
-onValue(DAILY_REF, snap => { allDaily = snap.val()||{}; renderDaily(); });
-
-function statusBadge(v) {
+/* badge */
+const bdg=v=>{
   if(!v||v==='—') return '—';
-  if(v==='OK'||v==='Auto'||v==='ON'||v.includes('✔')) return `<span class="ok-badge">${v}</span>`;
-  if(v==='N/G'||v==='OFF'||v.includes('✘')) return `<span class="ng-badge">${v}</span>`;
-  return `<span class="na-badge">${v||'—'}</span>`;
-}
+  if(['OK','Auto','ON','✔ OK'].includes(v)) return `<span class="ok-b">${v}</span>`;
+  if(['N/G','OFF','✘ N/G'].includes(v)) return `<span class="ng-b">${v}</span>`;
+  if(v==='Manual') return `<span class="ab-b">${v}</span>`;
+  return `<span class="na-b">${v||'—'}</span>`;
+};
 
-function renderDaily(filter_month='', filter_year='') {
-  const tbody = $('dailyBody'); if(!tbody) return;
-  const keys = Object.keys(allDaily);
-  let rows = keys.map(k => ({key:k, ...allDaily[k]}));
-  if(filter_month) rows = rows.filter(r => {
-    const d = new Date(r.date); return MONTHS[d.getMonth()]===filter_month;
+/* ── DAILY ── */
+window.renderDaily=function(){
+  const tbody=$('fp-daily-body');if(!tbody)return;
+  let rows=Object.entries(DB.fp.daily||{}).map(([k,v])=>({key:k,...v}));
+  const m=fv('fp_dm'),y=fv('fp_dy');
+  if(m)rows=rows.filter(r=>{const d=new Date(r.date);return MONTHS[d.getMonth()]===m;});
+  if(y)rows=rows.filter(r=>new Date(r.date).getFullYear()==y);
+  rows.sort((a,b)=>new Date(a.date)-new Date(b.date));
+  $('fp_dc').textContent=rows.length?rows.length+' records':'';
+  if(!rows.length){tbody.innerHTML=`<tr><td colspan="18" style="padding:24px;color:#6b7892">কোনো entry নেই।</td></tr>`;return;}
+  tbody.innerHTML='';
+  rows.forEach(r=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${r.date||'—'}</td><td>${r.time||'—'}</td>
+      <td>${bdg(r.jSt)}</td><td>${bdg(r.eSt)}</td><td>${bdg(r.dSt)}</td>
+      <td>${r.jP||'—'}</td><td>${r.eP||'—'}</td><td>${r.dP||'—'}</td>
+      <td>${bdg(r.lk)}</td><td>${bdg(r.fn)}</td><td>${bdg(r.bt)}</td>
+      <td>${bdg(r.lt)}</td><td>${bdg(r.cl)}</td><td>${bdg(r.wt)}</td>
+      <td style="font-size:10.5px">${esc(r.dn)||'—'}</td>
+      <td style="font-size:10.5px">${esc(r.ag)||'—'}</td>
+      <td style="font-size:10.5px">${esc(r.rm)||'—'}</td>
+      <td class="no-print"><button class="abt" onclick="delE('fp','daily','${r.key}')">🗑️</button></td>`;
+    tbody.appendChild(tr);
   });
-  if(filter_year) rows = rows.filter(r => new Date(r.date).getFullYear()==filter_year);
-  rows.sort((a,b) => new Date(a.date)-new Date(b.date));
-  $('daily_count').textContent = rows.length ? `${rows.length} records` : '';
-  if(!rows.length) {
-    tbody.innerHTML = `<tr><td colspan="18" style="text-align:center;padding:28px;color:#6b7892">কোনো entry নেই।</td></tr>`;
-    return;
-  }
-  tbody.innerHTML = '';
-  rows.forEach(r => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${r.date||'—'}</td><td>${r.time||'—'}</td>
-      <td>${statusBadge(r.jockeySt)}</td><td>${statusBadge(r.electricSt)}</td><td>${statusBadge(r.dieselSt)}</td>
-      <td>${r.jockeyPSI||'—'}</td><td>${r.electricPSI||'—'}</td><td>${r.dieselPSI||'—'}</td>
-      <td>${statusBadge(r.leakage)}</td><td>${statusBadge(r.fan)}</td><td>${statusBadge(r.battery)}</td>
-      <td>${statusBadge(r.light)}</td><td>${statusBadge(r.clean)}</td><td>${statusBadge(r.water)}</td>
-      <td style="font-size:11px">${esc(r.doneby)||'—'}</td>
-      <td style="font-size:11px">${esc(r.agm)||'—'}</td>
-      <td style="font-size:11px;max-width:100px">${esc(r.remarks)||'—'}</td>
-      <td class="no-print"><button class="action-btn" onclick="deleteDaily('${r.key}')">🗑️</button></td>
-    `;
+};
+
+window.openDailyModal=()=>{
+  $('d_date').value=new Date().toISOString().split('T')[0];
+  $('d_time').value=new Date().toTimeString().slice(0,5);
+  $('daily-modal').style.display='flex';
+};
+
+window.saveDaily=()=>{
+  if(!fv('d_date')){alert('Date দিন!');return;}
+  push(ref(db,'logbook3/fp/daily'),{
+    date:fv('d_date'),time:fv('d_time'),
+    jSt:fv('d_jSt'),eSt:fv('d_eSt'),dSt:fv('d_dSt'),
+    jP:fv('d_jP'),eP:fv('d_eP'),dP:fv('d_dP'),
+    lk:fv('d_lk'),fn:fv('d_fn'),bt:fv('d_bt'),
+    lt:fv('d_lt'),cl:fv('d_cl'),wt:fv('d_wt'),
+    dn:fv('d_dn'),ag:fv('d_ag'),rm:fv('d_rm'),
+    createdAt:new Date().toLocaleString('en-GB'),
+  });
+  closeM('daily-modal');
+};
+
+/* ── CHECKLIST ── */
+let _cSec='',_cFreq='',_cItems=[];
+
+window.renderCl=function(sec,freq){
+  const tbody=$(`${sec}-${freq}-body`);if(!tbody)return;
+  const entries=Object.entries(DB[sec]?.[freq]||{});
+  // Update filter
+  const fEl=$(`${sec}_${freq[0]}f`);
+  if(fEl){const cur=fEl.value;fEl.innerHTML='<option value="">All</option>';entries.forEach(([k,v])=>{const o=document.createElement('option');o.value=v.period;o.textContent=v.period;fEl.appendChild(o);});fEl.value=cur;}
+  let filtered=entries;
+  if(fEl&&fEl.value)filtered=entries.filter(([k,v])=>v.period===fEl.value);
+  if(!filtered.length){tbody.innerHTML=`<tr><td colspan="12" style="padding:24px;color:#6b7892">কোনো entry নেই। "＋ New Entry" দিয়ে শুরু করুন।</td></tr>`;return;}
+  tbody.innerHTML='';
+  filtered.forEach(([key,entry])=>{
+    // Header row
+    const htr=document.createElement('tr');
+    htr.innerHTML=`<td colspan="11" class="entry-hdr">📅 ${esc(entry.period||'—')} &nbsp;|&nbsp; Date: ${entry.date||'—'} &nbsp;|&nbsp; Sig Exec: ${esc(entry.sig1||'—')} &nbsp;|&nbsp; Sig AGM: ${esc(entry.sig2||'—')} &nbsp;|&nbsp; Sig GM: ${esc(entry.sig3||'—')}</td><td class="no-print" style="border:1px solid #252d3a;text-align:center"><button class="abt" onclick="delE('${sec}','${freq}','${key}')">🗑️</button></td>`;
+    tbody.appendChild(htr);
+    // Item rows
+    (entry.items||[]).forEach((item,i)=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`
+        <td style="font-weight:600;color:#9ab">${i+1}</td>
+        <td class="tl">${esc(item.desc||'—')}</td>
+        <td class="tl" style="font-size:10.5px;color:#9ab">${esc(item.scope||'—')}</td>
+        <td>${bdg(item.vi)}</td><td>${bdg(item.ch)}</td><td>${bdg(item.cl)}</td><td>${bdg(item.ts)}</td>
+        <td style="font-size:10px"></td><td style="font-size:10px"></td><td style="font-size:10px"></td>
+        <td style="font-size:10.5px">${esc(entry.period||'')}</td>
+        <td class="no-print"></td>`;
+      tbody.appendChild(tr);
+    });
+    if(!(entry.items||[]).length){
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td colspan="12" style="padding:10px;color:#6b7892;font-size:11px;font-style:italic">এই entry-তে কোনো item নেই।</td>`;
+      tbody.appendChild(tr);
+    }
+  });
+};
+
+/* filter shortcut for sub-filters like fp_wf, fp_mf etc */
+window.renderCl=window.renderCl;
+// Also handle fp_wf style selects
+['fp_wf','fp_mf','fp_qf','fp_sf','fp_af',
+ 'fd_mf','fd_qf','fd_sf','fd_af',
+ 'fe_mf','fe_qf','fe_sf','fe_af',
+ 'sp_mf','sp_qf','sp_sf','sp_af',
+ 'st_mf','st_qf','st_sf','st_af'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) el.onchange=function(){
+    const parts=id.split('_');
+    const sec=parts[0];
+    const fmap={w:'weekly',m:'monthly',q:'quarterly',s:'semi',a:'annual'};
+    const freq=fmap[parts[1][0]];
+    renderCl(sec,freq);
+  };
+});
+
+window.openClModal=function(sec,freq,plabel){
+  _cSec=sec;_cFreq=freq;_cItems=[];
+  $('cl-title').textContent=`📋 ${sec.toUpperCase()} — ${freq.charAt(0).toUpperCase()+freq.slice(1)} Entry`;
+  $('cl-plabel').textContent=(plabel||'Period')+' *';
+  $('cl_p').value='';$('cl_d').value=new Date().toISOString().split('T')[0];
+  $('cl_s1').value='';$('cl_s2').value='';$('cl_s3').value='';
+  $('new_desc').value='';$('new_scope').value='';
+  renderClFormItems();
+  $('cl-modal').style.display='flex';
+};
+
+function renderClFormItems(){
+  const tbody=$('cl-form-body');tbody.innerHTML='';
+  if(!_cItems.length){tbody.innerHTML=`<tr><td colspan="7" style="padding:12px;color:#6b7892;font-size:11px">নিচে description ও scope লিখে "＋ Add" করুন।</td></tr>`;return;}
+  _cItems.forEach((item,i)=>{
+    const tr=document.createElement('tr');
+    const makeS=(col)=>`<td style="border:1px solid #252d3a;text-align:center"><select class="csel" id="ci_${i}_${col}"><option value="">—</option><option>✔ OK</option><option>✘ N/G</option><option>N/A</option></select></td>`;
+    tr.innerHTML=`<td style="border:1px solid #252d3a;text-align:center;color:#9ab;font-weight:600">${i+1}</td>
+      <td class="tl" style="border:1px solid #252d3a;padding:5px 8px;font-size:11px">${esc(item.desc)}</td>
+      <td class="tl" style="border:1px solid #252d3a;padding:5px 8px;font-size:10.5px;color:#9ab">${esc(item.scope)}</td>
+      ${makeS('vi')}${makeS('ch')}${makeS('cl')}${makeS('ts')}`;
     tbody.appendChild(tr);
   });
 }
 
-window.filterDaily = () => renderDaily(fv('daily_month'), fv('daily_year'));
-
-window.openDailyModal = () => {
-  dailyEditKey = null;
-  const today = new Date().toISOString().split('T')[0];
-  $('d_date').value = today;
-  $('d_time').value = new Date().toTimeString().slice(0,5);
-  $('dailyModal').style.display='flex';
-};
-window.closeDailyModal = () => { $('dailyModal').style.display='none'; };
-window.deleteDaily = key => { if(confirm('Delete?')) remove(ref(db,'logbook/daily/'+key)); };
-
-window.saveDaily = () => {
-  if(!fv('d_date')) { alert('Date দিন!'); return; }
-  const data = {
-    date:fv('d_date'), time:fv('d_time'),
-    jockeySt:fv('d_jockeySt'), electricSt:fv('d_electricSt'), dieselSt:fv('d_dieselSt'),
-    jockeyPSI:fv('d_jockeyPSI'), electricPSI:fv('d_electricPSI'), dieselPSI:fv('d_dieselPSI'),
-    leakage:fv('d_leakage'), fan:fv('d_fan'), battery:fv('d_battery'),
-    light:fv('d_light'), clean:fv('d_clean'), water:fv('d_water'),
-    doneby:fv('d_doneby'), agm:fv('d_agm'), remarks:fv('d_remarks'),
-    createdAt: new Date().toLocaleString('en-GB'),
-  };
-  push(DAILY_REF, data);
-  closeDailyModal();
+window.addClItem=function(){
+  const desc=fv('new_desc').trim(),scope=fv('new_scope').trim();
+  if(!desc){alert('Description লিখুন!');return;}
+  _cItems.push({desc,scope});
+  $('new_desc').value='';$('new_scope').value='';
+  renderClFormItems();
 };
 
-/* ──────────── WEEKLY ──────────── */
-let allWeekly = {};
-onValue(WEEKLY_REF, snap => { allWeekly = snap.val()||{}; renderWeekly(); updateWeeklyFilter(); });
-
-function renderWeekly(filterKey='') {
-  const tbody = $('weeklyBody'); if(!tbody) return;
-  let entries = Object.entries(allWeekly);
-  if(filterKey) entries = entries.filter(([k,v]) => k===filterKey || v.weekname===filterKey);
-  if(!entries.length) {
-    tbody.innerHTML = `<tr><td colspan="12" style="text-align:center;padding:28px;color:#6b7892">কোনো entry নেই।</td></tr>`;
-    return;
-  }
-  tbody.innerHTML = '';
-  entries.forEach(([key, entry]) => {
-    // Group header row
-    const headerTr = document.createElement('tr');
-    headerTr.innerHTML = `<td colspan="11" style="background:#1a1030;color:#c0a0f0;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;padding:8px 12px;border:1px solid #252d3a">
-      📅 ${esc(entry.weekname||'—')} &nbsp;|&nbsp; Date: ${entry.date||'—'} &nbsp;|&nbsp; Sig Exec: ${esc(entry.sig1||'—')} &nbsp;|&nbsp; Sig AGM: ${esc(entry.sig2||'—')} &nbsp;|&nbsp; Sig GM: ${esc(entry.sig3||'—')}
-    </td>
-    <td class="no-print" style="border:1px solid #252d3a;text-align:center"><button class="action-btn" onclick="deleteWeekly('${key}')">🗑️</button></td>`;
-    tbody.appendChild(headerTr);
-
-    // Items
-    const items = entry.items || [];
-    WEEKLY_ITEMS.forEach(tmpl => {
-      if(tmpl.group) {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td colspan="12" style="background:#1a1020;color:#c0a0f0;font-weight:700;font-family:'Rajdhani',sans-serif;font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;padding:6px 10px;border:1px solid #252d3a">${tmpl.group}</td>`;
-        tbody.appendChild(tr); return;
-      }
-      const item = items.find(i => i.sl===tmpl.sl) || {};
-      const cell = (v, def) => v ? `<td style="border:1px solid #252d3a;text-align:center">${statusBadge(v)}</td>` : `<td style="border:1px solid #252d3a;text-align:center"><span class="na-badge">NA</span></td>`;
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td style="border:1px solid #252d3a;text-align:center;color:#9ab;font-weight:600">${tmpl.sl}</td>
-        <td style="border:1px solid #252d3a;padding:7px 10px">${esc(tmpl.desc)}</td>
-        <td style="border:1px solid #252d3a;padding:7px 10px;font-size:11.5px;color:#9ab">${esc(tmpl.scope)}</td>
-        ${typeof tmpl.vi==='boolean'?cell(item.vi):cell(null)}
-        ${typeof tmpl.ch==='boolean'?cell(item.ch):cell(null)}
-        ${typeof tmpl.cl==='boolean'?cell(item.cl):cell(null)}
-        ${typeof tmpl.ts==='boolean'?cell(item.ts):cell(null)}
-        <td style="border:1px solid #252d3a;text-align:center;font-size:11px"></td>
-        <td style="border:1px solid #252d3a;text-align:center;font-size:11px"></td>
-        <td style="border:1px solid #252d3a;text-align:center;font-size:11px"></td>
-        <td style="border:1px solid #252d3a;text-align:center;font-size:11px">${esc(entry.weekname||'')}</td>
-        <td class="no-print" style="border:1px solid #252d3a"></td>
-      `;
-      tbody.appendChild(tr);
-    });
+window.saveCl=function(){
+  const period=fv('cl_p').trim();
+  if(!period){alert('Period লিখুন!');return;}
+  const items=_cItems.map((item,i)=>({
+    desc:item.desc,scope:item.scope,
+    vi:fv(`ci_${i}_vi`)||'—',ch:fv(`ci_${i}_ch`)||'—',
+    cl:fv(`ci_${i}_cl`)||'—',ts:fv(`ci_${i}_ts`)||'—',
+  }));
+  push(ref(db,`logbook3/${_cSec}/${_cFreq}`),{
+    period,date:fv('cl_d'),
+    sig1:fv('cl_s1'),sig2:fv('cl_s2'),sig3:fv('cl_s3'),
+    items,createdAt:new Date().toLocaleString('en-GB'),
   });
-}
-
-function updateWeeklyFilter() {
-  const sel = $('weekly_filter'); if(!sel) return;
-  const current = sel.value;
-  sel.innerHTML = '<option value="">All</option>';
-  Object.values(allWeekly).forEach(e => {
-    const opt = document.createElement('option');
-    opt.value = e.weekname; opt.textContent = e.weekname;
-    sel.appendChild(opt);
-  });
-  sel.value = current;
-}
-
-window.filterWeekly = () => renderWeekly(fv('weekly_filter'));
-
-window.openWeeklyModal = () => {
-  buildChecklistFormRows(WEEKLY_ITEMS, 'weeklyFormBody');
-  $('w_date').value = new Date().toISOString().split('T')[0];
-  $('weeklyModal').style.display='flex';
-};
-window.closeWeeklyModal = () => { $('weeklyModal').style.display='none'; };
-window.deleteWeekly = key => { if(confirm('Delete?')) remove(ref(db,'logbook/weekly/'+key)); };
-
-window.saveWeekly = () => {
-  const weekname = fv('w_weekname').trim();
-  if(!weekname) { alert('Week name দিন!'); return; }
-  const data = {
-    weekname, date:fv('w_date'),
-    sig1:fv('w_sig1'), sig2:fv('w_sig2'), sig3:fv('w_sig3'),
-    items: getChecklistValues(WEEKLY_ITEMS, 'weeklyFormBody'),
-    createdAt: new Date().toLocaleString('en-GB'),
-  };
-  push(WEEKLY_REF, data);
-  closeWeeklyModal();
+  closeM('cl-modal');
 };
 
-/* ──────────── MONTHLY ──────────── */
-let allMonthly = {};
-onValue(MONTHLY_REF, snap => { allMonthly = snap.val()||{}; renderMonthly(); updateMonthlyFilter(); });
+window.delE=(sec,freq,key)=>{if(confirm('Delete?'))remove(ref(db,`logbook3/${sec}/${freq}/${key}`));};
 
-function renderMonthly(filterKey='') {
-  const tbody = $('monthlyBody'); if(!tbody) return;
-  let entries = Object.entries(allMonthly);
-  if(filterKey) entries = entries.filter(([k,v]) => v.monthname===filterKey);
-  if(!entries.length) {
-    tbody.innerHTML = `<tr><td colspan="12" style="text-align:center;padding:28px;color:#6b7892">কোনো entry নেই।</td></tr>`;
-    return;
-  }
-  tbody.innerHTML = '';
-  entries.forEach(([key, entry]) => {
-    const headerTr = document.createElement('tr');
-    headerTr.innerHTML = `<td colspan="11" style="background:#1a1030;color:#c0a0f0;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;padding:8px 12px;border:1px solid #252d3a">
-      🗓️ ${esc(entry.monthname||'—')} &nbsp;|&nbsp; Date: ${entry.date||'—'} &nbsp;|&nbsp; Sig Exec: ${esc(entry.sig1||'—')} &nbsp;|&nbsp; Sig AGM: ${esc(entry.sig2||'—')} &nbsp;|&nbsp; Sig GM: ${esc(entry.sig3||'—')}
-    </td>
-    <td class="no-print" style="border:1px solid #252d3a;text-align:center"><button class="action-btn" onclick="deleteMonthly('${key}')">🗑️</button></td>`;
-    tbody.appendChild(headerTr);
-
-    const items = entry.items || [];
-    MONTHLY_ITEMS.forEach(tmpl => {
-      if(tmpl.group) {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td colspan="12" style="background:#1a1020;color:#c0a0f0;font-weight:700;font-family:'Rajdhani',sans-serif;font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;padding:6px 10px;border:1px solid #252d3a">${tmpl.group}</td>`;
-        tbody.appendChild(tr); return;
-      }
-      const item = items.find(i => i.sl===tmpl.sl) || {};
-      const cell = (v) => v ? `<td style="border:1px solid #252d3a;text-align:center">${statusBadge(v)}</td>` : `<td style="border:1px solid #252d3a;text-align:center"><span class="na-badge">NA</span></td>`;
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td style="border:1px solid #252d3a;text-align:center;color:#9ab;font-weight:600">${tmpl.sl}</td>
-        <td style="border:1px solid #252d3a;padding:7px 10px">${esc(tmpl.desc)}</td>
-        <td style="border:1px solid #252d3a;padding:7px 10px;font-size:11.5px;color:#9ab">${esc(tmpl.scope)}</td>
-        ${typeof tmpl.vi==='boolean'?cell(item.vi):cell(null)}
-        ${typeof tmpl.ch==='boolean'?cell(item.ch):cell(null)}
-        ${typeof tmpl.cl==='boolean'?cell(item.cl):cell(null)}
-        ${typeof tmpl.ts==='boolean'?cell(item.ts):cell(null)}
-        <td style="border:1px solid #252d3a;text-align:center;font-size:11px"></td>
-        <td style="border:1px solid #252d3a;text-align:center;font-size:11px"></td>
-        <td style="border:1px solid #252d3a;text-align:center;font-size:11px"></td>
-        <td style="border:1px solid #252d3a;text-align:center;font-size:11px">${esc(entry.monthname||'')}</td>
-        <td class="no-print" style="border:1px solid #252d3a"></td>
-      `;
-      tbody.appendChild(tr);
-    });
-  });
-}
-
-function updateMonthlyFilter() {
-  const sel = $('monthly_filter'); if(!sel) return;
-  const current = sel.value;
-  sel.innerHTML = '<option value="">All</option>';
-  Object.values(allMonthly).forEach(e => {
-    const opt = document.createElement('option');
-    opt.value = e.monthname; opt.textContent = e.monthname;
-    sel.appendChild(opt);
-  });
-  sel.value = current;
-}
-
-window.filterMonthly = () => renderMonthly(fv('monthly_filter'));
-
-window.openMonthlyModal = () => {
-  buildChecklistFormRows(MONTHLY_ITEMS, 'monthlyFormBody');
-  $('m_date').value = new Date().toISOString().split('T')[0];
-  $('monthlyModal').style.display='flex';
-};
-window.closeMonthlyModal = () => { $('monthlyModal').style.display='none'; };
-window.deleteMonthly = key => { if(confirm('Delete?')) remove(ref(db,'logbook/monthly/'+key)); };
-
-window.saveMonthly = () => {
-  const monthname = fv('m_monthname').trim();
-  if(!monthname) { alert('Month/Year দিন!'); return; }
-  const data = {
-    monthname, date:fv('m_date'),
-    sig1:fv('m_sig1'), sig2:fv('m_sig2'), sig3:fv('m_sig3'),
-    items: getChecklistValues(MONTHLY_ITEMS, 'monthlyFormBody'),
-    createdAt: new Date().toLocaleString('en-GB'),
-  };
-  push(MONTHLY_REF, data);
-  closeMonthlyModal();
-};
-
-/* ──────────── TAB & PRINT ──────────── */
-window.switchTab = (tab, btn) => {
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  $('tab-'+tab).classList.add('active');
+/* ── NAVIGATION ── */
+window.switchMain=function(sec,btn){
+  SECS.forEach(s=>{const el=$(`sec-${s}`);if(el){el.classList.remove('active');el.style.display='none';}});
+  document.querySelectorAll('.main-nav-btn').forEach(b=>b.classList.remove('active'));
+  const el=$(`sec-${sec}`);if(el){el.classList.add('active');el.style.display='block';}
   btn.classList.add('active');
 };
 
-window.printTab = (tab) => {
-  document.querySelectorAll('.tab-content').forEach(t => t.style.display='none');
-  $('tab-'+tab).style.display='block';
+window.switchSub=function(sec,freq,btn){
+  document.querySelectorAll(`#subnav-${sec} .sub-nav-btn`).forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  $(`sec-${sec}`).querySelectorAll('.content-panel').forEach(p=>p.classList.remove('active'));
+  const panel=$(`${sec}-${freq}`);if(panel)panel.classList.add('active');
+};
+
+/* ── MODAL ── */
+window.closeM=id=>{$(id).style.display='none';};
+
+/* ── PRINT ── */
+window.doPrint=function(sec,freq){
+  SECS.forEach(s=>{const el=$(`sec-${s}`);if(el)el.style.display='none';});
+  const secEl=$(`sec-${sec}`);if(secEl)secEl.style.display='block';
+  secEl.querySelectorAll('.content-panel').forEach(p=>p.classList.remove('active'));
+  const panel=$(`${sec}-${freq}`);if(panel)panel.classList.add('active');
   window.print();
-  document.querySelectorAll('.tab-content').forEach(t => t.style.display='');
-  $('tab-'+tab).classList.add('active');
+  // Restore
+  SECS.forEach(s=>{const el=$(`sec-${s}`);if(el)el.style.display='none';});
+  $('sec-fp').style.display='block';$('sec-fp').classList.add('active');
+  $('sec-fp').querySelectorAll('.content-panel').forEach(p=>p.classList.remove('active'));
+  $('fp-daily').classList.add('active');
 };
 </script>
 </body>
