@@ -1,0 +1,15 @@
+{
+  "name": "Fire & Safety System — Seven Circle (Bangladesh) Ltd.",
+  "short_name": "F&S System",
+  "description": "Fire & Safety Work Management System",
+  "start_url": "login.html",
+  "display": "standalone",
+  "background_color": "#0f1318",
+  "theme_color": "#e03030",
+  "orientation": "any",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "categories": ["business","productivity"]
+}

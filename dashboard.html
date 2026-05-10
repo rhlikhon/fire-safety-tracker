@@ -131,6 +131,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <span class="nav-badge" id="req-badge" style="display:none">0</span>
     </a>
 
+    <div class="nav-section">Reports</div>
+    <a class="nav-item" href="reports.html">
+      <span class="icon">📊</span> Reports & Analytics
+    </a>
     <div class="nav-section">Log Book</div>
     <a class="nav-item" href="logbook.html">
       <span class="icon">📒</span> Fire Pump Room
@@ -160,6 +164,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       </div>
     </div>
     <button class="btn-logout" onclick="doLogout()">⬅ Logout</button>
+    <button class="btn-logout" style="background:none;border-color:#1a3a6e;color:#6ab8f7;margin-top:4px" onclick="openPwChange()">🔑 Change Password</button>
   </div>
 </div>
 
@@ -552,6 +557,78 @@ window.closeSidebar=()=>{
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('sidebarOverlay').classList.remove('open');
 };
+</script>
+
+
+<!-- Password Change Modal -->
+<div id="pw-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.84);z-index:3000;align-items:center;justify-content:center;padding:16px">
+  <div style="background:#181e27;border:1.5px solid #1a3a6e;border-radius:14px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.7)">
+    <div style="background:linear-gradient(135deg,#0d3a6e,#1565c0);padding:14px 18px;border-radius:12px 12px 0 0;display:flex;justify-content:space-between;align-items:center">
+      <span style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:1px">🔑 Change Password</span>
+      <button onclick="document.getElementById('pw-modal').style.display='none'" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer;opacity:.8">✕</button>
+    </div>
+    <div style="padding:20px;display:flex;flex-direction:column;gap:12px">
+      <div>
+        <label style="display:block;font-size:11px;font-weight:700;color:#90c8f8;text-transform:uppercase;letter-spacing:.7px;font-family:'Rajdhani',sans-serif;margin-bottom:5px">New Password</label>
+        <input id="pw_new" type="password" placeholder="নতুন password" style="width:100%;background:#1a2030;border:1.5px solid #252d3a;border-radius:7px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#e8eaf0;outline:none">
+      </div>
+      <div>
+        <label style="display:block;font-size:11px;font-weight:700;color:#90c8f8;text-transform:uppercase;letter-spacing:.7px;font-family:'Rajdhani',sans-serif;margin-bottom:5px">Confirm Password</label>
+        <input id="pw_confirm" type="password" placeholder="আবার লিখুন" style="width:100%;background:#1a2030;border:1.5px solid #252d3a;border-radius:7px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#e8eaf0;outline:none">
+      </div>
+      <div id="pw-msg" style="display:none;padding:8px 12px;border-radius:6px;font-size:12.5px;text-align:center"></div>
+    </div>
+    <div style="padding:12px 18px;border-top:1px solid #252d3a;display:flex;gap:8px;justify-content:flex-end">
+      <button onclick="document.getElementById('pw-modal').style.display='none'" style="background:#252d3a;color:#6b7892;padding:8px 14px;border:none;border-radius:7px;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;cursor:pointer">বাতিল</button>
+      <button onclick="changePassword()" style="background:linear-gradient(135deg,#0d3a6e,#1565c0);color:#fff;padding:8px 20px;border:none;border-radius:7px;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;cursor:pointer">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, updatePassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+const _cfg={apiKey:"AIzaSyDS1f3vKcohxGEvYdEBjVdBsm0E9ppmmBQ",authDomain:"fire-safety-tracker-a1826.firebaseapp.com",projectId:"fire-safety-tracker-a1826",appId:"1:561656890483:web:82b1cf24a0db230992d686"};
+const _app3 = getApps().find(a=>a.name==='pwapp') || initializeApp(_cfg,'pwapp');
+const _auth3 = getAuth(_app3);
+
+window.openPwChange=()=>{ document.getElementById('pw-modal').style.display='flex'; document.getElementById('pw-msg').style.display='none'; };
+window.changePassword=async()=>{
+  const np=document.getElementById('pw_new').value;
+  const cp=document.getElementById('pw_confirm').value;
+  const msg=document.getElementById('pw-msg');
+  if(!np||np.length<6){msg.style.cssText='display:block;background:#2a0808;color:#ff8080;border:1px solid #6b1a1a;padding:8px 12px;border-radius:6px;font-size:12.5px;text-align:center';msg.textContent='Password কমপক্ষে ৬ character হতে হবে।';return;}
+  if(np!==cp){msg.style.cssText='display:block;background:#2a0808;color:#ff8080;border:1px solid #6b1a1a;padding:8px 12px;border-radius:6px;font-size:12.5px;text-align:center';msg.textContent='Password দুটো মিলছে না।';return;}
+  try{
+    await updatePassword(_auth3.currentUser, np);
+    msg.style.cssText='display:block;background:#0a2015;color:#55e09a;border:1px solid #1a5c33;padding:8px 12px;border-radius:6px;font-size:12.5px;text-align:center';
+    msg.textContent='✅ Password সফলভাবে পরিবর্তন হয়েছে!';
+    setTimeout(()=>document.getElementById('pw-modal').style.display='none',2000);
+  }catch(e){
+    msg.style.cssText='display:block;background:#2a0808;color:#ff8080;border:1px solid #6b1a1a;padding:8px 12px;border-radius:6px;font-size:12.5px;text-align:center';
+    msg.textContent='Error: '+e.message;
+  }
+};
+</script>
+
+<script>
+// PWA
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+// Auto logout 30 mins
+let _timer;
+function _reset(){
+  clearTimeout(_timer);
+  _timer = setTimeout(()=>{
+    if(typeof doLogout==='function') doLogout();
+    else window.location.href='login.html';
+  }, 30*60*1000);
+}
+['click','keypress','scroll','mousemove','touchstart'].forEach(e=>{
+  document.addEventListener(e,_reset,{passive:true});
+});
+_reset();
 </script>
 </body>
 </html>
