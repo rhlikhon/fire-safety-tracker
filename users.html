@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Management — Fire & Safety System</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f1318;--card:#181e27;--border:#252d3a;--accent:#e03030;--text:#e8eaf0;--muted:#6b7892;--radius:12px}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;color:var(--text);padding:0}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+
+.topbar{background:linear-gradient(135deg,#7b1416,#c0321a,#b52626);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:relative;z-index:1}
+.topbar-left{display:flex;align-items:center;gap:14px}
+.topbar-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:#fff;letter-spacing:1.2px;text-transform:uppercase}
+.back-btn{background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);border-radius:7px;padding:7px 14px;color:#fff;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px;transition:all .2s}
+.back-btn:hover{background:rgba(255,255,255,.25)}
+
+.content{padding:20px;position:relative;z-index:1;max-width:1100px;margin:0 auto}
+
+/* Role cards */
+.role-info{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:24px}
+.role-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:16px;position:relative;overflow:hidden}
+.role-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.role-card.admin::before{background:linear-gradient(90deg,#7b1416,#e03030)}
+.role-card.manager::before{background:linear-gradient(90deg,#0d3a6e,#1976d2)}
+.role-card.viewer::before{background:linear-gradient(90deg,#0e6655,#16a085)}
+.role-icon{font-size:24px;margin-bottom:8px}
+.role-name{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.8px}
+.role-desc{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.6}
+.role-perms{margin-top:8px;display:flex;flex-direction:column;gap:3px}
+.perm{font-size:11px;display:flex;align-items:center;gap:5px}
+.perm.yes{color:#55e09a}
+.perm.no{color:#3a4560}
+
+/* Add user card */
+.add-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px}
+.card-title{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:#f5b8b8;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;display:flex;align-items:center;gap:7px}
+.form-row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg label{font-size:11px;font-weight:700;color:#f5b8b8;text-transform:uppercase;letter-spacing:.7px;font-family:'Rajdhani',sans-serif}
+.fg input,.fg select{background:#1a2030;border:1.5px solid var(--border);border-radius:7px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color .2s;width:100%}
+.fg input:focus,.fg select:focus{border-color:var(--accent)}
+.fg select option{background:#1a2030}
+.btn{border:none;padding:9px 18px;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:.6px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap}
+.btn-add{background:var(--accent);color:#fff;box-shadow:0 2px 12px rgba(224,48,48,.3)}
+.btn-add:hover{background:#c82020;transform:translateY(-1px)}
+
+.msg{padding:10px 14px;border-radius:7px;font-size:13px;margin-top:12px;display:none;animation:fadeIn .3s}
+.msg.ok{background:#0a2015;color:#55e09a;border:1px solid #1a5c33}
+.msg.err{background:#2a0808;color:#ff8080;border:1px solid #6b1a1a}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* Users table */
+.users-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:20px}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:#1f0a0a;color:#f5b8b8;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;padding:11px 12px;text-align:left;border:1px solid #3a1a1a;white-space:nowrap}
+tbody td{padding:10px 12px;border:1px solid #252d3a;vertical-align:middle}
+tbody tr:nth-child(even){background:#161b23}
+tbody tr:hover{background:#1e252f}
+
+.role-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 11px;border-radius:20px;font-size:11.5px;font-weight:700;white-space:nowrap}
+.rb-admin{background:#2a0808;color:#ff8080;border:1px solid #6b1a1a}
+.rb-manager{background:#061825;color:#6ab8f7;border:1px solid #0d4070}
+.rb-viewer{background:#0a2015;color:#55e09a;border:1px solid #1a5c33}
+
+.action-btn{border:none;background:none;cursor:pointer;font-size:14px;padding:3px 6px;border-radius:5px;transition:background .15s}
+.action-btn:hover{background:#2a1010}
+
+.status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+.status-dot.active{background:#28a745}
+.status-dot.inactive{background:#dc3545}
+
+/* Note box */
+.note{background:#0d1a2e;border:1.5px solid #1a3a6e;border-radius:9px;padding:12px 16px;font-size:12px;color:#6ab8f7;line-height:1.7;margin-bottom:16px}
+.note strong{color:#90c8f8}
+
+@media(max-width:768px){
+  .form-row{grid-template-columns:1fr}
+  .content{padding:12px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-title">👥 User Management</div>
+  </div>
+  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAABIFBMVEX////tHCTpAAD5rrH2jpLyVlz94+TuKDDwQ0ruKjL0dnvnAAD6w8XwSE72k5f+9/fzYmj7ztD6u77vNDvvOD/uIyvzanDyW2H1h4v3m5//+vr81dcAAHT7ycv6v8H94OH4oqb0en/xTFIVGYX5sbP96+z82dr0eX30cXZZW6j1gYUfIoqztNfq6vT4p6rzaG3P0OZ9f7vsDhcsL5GOkMTs7PXb3OwAAGw1OJa/wN4KDn+jpc8+QZqtrtRaXKl1d7dMT6Lx//+Ehr////RmaK//8uvh9P9HWa9de8ZYcsBDRp24w+X/vrf/sqr+WVi6z+/Q6v7/tqj/TUX/xrahu+iwzfL/hH7e1uaIoNj/pqD/nJEsQKL+EhL/Ukd4ktD/ZmB5Gu99AAADB0lEQVR42u2V21LbSBCG/5blI4wtC8k6YGEhIZWwg+UI2/hAgCUsqRwrFzm+/4tsjwS1uxeQqsSX87ump2dG/tw96vEASkpKSkpKSkpKv5apad+86bjQ3N3wtAJ/xdzfJy3aAS7SsEF8vsR6vngBq/unvF6ByRaX8znOVxjiXnsgmm2BE8MwQgMIDLBXG7PrjIGjSEwxMuA6gJEAY5El6LQ7D/kyJZ692rx5G798ieHV+8iX00RpF7rtdUENHvTI8wJBNkgAHSsh6hPqlPLqPgkzQ9RM85J3jIvZAsPZ66L4yKmfrRYoKiAbvS29AcjqyaFoUqMEtlABBTGwfBJtq4pvpN0AyytHyLCi/DP8STxw5IrND+rEJuBv+T32TjhCKoHEoUqgSxklZDG+WbYy4dPF9qsG9ANYJo7fYP2KJ0uRWUYIGjdRRcho+yFCRwIzk6oIqSWfq4Czi7PX+zI7L5ETl5s1Iu4td0y+buuuzL7GwK7rMTD8X8oZ942QrJBazlQvga33V+sYlnWEqOMmBzluzrerwx5wmOcjBLquAyE339V1b8p0N+QCCFFzEx1Tk8fyLRuhP3KMMq3s+vx2ko1Tz+Y12x2Y29Xl5u/096sw4zbxqg3QZcRf2DT+ACg3c8IVGRV2Tlwv9JYngp5cCvMparVagw1kY59NglGtUbpPHGP+rEfNvToOBZ/pDCvsoc4LPtmeANUH/bIkuVFrMJD9lPoOtepPAWUwa/CG5ryLbVxVv8Ju+c4oYNMkdOsM1Mt6P5hKvvlUyod7GG5m1xLBr08sMTzDcfR4UiALO6E8lUVCcsB1HDwL5Ni2bIffP5nIPwzZnX/ew79AjjCwfZuOHiOEYT8PhHb74myD28np3ep0uZxU/x/gnXJSjyFmetLm85EyMDdNVNv5LDBp818D5rMV4utF/G6rdR4LgOoQQnhhhkGjJ6TPhguCm9h/pnIOivsLvLtj4Ap3qB/v4gqw8eMmxvUP3yh6O7lUPK3Q+/s/29pgl1efr25/JSUlJSUlJaX/6h/whkI66PeGPwAAAABJRU5ErkJggg==" style="height:32px;width:auto;object-fit:contain" alt="Seven Rings Cement">
+  <a href="dashboard.html" class="back-btn">← Dashboard</a>
+</div>
+
+<div class="content">
+
+  <!-- Role Info -->
+  <div class="role-info">
+    <div class="role-card admin">
+      <div class="role-icon">🔥</div>
+      <div class="role-name">Admin</div>
+      <div class="role-desc">সম্পূর্ণ control — সব কিছু করতে পারবে</div>
+      <div class="role-perms">
+        <div class="perm yes">✅ Task Add/Edit/Delete</div>
+        <div class="perm yes">✅ PTW Manage</div>
+        <div class="perm yes">✅ Log Book Entry</div>
+        <div class="perm yes">✅ Job Request Approve</div>
+        <div class="perm yes">✅ User Manage</div>
+        <div class="perm yes">✅ Reports Export</div>
+      </div>
+    </div>
+    <div class="role-card manager">
+      <div class="role-icon">📋</div>
+      <div class="role-name">Manager</div>
+      <div class="role-desc">কাজ পরিচালনা করতে পারবে</div>
+      <div class="role-perms">
+        <div class="perm yes">✅ Task Add/Edit</div>
+        <div class="perm yes">✅ PTW Add</div>
+        <div class="perm yes">✅ Log Book Entry</div>
+        <div class="perm yes">✅ Job Request দেখা</div>
+        <div class="perm no">❌ User Manage</div>
+        <div class="perm yes">✅ Reports দেখা</div>
+      </div>
+    </div>
+    <div class="role-card viewer">
+      <div class="role-icon">👁️</div>
+      <div class="role-name">Viewer</div>
+      <div class="role-desc">শুধু দেখতে পারবে, কিছু করতে পারবে না</div>
+      <div class="role-perms">
+        <div class="perm no">❌ Task Add/Edit/Delete</div>
+        <div class="perm no">❌ PTW Manage</div>
+        <div class="perm no">❌ Log Book Entry</div>
+        <div class="perm yes">✅ সব কিছু দেখতে পারবে</div>
+        <div class="perm yes">✅ Job Request দিতে পারবে</div>
+        <div class="perm no">❌ Reports Export</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add User -->
+  <div class="add-card">
+    <div class="card-title">➕ নতুন User যোগ করুন</div>
+    <div class="note">
+      <strong>⚠️ গুরুত্বপূর্ণ:</strong> নতুন user তৈরি করতে Firebase Console-এ গিয়ে manually user add করতে হবে।
+      তারপর এখানে সেই user-এর email ও role save করুন — তাহলে সঠিক permission পাবে।<br>
+      Firebase user তৈরি করুন: <a href="https://console.firebase.google.com/project/fire-safety-tracker-a1826/authentication/users" target="_blank" style="color:#90c8f8">🔗 Firebase Authentication</a>
+    </div>
+    <div class="form-row">
+      <div class="fg">
+        <label>Full Name *</label>
+        <input id="u_name" type="text" placeholder="যেমন: Karim Ahmed">
+      </div>
+      <div class="fg">
+        <label>Email *</label>
+        <input id="u_email" type="email" placeholder="email@example.com">
+      </div>
+      <div class="fg">
+        <label>Role *</label>
+        <select id="u_role">
+          <option value="viewer">👁️ Viewer</option>
+          <option value="manager">📋 Manager</option>
+          <option value="admin">🔥 Admin</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Designation</label>
+        <select id="u_desig">
+          <option>Executive</option>
+          <option>Senior Executive</option>
+          <option>Manager</option>
+          <option>Senior Manager</option>
+          <option>AGM</option>
+          <option>GM</option>
+          <option>CTO</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <button class="btn btn-add" onclick="addUser()">➕ User যোগ করুন</button>
+    </div>
+    <div class="msg" id="add-msg"></div>
+  </div>
+
+  <!-- Users List -->
+  <div class="users-card">
+    <div class="card-title">👥 সকল Users</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:36px">Sl</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Designation</th>
+            <th>Role</th>
+            <th>Added At</th>
+            <th style="width:80px">Action</th>
+          </tr>
+        </thead>
+        <tbody id="users-body">
+          <tr><td colspan="7" style="text-align:center;padding:28px;color:#6b7892">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- Edit Role Modal -->
+<div id="edit-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:2000;align-items:center;justify-content:center;padding:16px">
+  <div style="background:#181e27;border:1.5px solid #3a1a1a;border-radius:13px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.7)">
+    <div style="background:linear-gradient(135deg,#7b1416,#b52626);padding:14px 18px;border-radius:11px 11px 0 0;display:flex;justify-content:space-between;align-items:center">
+      <span style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:1px">✏️ Role পরিবর্তন</span>
+      <button onclick="document.getElementById('edit-modal').style.display='none'" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer;opacity:.8">✕</button>
+    </div>
+    <div style="padding:18px;display:flex;flex-direction:column;gap:12px">
+      <div class="fg">
+        <label>Name</label>
+        <input id="edit_name" type="text" readonly style="opacity:.6">
+      </div>
+      <div class="fg">
+        <label>New Role</label>
+        <select id="edit_role">
+          <option value="viewer">👁️ Viewer</option>
+          <option value="manager">📋 Manager</option>
+          <option value="admin">🔥 Admin</option>
+        </select>
+      </div>
+      <input type="hidden" id="edit_key">
+    </div>
+    <div style="padding:12px 18px;border-top:1px solid #252d3a;display:flex;gap:8px;justify-content:flex-end">
+      <button onclick="document.getElementById('edit-modal').style.display='none'" style="background:#252d3a;color:#6b7892;padding:8px 14px;border:none;border-radius:7px;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;cursor:pointer">বাতিল</button>
+      <button onclick="saveEditRole()" style="background:var(--accent);color:#fff;padding:8px 20px;border:none;border-radius:7px;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;cursor:pointer">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const app=initializeApp({
+  apiKey:"AIzaSyDS1f3vKcohxGEvYdEBjVdBsm0E9ppmmBQ",
+  authDomain:"fire-safety-tracker-a1826.firebaseapp.com",
+  databaseURL:"https://fire-safety-tracker-a1826-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:"fire-safety-tracker-a1826",
+  storageBucket:"fire-safety-tracker-a1826.firebasestorage.app",
+  messagingSenderId:"561656890483",
+  appId:"1:561656890483:web:82b1cf24a0db230992d686"
+});
+const auth=getAuth(app);
+const db=getDatabase(app);
+
+const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const $=id=>document.getElementById(id);
+const fv=id=>($( id)||{}).value||'';
+
+// Auth guard
+onAuthStateChanged(auth,user=>{ if(!user) window.location.href='login.html'; });
+
+// Load users
+let allUsers={};
+onValue(ref(db,'users'),snap=>{
+  allUsers=snap.val()||{};
+  renderUsers();
+});
+
+const ROLE_BADGE={
+  admin:'<span class="role-badge rb-admin">🔥 Admin</span>',
+  manager:'<span class="role-badge rb-manager">📋 Manager</span>',
+  viewer:'<span class="role-badge rb-viewer">👁️ Viewer</span>',
+};
+
+function renderUsers(){
+  const tbody=$('users-body');
+  const keys=Object.keys(allUsers);
+  if(!keys.length){
+    tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:28px;color:#6b7892">কোনো user নেই। উপরে user যোগ করুন।</td></tr>';
+    return;
+  }
+  tbody.innerHTML='';
+  keys.forEach((key,i)=>{
+    const u=allUsers[key];
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td style="text-align:center;color:#9ab;font-weight:600">${i+1}</td>
+      <td><strong style="color:#eee">${esc(u.name||'—')}</strong></td>
+      <td style="font-size:12px;color:#9ab">${esc(u.email||'—')}</td>
+      <td style="font-size:12px">${esc(u.designation||'—')}</td>
+      <td>${ROLE_BADGE[u.role]||ROLE_BADGE.viewer}</td>
+      <td style="font-size:11px;color:#6b7892">${u.addedAt||'—'}</td>
+      <td style="white-space:nowrap">
+        <button class="action-btn" onclick="openEdit('${key}')" title="Edit role">✏️</button>
+        <button class="action-btn" onclick="deleteUser('${key}')" title="Delete">🗑️</button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+window.addUser=()=>{
+  const name=fv('u_name').trim();
+  const email=fv('u_email').trim();
+  const role=fv('u_role');
+  const desig=fv('u_desig');
+  const msg=$('add-msg');
+
+  if(!name||!email){
+    msg.className='msg err'; msg.style.display='block';
+    msg.textContent='Name ও Email আবশ্যক।'; return;
+  }
+  if(!email.includes('@')){
+    msg.className='msg err'; msg.style.display='block';
+    msg.textContent='সঠিক email দিন।'; return;
+  }
+
+  push(ref(db,'users'),{
+    name,email,role,designation:desig,
+    addedAt:new Date().toLocaleString('en-GB'),
+  });
+
+  msg.className='msg ok'; msg.style.display='block';
+  msg.textContent=`✅ ${name} সফলভাবে যোগ হয়েছে! (${role})`;
+  $('u_name').value=''; $('u_email').value='';
+  setTimeout(()=>msg.style.display='none',3000);
+};
+
+window.openEdit=(key)=>{
+  const u=allUsers[key];
+  $('edit_name').value=u.name||'';
+  $('edit_role').value=u.role||'viewer';
+  $('edit_key').value=key;
+  $('edit-modal').style.display='flex';
+};
+
+window.saveEditRole=()=>{
+  const key=fv('edit_key');
+  const role=fv('edit_role');
+  update(ref(db,'users/'+key),{role});
+  $('edit-modal').style.display='none';
+};
+
+window.deleteUser=(key)=>{
+  const u=allUsers[key];
+  if(confirm(`"${u.name}" কে delete করবেন?\n\nNote: Firebase Authentication থেকে আলাদাভাবে delete করতে হবে।`)){
+    remove(ref(db,'users/'+key));
+  }
+};
+
+// PWA & auto logout
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+let _t; const _r=()=>{ clearTimeout(_t); _t=setTimeout(()=>{ auth.signOut(); window.location.href='login.html'; },30*60*1000); };
+['click','keypress','scroll','touchstart'].forEach(e=>document.addEventListener(e,_r,{passive:true}));
+_r();
+</script>
+</body>
+</html>
