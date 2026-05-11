@@ -3,110 +3,72 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login — Fire & Safety System</title>
+<title>Admin Login — Fire & Safety System</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#e03030">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="F&S System">
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'DM Sans',sans-serif;background:#0f1318;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;overflow:hidden}
-
-/* Loading screen */
-.loading-screen{position:fixed;inset:0;background:#0f1318;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s}
-.loading-screen.hidden{opacity:0;pointer-events:none}
-.loading-logo{font-size:60px;animation:bounce 1s ease-in-out infinite}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-.loading-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:#fff;margin-top:16px;letter-spacing:1px;text-transform:uppercase}
-.loading-bar{width:200px;height:3px;background:#252d3a;border-radius:10px;margin-top:20px;overflow:hidden}
-.loading-fill{height:100%;background:linear-gradient(90deg,#7b1416,#e03030);border-radius:10px;animation:load 1.5s ease-in-out forwards}
-@keyframes load{0%{width:0}100%{width:100%}}
-.loading-sub{font-size:11px;color:#6b7892;margin-top:10px}
-
-/* Background */
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
-.bg-c{position:fixed;border-radius:50%;pointer-events:none;animation:pulse 4s ease-in-out infinite}
+body{font-family:"DM Sans",sans-serif;background:#0f1318;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+.bg-c{position:fixed;border-radius:50%;pointer-events:none}
 .bg-c1{width:400px;height:400px;background:radial-gradient(circle,rgba(224,48,48,.08),transparent 70%);top:-100px;right:-100px}
-.bg-c2{width:300px;height:300px;background:radial-gradient(circle,rgba(224,48,48,.05),transparent 70%);bottom:-80px;left:-80px;animation-delay:2s}
-@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:.7}}
-
-/* Card */
-.login-card{background:#181e27;border:1.5px solid #252d3a;border-radius:20px;padding:38px 34px;width:100%;max-width:410px;position:relative;z-index:1;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:slideUp .4s ease-out}
-@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-
-.logo-area{text-align:center;margin-bottom:30px}
-.logo-icon{width:70px;height:70px;background:linear-gradient(135deg,#7b1416,#e03030);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px;box-shadow:0 8px 24px rgba(224,48,48,.35)}
-.logo-title{font-family:'Rajdhani',sans-serif;font-size:21px;font-weight:700;color:#fff;letter-spacing:1.5px;text-transform:uppercase}
-.logo-sub{font-size:11.5px;color:#6b7892;margin-top:4px}
-.logo-company{font-size:10.5px;color:#e03030;font-weight:600;margin-top:6px;letter-spacing:.4px}
-
+.bg-c2{width:300px;height:300px;background:radial-gradient(circle,rgba(224,48,48,.05),transparent 70%);bottom:-80px;left:-80px}
+.card{background:#181e27;border:1.5px solid #252d3a;border-radius:20px;padding:38px 34px;width:100%;max-width:410px;position:relative;z-index:1;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.logo-row{text-align:center;margin-bottom:10px}
+.logo-row img{height:50px;width:auto}
+.icon-row{text-align:center;margin:14px 0 10px}
+.fire-icon{width:68px;height:68px;background:linear-gradient(135deg,#7b1416,#e03030);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 8px 24px rgba(224,48,48,.35)}
+.title{font-family:"Rajdhani",sans-serif;font-size:22px;font-weight:700;color:#fff;letter-spacing:1.5px;text-transform:uppercase;text-align:center}
+.sub{font-size:11.5px;color:#6b7892;margin-top:4px;text-align:center}
+.company{font-size:10.5px;color:#e03030;font-weight:600;margin-top:5px;letter-spacing:.4px;text-align:center}
+.form{margin-top:26px}
 .fg{margin-bottom:16px}
-.fg label{display:block;font-size:11px;font-weight:700;color:#f5b8b8;text-transform:uppercase;letter-spacing:.8px;font-family:'Rajdhani',sans-serif;margin-bottom:6px}
-.fg input{width:100%;background:#1a2030;border:1.5px solid #252d3a;border-radius:10px;padding:12px 15px;font-family:'DM Sans',sans-serif;font-size:14px;color:#e8eaf0;outline:none;transition:all .2s}
+.fg label{display:block;font-size:11px;font-weight:700;color:#f5b8b8;text-transform:uppercase;letter-spacing:.8px;font-family:"Rajdhani",sans-serif;margin-bottom:6px}
+.fg input{width:100%;background:#1a2030;border:1.5px solid #252d3a;border-radius:10px;padding:12px 15px;font-family:"DM Sans",sans-serif;font-size:14px;color:#e8eaf0;outline:none;transition:all .2s}
 .fg input:focus{border-color:#e03030;background:#1e2535;box-shadow:0 0 0 3px rgba(224,48,48,.1)}
 .fg input::placeholder{color:#3a4560}
-
-.btn-login{width:100%;background:linear-gradient(135deg,#b52626,#e03030);color:#fff;border:none;border-radius:10px;padding:13px;font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .2s;margin-top:6px;text-transform:uppercase;position:relative;overflow:hidden}
+.btn-login{width:100%;background:linear-gradient(135deg,#b52626,#e03030);color:#fff;border:none;border-radius:10px;padding:13px;font-family:"Rajdhani",sans-serif;font-size:16px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .2s;margin-top:6px;text-transform:uppercase}
 .btn-login:hover{background:linear-gradient(135deg,#c82020,#ff4040);transform:translateY(-1px);box-shadow:0 8px 24px rgba(224,48,48,.4)}
 .btn-login:disabled{opacity:.6;cursor:not-allowed;transform:none}
-
-.err{background:#2a0808;border:1.5px solid #6b1a1a;border-radius:8px;padding:10px 14px;font-size:12.5px;color:#ff8080;margin-top:10px;display:none;text-align:center;animation:fadeIn .3s}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-
-.install-banner{background:#0a1520;border:1.5px solid #1a3a55;border-radius:10px;padding:10px 14px;margin-bottom:16px;display:none;align-items:center;gap:10px;justify-content:space-between}
-.install-banner span{font-size:12px;color:#6ab8f7}
-.btn-install{background:linear-gradient(135deg,#0d3a6e,#1565c0);color:#fff;border:none;border-radius:6px;padding:5px 12px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;cursor:pointer}
-
-hr{border:none;border-top:1px solid #252d3a;margin:22px 0}
-.footer-info{text-align:center;font-size:10.5px;color:#3a4560;line-height:1.6}
-.footer-info span{color:#e03030}
+.err{background:#2a0808;border:1.5px solid #6b1a1a;border-radius:8px;padding:10px 14px;font-size:12.5px;color:#ff8080;margin-top:10px;display:none;text-align:center}
+.back-row{text-align:center;margin-top:18px}
+.back-link{font-size:12px;color:#6b7892;text-decoration:none;display:inline-flex;align-items:center;gap:5px;transition:color .2s}
+.back-link:hover{color:#e8eaf0}
+hr{border:none;border-top:1px solid #252d3a;margin:20px 0}
+.footer{text-align:center;font-size:10.5px;color:#3a4560;line-height:1.6}
+.footer span{color:#e03030}
 </style>
 </head>
 <body>
-
-<!-- Loading Screen -->
-<div class="loading-screen" id="loadingScreen">
-  <div class="loading-logo">🔥</div>
-  <div class="loading-title">Fire & Safety System</div>
-  <div class="loading-bar"><div class="loading-fill"></div></div>
-  <div class="loading-sub">Seven Circle (Bangladesh) Ltd.</div>
-</div>
-
 <div class="bg-c bg-c1"></div>
 <div class="bg-c bg-c2"></div>
-
-<div class="login-card">
-  <!-- PWA Install Banner -->
-  <div class="install-banner" id="installBanner">
-    <span>📱 ফোনে App হিসেবে install করুন</span>
-    <button class="btn-install" id="installBtn">Install</button>
+<div class="card">
+  <div class="logo-row">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAABIFBMVEX////tHCTpAAD5rrH2jpLyVlz94+TuKDDwQ0ruKjL0dnvnAAD6w8XwSE72k5f+9/fzYmj7ztD6u77vNDvvOD/uIyvzanDyW2H1h4v3m5//+vr81dcAAHT7ycv6v8H94OH4oqb0en/xTFIVGYX5sbP96+z82dr0eX30cXZZW6j1gYUfIoqztNfq6vT4p6rzaG3P0OZ9f7vsDhcsL5GOkMTs7PXb3OwAAGw1OJa/wN4KDn+jpc8+QZqtrtRaXKl1d7dMT6Lx//+Ehr////RmaK//8uvh9P9HWa9de8ZYcsBDRp24w+X/vrf/sqr+WVi6z+/Q6v7/tqj/TUX/xrahu+iwzfL/hH7e1uaIoNj/pqD/nJEsQKL+EhL/Ukd4ktD/ZmB5Gu99AAADB0lEQVR42u2V21LbSBCG/5blI4wtC8k6YGEhIZWwg+UI2/hAgCUsqRwrFzm+/4tsjwS1uxeQqsSX87ump2dG/tw96vEASkpKSkpKSkpKv5apad+86bjQ3N3wtAJ/xdzfJy3aAS7SsEF8vsR6vngBq/unvF6ByRaX8znOVxjiXnsgmm2BE8MwQgMIDLBXG7PrjIGjSEwxMuA6gJEAY5El6LQ7D/kyJZ692rx5G798ieHV+8iX00RpF7rtdUENHvTI8wJBNkgAHSsh6hPqlPLqPgkzQ9RM85J3jIvZAsPZ66L4yKmfrRYoKiAbvS29AcjqyaFoUqMEtlABBTGwfBJtq4pvpN0AyytHyLCi/DP8STxw5IrND+rEJuBv+T32TjhCKoHEoUqgSxklZDG+WbYy4dPF9qsG9ANYJo7fYP2KJ0uRWUYIGjdRRcho+yFCRwIzk6oIqSWfq4Czi7PX+zI7L5ETl5s1Iu4td0y+buuuzL7GwK7rMTD8X8oZ942QrJBazlQvga33V+sYlnWEqOMmBzluzrerwx5wmOcjBLquAyE339V1b8p0N+QCCFFzEx1Tk8fyLRuhP3KMMq3s+vx2ko1Tz+Y12x2Y29Xl5u/096sw4zbxqg3QZcRf2DT+ACg3c8IVGRV2Tlwv9JYngp5cCvMparVagw1kY59NglGtUbpPHGP+rEfNvToOBZ/pDCvsoc4LPtmeANUH/bIkuVFrMJD9lPoOtepPAWUwa/CG5ryLbVxVv8Ju+c4oYNMkdOsM1Mt6P5hKvvlUyod7GG5m1xLBr08sMTzDcfR4UiALO6E8lUVCcsB1HDwL5Ni2bIffP5nIPwzZnX/ew79AjjCwfZuOHiOEYT8PhHb74myD28np3ep0uZxU/x/gnXJSjyFmetLm85EyMDdNVNv5LDBp818D5rMV4utF/G6rdR4LgOoQQnhhhkGjJ6TPhguCm9h/pnIOivsLvLtj4Ap3qB/v4gqw8eMmxvUP3yh6O7lUPK3Q+/s/29pgl1efr25/JSUlJSUlJaX/6h/whkI66PeGPwAAAABJRU5ErkJggg==" alt="Seven Rings Cement">
   </div>
-
-  <div style="text-align:center;margin-bottom:16px"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAABIFBMVEX////tHCTpAAD5rrH2jpLyVlz94+TuKDDwQ0ruKjL0dnvnAAD6w8XwSE72k5f+9/fzYmj7ztD6u77vNDvvOD/uIyvzanDyW2H1h4v3m5//+vr81dcAAHT7ycv6v8H94OH4oqb0en/xTFIVGYX5sbP96+z82dr0eX30cXZZW6j1gYUfIoqztNfq6vT4p6rzaG3P0OZ9f7vsDhcsL5GOkMTs7PXb3OwAAGw1OJa/wN4KDn+jpc8+QZqtrtRaXKl1d7dMT6Lx//+Ehr////RmaK//8uvh9P9HWa9de8ZYcsBDRp24w+X/vrf/sqr+WVi6z+/Q6v7/tqj/TUX/xrahu+iwzfL/hH7e1uaIoNj/pqD/nJEsQKL+EhL/Ukd4ktD/ZmB5Gu99AAADB0lEQVR42u2V21LbSBCG/5blI4wtC8k6YGEhIZWwg+UI2/hAgCUsqRwrFzm+/4tsjwS1uxeQqsSX87ump2dG/tw96vEASkpKSkpKSkpKv5apad+86bjQ3N3wtAJ/xdzfJy3aAS7SsEF8vsR6vngBq/unvF6ByRaX8znOVxjiXnsgmm2BE8MwQgMIDLBXG7PrjIGjSEwxMuA6gJEAY5El6LQ7D/kyJZ692rx5G798ieHV+8iX00RpF7rtdUENHvTI8wJBNkgAHSsh6hPqlPLqPgkzQ9RM85J3jIvZAsPZ66L4yKmfrRYoKiAbvS29AcjqyaFoUqMEtlABBTGwfBJtq4pvpN0AyytHyLCi/DP8STxw5IrND+rEJuBv+T32TjhCKoHEoUqgSxklZDG+WbYy4dPF9qsG9ANYJo7fYP2KJ0uRWUYIGjdRRcho+yFCRwIzk6oIqSWfq4Czi7PX+zI7L5ETl5s1Iu4td0y+buuuzL7GwK7rMTD8X8oZ942QrJBazlQvga33V+sYlnWEqOMmBzluzrerwx5wmOcjBLquAyE339V1b8p0N+QCCFFzEx1Tk8fyLRuhP3KMMq3s+vx2ko1Tz+Y12x2Y29Xl5u/096sw4zbxqg3QZcRf2DT+ACg3c8IVGRV2Tlwv9JYngp5cCvMparVagw1kY59NglGtUbpPHGP+rEfNvToOBZ/pDCvsoc4LPtmeANUH/bIkuVFrMJD9lPoOtepPAWUwa/CG5ryLbVxVv8Ju+c4oYNMkdOsM1Mt6P5hKvvlUyod7GG5m1xLBr08sMTzDcfR4UiALO6E8lUVCcsB1HDwL5Ni2bIffP5nIPwzZnX/ew79AjjCwfZuOHiOEYT8PhHb74myD28np3ep0uZxU/x/gnXJSjyFmetLm85EyMDdNVNv5LDBp818D5rMV4utF/G6rdR4LgOoQQnhhhkGjJ6TPhguCm9h/pnIOivsLvLtj4Ap3qB/v4gqw8eMmxvUP3yh6O7lUPK3Q+/s/29pgl1efr25/JSUlJSUlJaX/6h/whkI66PeGPwAAAABJRU5ErkJggg==" style="height:40px;width:auto;object-fit:contain" alt="Seven Rings Cement"></div>
-  <div class="logo-area">
-    <div class="logo-icon">🔥</div>
-    <div class="logo-title">Fire & Safety</div>
-    <div class="logo-sub">Work Management System</div>
-    <div class="logo-company">Seven Circle (Bangladesh) Ltd. — Seven Rings Cement</div>
+  <div class="icon-row"><div class="fire-icon">🔥</div></div>
+  <div class="title">Admin Login</div>
+  <div class="sub">Fire & Safety Work Management System</div>
+  <div class="company">Seven Circle (Bangladesh) Ltd. — Seven Rings Cement</div>
+  <div class="form">
+    <div class="fg">
+      <label>Email Address</label>
+      <input type="email" id="email" placeholder="your@email.com" autocomplete="email">
+    </div>
+    <div class="fg">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;" autocomplete="current-password">
+    </div>
+    <button class="btn-login" id="loginBtn" onclick="doLogin()">&#128272; Login</button>
+    <div class="err" id="errMsg"></div>
   </div>
-
-  <div class="fg">
-    <label>Email Address</label>
-    <input type="email" id="email" placeholder="your@email.com" autocomplete="email">
+  <div class="back-row">
+    <a href="javascript:history.back()" class="back-link">&#8592; আগের পেজে ফিরুন</a>
   </div>
-  <div class="fg">
-    <label>Password</label>
-    <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
-  </div>
-
-  <button class="btn-login" id="loginBtn" onclick="doLogin()">🔐 Login</button>
-  <div class="err" id="errMsg"></div>
-
   <hr>
-  <div class="footer-info">
-    Administration Department &nbsp;•&nbsp; <span>Fire & Safety Division</span><br>
+  <div class="footer">
+    Administration Department &nbsp;&#8226;&nbsp; <span>Fire & Safety Division</span><br>
     Char Mirpur, Kaliganj, Gazipur
   </div>
 </div>
@@ -114,9 +76,8 @@ hr{border:none;border-top:1px solid #252d3a;margin:22px 0}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-const app=initializeApp({
+const app = initializeApp({
   apiKey:"AIzaSyDS1f3vKcohxGEvYdEBjVdBsm0E9ppmmBQ",
   authDomain:"fire-safety-tracker-a1826.firebaseapp.com",
   databaseURL:"https://fire-safety-tracker-a1826-default-rtdb.asia-southeast1.firebasedatabase.app",
@@ -125,67 +86,50 @@ const app=initializeApp({
   messagingSenderId:"561656890483",
   appId:"1:561656890483:web:82b1cf24a0db230992d686"
 });
-const auth=getAuth(app);
-const db=getDatabase(app);
+const auth = getAuth(app);
 
-// Hide loading after 1.5s
-setTimeout(()=>{
-  document.getElementById('loadingScreen').classList.add('hidden');
-},1500);
+function getRedirect(){
+  const p = new URLSearchParams(window.location.search);
+  return p.get("redirect") || "index.html";
+}
 
-// Already logged in → redirect
-onAuthStateChanged(auth,user=>{
-  if(user) const params = new URLSearchParams(window.location.search);
-    const redirect = params.get('redirect') || 'dashboard.html';
-    window.location.href = redirect;
+// Already logged in → redirect back
+onAuthStateChanged(auth, user => {
+  if(user) window.location.href = getRedirect();
 });
 
-window.doLogin=async()=>{
-  const email=document.getElementById('email').value.trim();
-  const pass=document.getElementById('password').value;
-  const btn=document.getElementById('loginBtn');
-  const err=document.getElementById('errMsg');
-  if(!email||!pass){err.textContent='Email ও Password দিন।';err.style.display='block';return;}
-  btn.disabled=true; btn.textContent='⏳ Logging in…'; err.style.display='none';
+window.doLogin = async () => {
+  const email = document.getElementById("email").value.trim();
+  const pass  = document.getElementById("password").value;
+  const btn   = document.getElementById("loginBtn");
+  const err   = document.getElementById("errMsg");
+
+  if(!email || !pass){ err.textContent="Email ও Password দিন।"; err.style.display="block"; return; }
+  btn.disabled = true;
+  btn.textContent = "⏳ Logging in…";
+  err.style.display = "none";
+
   try{
-    await signInWithEmailAndPassword(auth,email,pass);
-    btn.textContent='✅ Success!';
-    const params = new URLSearchParams(window.location.search);
-    const redirect = params.get('redirect') || 'dashboard.html';
-    window.location.href = redirect;
-  }catch(e){
-    const msgs={
-      'auth/user-not-found':'এই email-এ কোনো account নেই।',
-      'auth/wrong-password':'Password ভুল।',
-      'auth/invalid-credential':'Email বা Password ভুল।',
-      'auth/too-many-requests':'অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পর আবার চেষ্টা করুন।',
+    await signInWithEmailAndPassword(auth, email, pass);
+    btn.textContent = "✅ Success!";
+    window.location.href = getRedirect();
+  } catch(e){
+    const msgs = {
+      "auth/user-not-found":"এই email-এ কোনো account নেই।",
+      "auth/wrong-password":"Password ভুল।",
+      "auth/invalid-credential":"Email বা Password ভুল।",
+      "auth/too-many-requests":"অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পর আবার চেষ্টা করুন।",
     };
-    err.textContent=msgs[e.code]||'Login failed। আবার চেষ্টা করুন।';
-    err.style.display='block';
-    btn.disabled=false; btn.textContent='🔐 Login';
+    err.textContent = msgs[e.code] || "Login failed। আবার চেষ্টা করুন।";
+    err.style.display = "block";
+    btn.disabled = false;
+    btn.textContent = "🔐 Login";
   }
 };
 
-document.addEventListener('keydown',e=>{if(e.key==='Enter') window.doLogin();});
+document.addEventListener("keydown", e => { if(e.key === "Enter") window.doLogin(); });
 
-// PWA install
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt',e=>{
-  e.preventDefault(); deferredPrompt=e;
-  document.getElementById('installBanner').style.display='flex';
-});
-document.getElementById('installBtn')?.addEventListener('click',async()=>{
-  if(!deferredPrompt) return;
-  deferredPrompt.prompt();
-  const {outcome}=await deferredPrompt.userChoice;
-  if(outcome==='accepted') document.getElementById('installBanner').style.display='none';
-  deferredPrompt=null;
-});
-
-// Service worker
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
-}
+if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>
 </body>
 </html>
