@@ -9,6 +9,8 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  const auth = getAuth(app);
 
   const firebaseConfig = {
     apiKey:            "AIzaSyDS1f3vKcohxGEvYdEBjVdBsm0E9ppmmBQ",
@@ -68,7 +70,7 @@
   function updateAdminUI() {
     const btn = $('adminBtn');
     if (!btn) return;
-    btn.textContent = isAdmin ? '🔓 Admin (Logout)' : '🔐 Admin Login';
+    btn.textContent = isAdmin ? '🔓 Logout' : '🔐 Admin Login';
     btn.style.background = isAdmin ? '#1a5c33' : '#7b1416';
     $('addTaskBtn').style.display = isAdmin ? 'flex' : 'none';
     // show/hide requests panel
@@ -828,9 +830,4 @@ label.blue-label{color:#90c8f8}
 </script>
 </body>
 </html>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-const _app2 = initializeApp({apiKey:"AIzaSyDS1f3vKcohxGEvYdEBjVdBsm0E9ppmmBQ",authDomain:"fire-safety-tracker-a1826.firebaseapp.com",projectId:"fire-safety-tracker-a1826",appId:"1:561656890483:web:82b1cf24a0db230992d686"}, "guard");
-onAuthStateChanged(getAuth(_app2), user => { if(!user) window.location.href="login.html"; });
-</script>
+

@@ -268,7 +268,7 @@ const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&g
 const $=id=>document.getElementById(id);
 const fv=id=>($( id)||{}).value||'';
 
-onAuthStateChanged(auth,user=>{ if(!user) window.location.href='login.html'; });
+onAuthStateChanged(auth, user=>{ window._isAdmin=!!user; });
 
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const STATUS_LABELS=['Pending','In Progress','Under Review','Completed','On Hold','Cancelled'];
