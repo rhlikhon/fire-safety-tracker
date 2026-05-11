@@ -135,7 +135,9 @@ setTimeout(()=>{
 
 // Already logged in → redirect
 onAuthStateChanged(auth,user=>{
-  if(user) window.location.href='dashboard.html';
+  if(user) const params = new URLSearchParams(window.location.search);
+    const redirect = params.get('redirect') || 'dashboard.html';
+    window.location.href = redirect;
 });
 
 window.doLogin=async()=>{
@@ -148,7 +150,9 @@ window.doLogin=async()=>{
   try{
     await signInWithEmailAndPassword(auth,email,pass);
     btn.textContent='✅ Success!';
-    window.location.href='dashboard.html';
+    const params = new URLSearchParams(window.location.search);
+    const redirect = params.get('redirect') || 'dashboard.html';
+    window.location.href = redirect;
   }catch(e){
     const msgs={
       'auth/user-not-found':'এই email-এ কোনো account নেই।',
